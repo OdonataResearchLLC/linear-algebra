@@ -1,0 +1,6 @@
+linear-algebra
+
+linear-algebra is a Common Lisp library of numeric linear algebra routines.
+It approximates the functionality present in the Basic Linear Algebra
+Subroutines (BLAS) Fortran library. The objective of this project is to
+generate linear algebra routines in native ANSI Common Lisp.
