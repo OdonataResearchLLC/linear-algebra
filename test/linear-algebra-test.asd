@@ -3,7 +3,7 @@
 
  Linear Algebra in Common Lisp Unit Tests
 
- Copyright (c) 2010-2011, Thomas M. Hermann
+ Copyright (c) 2010-2012, Thomas M. Hermann
  All rights reserved.
 
  Redistribution and  use  in  source  and  binary  forms, with or without
@@ -38,19 +38,20 @@
 
 (defsystem :linear-algebra-test
   :description "Unit Tests for Linear Algebra in Common Lisp"
-  :version "Draft"
+  :version "0.1.0"
   :author "Thomas M. Hermann <thomas.m.hermann@odonata-research.com>"
   :license "BSD"
   :depends-on ("lisp-unit" "linear-algebra")
-  :components ((:file "defpackage")
-               (:file "vector" :depends-on ("defpackage"))
-               (:file "data-vector" :depends-on ("defpackage"))
-               (:file "matrix" :depends-on ("defpackage"))
-               (:file "identity-matrix" :depends-on ("matrix"))
-               (:file "permutation-matrix" :depends-on ("matrix"))
-               (:file "dense-matrix" :depends-on ("matrix"))
-               (:file "square-matrix" :depends-on ("matrix"))
-               (:file "hermitian-matrix" :depends-on ("matrix"))
-               (:file "symmetric-matrix" :depends-on ("matrix"))
-               (:file "triangular-matrix" :depends-on ("matrix"))
-               (:file "auxiliary" :depends-on ("defpackage"))))
+  :components
+  ((:file "defpackage")
+   (:file "auxiliary" :depends-on ("defpackage"))
+   (:file "vector" :depends-on ("defpackage"))
+   (:file "data-vector" :depends-on ("defpackage"))
+   (:file "matrix" :depends-on ("defpackage"))
+   (:file "identity-matrix" :depends-on ("matrix"))
+   (:file "permutation-matrix" :depends-on ("matrix"))
+   (:file "dense-matrix" :depends-on ("matrix"))
+   (:file "square-matrix" :depends-on ("matrix"))
+   (:file "hermitian-matrix" :depends-on ("matrix"))
+   (:file "symmetric-matrix" :depends-on ("matrix"))
+   (:file "triangular-matrix" :depends-on ("matrix"))))
