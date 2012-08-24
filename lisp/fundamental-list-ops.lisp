@@ -46,3 +46,14 @@ list."
              sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
              scale abs-val)
             (incf sumsq (expt (/ elm scale) 2)))))))
+
+(defmethod sump ((data list) (p real) &key (scale 0) (sump 1))
+  "Return the scaling parameter and the sum of the powers of p of the
+data."
+  (let ((abs-val nil))
+    (dolist (elm data (values scale sump))
+      (when (< 0 (setf abs-val (abs elm)))
+        (if (< scale abs-val)
+            (setf sump  (1+ (* sump (expt (/ scale abs-val) p)))
+                  scale abs-val)
+            (incf sump (expt (/ elm scale) p)))))))
