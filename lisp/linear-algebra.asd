@@ -3,7 +3,7 @@
 
  Linear Algebra in Common Lisp
 
- Copyright (c) 2011, Thomas M. Hermann
+ Copyright (c) 2011-2012, Odonata Research LLC
  All rights reserved.
 
  Redistribution and  use  in  source  and  binary  forms, with or without
@@ -39,22 +39,22 @@
 
 (defsystem :linear-algebra
   :description "Linear Algebra in Common Lisp."
-  :version "Draft"
+  :version "0.1.0"
   :author "Thomas M. Hermann <thomas.m.hermann@odonata-research.com>"
   :license "BSD"
   :depends-on ("floating-point")
-  :components ((:file "defpackage")
-               (:file "auxiliary" :depends-on ("defpackage"))
-               (:file "fundamental-ops" :depends-on ("defpackage"))
-               (:file "vector" :depends-on ("fundamental-ops"))
-               (:file "matrix" :depends-on ("fundamental-ops"))
-               (:file "identity-matrix" :depends-on ("matrix"))
-               (:file "permutation-matrix" :depends-on ("matrix"))
-               (:file "data-vector" :depends-on ("auxiliary"
-                                                 "vector"
-                                                 "permutation-matrix"))
-               (:file "dense-matrix" :depends-on ("data-vector"))
-               (:file "square-matrix" :depends-on ("dense-matrix"))
-               (:file "hermitian-matrix" :depends-on ("square-matrix"))
-               (:file "symmetric-matrix" :depends-on ("square-matrix"))
-               (:file "triangular-matrix" :depends-on ("square-matrix"))))
+  :components
+  ((:file "defpackage")
+   (:file "auxiliary" :depends-on ("defpackage"))
+   (:file "fundamental-ops" :depends-on ("defpackage"))
+   (:file "vector" :depends-on ("fundamental-ops"))
+   (:file "matrix" :depends-on ("fundamental-ops"))
+   (:file "identity-matrix" :depends-on ("matrix"))
+   (:file "permutation-matrix" :depends-on ("matrix"))
+   (:file "data-vector"
+    :depends-on ("auxiliary" "vector" "permutation-matrix"))
+   (:file "dense-matrix" :depends-on ("data-vector"))
+   (:file "square-matrix" :depends-on ("dense-matrix"))
+   (:file "hermitian-matrix" :depends-on ("square-matrix"))
+   (:file "symmetric-matrix" :depends-on ("square-matrix"))
+   (:file "triangular-matrix" :depends-on ("square-matrix"))))

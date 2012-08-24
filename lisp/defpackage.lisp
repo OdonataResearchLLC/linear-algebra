@@ -2,7 +2,7 @@
 
  Linear Algebra in Common Lisp
 
- Copyright (c) 2011, Thomas M. Hermann
+ Copyright (c) 2011-2012, Odonata Research LLC
  All rights reserved.
 
  Redistribution and  use  in  source  and  binary  forms, with or without
@@ -37,63 +37,67 @@
 
 (defpackage :linear-algebra
   (:use :common-lisp :floating-point)
-  (:export
-   ;; Fundamental operations
-   :sumsq :sump
-   :norm
-   :transpose :ntranspose
-   :permute :npermute
-   :scale :nscale
-   :add :nadd
-   :subtract :nsubtract
-   :product
-   ;; Vector exports
-   :vector-object
-   :make-vector :initialize-vector
-   :vector-object-p :vector-in-bounds-p
-   :vector-element-type :vector-length
-   :vref
-   :copy-vector
-   :subvector :replace-vector
-   :map-vector :map-into-vector
-   :dovector
-   :givens-rotation
-   :jacobi-rotation
-   :householder-reflection
-   :apply-rotation :napply-rotation
-   ;; Matrix interface
-   :matrix-object
-   :make-matrix :initialize-matrix
-   :matrixp :matrix-in-bounds-p
-   :matrix-element-type
-   :matrix-dimensions
-   :matrix-row-dimension
-   :matrix-column-dimension
-   :mref
-   :copy-matrix
-   :submatrix :replace-matrix
-   :matrix-validated-range
-   ;; Identity matrix
-   :identity-matrix
-   :identity-matrix-p
-   ;; Permutation matrix
-   :permutation-matrix
-   :permutation-matrix-p
-   ;; Data vector exports
-   :data-vector :row-vector :column-vector
-   :column-vector-p :row-vector-p
-   ;; Dense matrix
-   :dense-matrix
-   :dense-matrix-p
-   ;; Square matrix
-   :square-matrix
-   :square-matrix-p
-   ;; Hermitian matrix
-   :hermitian-matrix
-   :hermitian-matrix-p
-   ;; Symmetric matrix
-   :symmetric-matrix
-   :symmetric-matrix-p
-   ;; Triangular matrix
-   :upper-triangular-matrix :lower-triangular-matrix
-   :upper-triangular-matrix-p :lower-triangular-matrix-p))
+  ;; Fundamental operations
+  (:export :sumsq :sump
+           :norm
+           :transpose :ntranspose
+           :permute :npermute
+           :scale :nscale
+           :add :nadd
+           :subtract :nsubtract
+           :product)
+  ;; Vector exports
+  (:export :vector-object
+           :make-vector :initialize-vector
+           :vector-object-p :vector-in-bounds-p
+           :vector-element-type :vector-length
+           :vref
+           :copy-vector
+           :subvector :replace-vector
+           :map-vector :map-into-vector
+           :dovector
+           :givens-rotation
+           :jacobi-rotation
+           :householder-reflection
+           :apply-rotation :napply-rotation)
+  ;; Matrix interface
+  (:export :matrix-object
+           :make-matrix :initialize-matrix
+           :matrixp :matrix-in-bounds-p
+           :matrix-element-type
+           :matrix-dimensions
+           :matrix-row-dimension
+           :matrix-column-dimension
+           :mref
+           :copy-matrix
+           :submatrix :replace-matrix
+           :matrix-validated-range)
+  ;; Identity matrix
+  (:export :identity-matrix
+           :identity-matrix-p)
+  ;; Permutation matrix
+  (:export :permutation-matrix
+           :permutation-matrix-p)
+  ;; Data vector exports
+  (:export :data-vector
+           :row-vector
+           :column-vector
+           :column-vector-p
+           :row-vector-p)
+  ;; Dense matrix
+  (:export :dense-matrix
+           :dense-matrix-p)
+  ;; Square matrix
+  (:export :square-matrix
+           :square-matrix-p)
+  ;; Hermitian matrix
+  (:export :hermitian-matrix
+           :hermitian-matrix-p)
+  ;; Symmetric matrix
+  (:export :symmetric-matrix
+           :symmetric-matrix-p)
+  ;; Triangular matrix
+  (:export :upper-triangular-matrix
+           :lower-triangular-matrix
+           :upper-triangular-matrix-p
+           :lower-triangular-matrix-p))
