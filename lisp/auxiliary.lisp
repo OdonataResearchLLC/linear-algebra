@@ -2,7 +2,7 @@
 
  Linear Algebra in Common Lisp
 
- Copyright (c) 2011, Thomas M. Hermann
+ Copyright (c) 2011-2012, Thomas M. Hermann
  All rights reserved.
 
  Redistribution and  use  in  source  and  binary  forms, with or without
@@ -39,18 +39,20 @@
   "Return the square root of |x|^2 + |y|^2."
   (let* ((abs-x (abs x))
          (abs-y (abs y))
-         (w (max abs-x abs-y)))
-    (* w (sqrt (+ 1 (expt (/ (min abs-x abs-y) w) 2))))))
+         (w (max abs-x abs-y))
+         (v/w (/ (min abs-x abs-y) w)))
+    (* w (sqrt (+ 1D0 (* v/w v/w))))))
 
 (defun lapy3 (x y z)
   "Return the square root of |x|^2 + |y|^2 + |z|^2."
   (let* ((abs-x (abs x))
          (abs-y (abs y))
          (abs-z (abs z))
-         (w (max abs-x abs-y abs-z)))
-    (* w (sqrt (+ (expt (/ abs-x w) 2)
-                  (expt (/ abs-y w) 2)
-                  (expt (/ abs-z w) 2))))))
+         (w (max abs-x abs-y abs-z))
+         (x/w (/ abs-x w))
+         (y/w (/ abs-y w))
+         (z/w (/ abs-z w)))
+    (* w (sqrt (+ (* x/w x/w) (* y/w y/w) (* z/w z/w))))))
 
 (defun scaled-binary-op (op scalar1 scalar2)
   "Return the correct scaled binary operation."
@@ -111,4 +113,3 @@ comparison."
           (typep number2 '(complex rational)))
      (= number1 number2))
     (t (error "Non-numeric arguments."))))
-
