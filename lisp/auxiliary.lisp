@@ -41,7 +41,7 @@
          (abs-y (abs y))
          (w (max abs-x abs-y))
          (v/w (/ (min abs-x abs-y) w)))
-    (* w (sqrt (+ 1D0 (* v/w v/w))))))
+    (* w (sqrt (+ 1 (* v/w v/w))))))
 
 (defun lapy3 (x y z)
   "Return the square root of |x|^2 + |y|^2 + |z|^2."
