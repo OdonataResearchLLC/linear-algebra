@@ -35,6 +35,8 @@
 
 (in-package :linear-algebra)
 
+;;; External Interface
+
 (defgeneric sumsq (vector-or-matrix &key scale sumsq)
   (:documentation
    "Return the scaling parameter and the sum of the squares."))
@@ -95,3 +97,8 @@
   (:documentation
    "Return the vector-vector, matrix-vector or matrix-matrix product."))
 
+;;; Internal Interface
+
+(defgeneric %norm (vector-or-matrix measure)
+  (:documentation
+   "Internal generic function to facilitate dispatch on measure."))
