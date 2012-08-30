@@ -212,3 +212,22 @@ data."
 (defmethod nsubtract ((list1 list) (list2 list) &key scalar1 scalar2)
   "Return the subraction of scalar2*list2 from scalar1*list1."
   (map-into list1 (scaled-binary-op #'- scalar1 scalar2) list1 list2))
+
+(defmethod product :before ((list1 list) (list2 list)
+                            &key scalar conjugate)
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar conjugate))
+  (unless (= (length list1) (length list2))
+    (error "LIST1 and LIST2 are not of equal length.")))
+
+(defmethod product ((list1 list) (list2 list)
+                    &key (scalar nil scalarp) conjugate)
+  "Return the dot product of list1 and list2."
+  (loop with op = (if conjugate
+                      (lambda (x y) (* (conjugate x) y))
+                      #'*)
+        for element1 in list1
+        and element2 in list2
+        sum (funcall op element1 element2) into result
+        finally
+        (return (if scalarp (* scalar result) result))))
