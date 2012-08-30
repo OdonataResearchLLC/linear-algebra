@@ -206,3 +206,44 @@
     (assert-float-equal (list 3.3 4.4 2.2 5.5 1.1) list1)
     (assert-eq list2 (linear-algebra:npermute pmat list2))
     (assert-float-equal (list 5.5 3.3 1.1 2.2 4.4) list2)))
+
+;;; List scale
+
+(define-test scale-list
+  (assert-float-equal
+   '(2.0 4.0 6.0 8.0 10.0)
+   (linear-algebra:scale 2.0 '(1.0 2.0 3.0 4.0 5.0)))
+  (assert-float-equal
+   '(#C(1.0 1.0) #C(2.0 2.0) #C(3.0 3.0) #C(4.0 4.0) #C(5.0 5.0))
+   (linear-algebra:scale #C(1.0 1.0) '(1.0 2.0 3.0 4.0 5.0)))
+  (assert-float-equal
+   '(#C(2.0 2.0) #C(4.0 4.0) #C(6.0 6.0) #C(8.0 8.0) #C(10.0 10.0))
+   (linear-algebra:scale 2.0
+    '(#C(1.0 1.0) #C(2.0 2.0) #C(3.0 3.0) #C(4.0 4.0) #C(5.0 5.0))))
+  (assert-float-equal
+   #(#C(0.0 4.0) #C(0.0 8.0) #C(0.0 12.0) #C(0.0 16.0) #C(0.0 20.0))
+   (linear-algebra:scale
+    #C(2.0 2.0)
+    '(#C(1.0 1.0) #C(2.0 2.0) #C(3.0 3.0) #C(4.0 4.0) #C(5.0 5.0)))))
+
+(define-test nscale-list
+  (let ((list (list 1.0 2.0 3.0 4.0 5.0)))
+    (assert-eq list (linear-algebra:nscale 2.0 list))
+    (assert-float-equal '(2.0 4.0 6.0 8.0 10.0) list))
+  (let ((list (list 1.0 2.0 3.0 4.0 5.0)))
+    (assert-eq list (linear-algebra:nscale #C(1.0 1.0) list))
+    (assert-float-equal
+     '(#C(1.0 1.0) #C(2.0 2.0) #C(3.0 3.0) #C(4.0 4.0) #C(5.0 5.0))
+     list))
+  (let ((list (list #C(1.0 1.0) #C(2.0 2.0) #C(3.0 3.0)
+                    #C(4.0 4.0) #C(5.0 5.0))))
+    (assert-eq list (linear-algebra:nscale 2.0 list))
+    (assert-float-equal
+     '(#C(2.0 2.0) #C(4.0 4.0) #C(6.0 6.0) #C(8.0 8.0) #C(10.0 10.0))
+     list))
+  (let ((list (list #C(1.0 1.0) #C(2.0 2.0) #C(3.0 3.0)
+                    #C(4.0 4.0) #C(5.0 5.0))))
+    (assert-eq list (linear-algebra:nscale #C(2.0 2.0) list))
+    (assert-float-equal
+     '(#C(0.0 4.0) #C(0.0 8.0) #C(0.0 12.0) #C(0.0 16.0) #C(0.0 20.0))
+     list)))

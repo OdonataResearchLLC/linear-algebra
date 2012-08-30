@@ -153,3 +153,11 @@ data."
           as column = (aref mat row)
           do (rotatef (nth row data) (nth column data))
           finally (return data))))
+
+(defmethod scale ((scalar number) (data list))
+  "Return the list scaled by scalar."
+  (loop for item in data collect (* scalar item)))
+
+(defmethod nscale ((scalar number) (data list))
+  "Return the list destructively scaled by scalar."
+  (map-into data (lambda (x) (* scalar x)) data))
