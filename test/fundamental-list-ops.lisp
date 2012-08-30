@@ -156,3 +156,53 @@
         '(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
           #C(-2 3) #C(-3 1) #C(-1 0))
         :measure :infinity)))
+
+;;; List transpose
+
+(define-test transpose-list
+  (assert-float-equal
+   '(1.0 2.0 3.0 4.0 5.0)
+   (linear-algebra:transpose
+    '(1.0 2.0 3.0 4.0 5.0))))
+
+(define-test ntranspose-list
+  (let ((data (list 1.0 2.0 3.0 4.0 5.0)))
+    (assert-equal
+     data (linear-algebra:ntranspose data))))
+
+;;; List permutation
+
+(define-test permute-list
+  (let ((list (list 1.1 2.2 3.3 4.4 5.5))
+        (pmat (linear-algebra:make-matrix
+               5 5 :matrix-type
+               'linear-algebra:permutation-matrix
+               :initial-contents
+               '((0 0 1 0 0)
+                 (0 0 0 0 1)
+                 (1 0 0 0 0)
+                 (0 1 0 0 0)
+                 (0 0 0 1 0)))))
+    (assert-float-equal
+     (list 3.3 4.4 1.1 5.5 2.2)
+     (linear-algebra:permute list pmat))
+    (assert-float-equal
+     (list 3.3 5.5 1.1 2.2 4.4)
+     (linear-algebra:permute pmat list))))
+
+(define-test npermute-list
+  (let ((list1 (list 1.1 2.2 3.3 4.4 5.5))
+        (list2 (list 1.1 2.2 3.3 4.4 5.5))
+        (pmat (linear-algebra:make-matrix
+               5 5 :matrix-type
+               'linear-algebra:permutation-matrix
+               :initial-contents
+               '((0 0 0 0 1)
+                 (0 0 1 0 0)
+                 (1 0 0 0 0)
+                 (0 1 0 0 0)
+                 (0 0 0 1 0)))))
+    (assert-eq list1 (linear-algebra:npermute list1 pmat))
+    (assert-float-equal (list 3.3 4.4 2.2 5.5 1.1) list1)
+    (assert-eq list2 (linear-algebra:npermute pmat list2))
+    (assert-float-equal (list 5.5 3.3 1.1 2.2 4.4) list2)))
