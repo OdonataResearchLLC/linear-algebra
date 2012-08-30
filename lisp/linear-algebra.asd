@@ -51,6 +51,8 @@
    (:file "matrix" :depends-on ("fundamental-ops"))
    (:file "identity-matrix" :depends-on ("matrix"))
    (:file "permutation-matrix" :depends-on ("matrix"))
+   (:file "cl-list"
+    :depends-on ("auxiliary" "fundamental-ops" "permutation-matrix"))
    (:file "data-vector"
     :depends-on ("auxiliary" "vector" "permutation-matrix"))
    (:file "dense-matrix" :depends-on ("data-vector"))
