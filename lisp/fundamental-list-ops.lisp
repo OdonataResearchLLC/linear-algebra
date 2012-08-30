@@ -161,3 +161,29 @@ data."
 (defmethod nscale ((scalar number) (data list))
   "Return the list destructively scaled by scalar."
   (map-into data (lambda (x) (* scalar x)) data))
+
+(defmethod add :before ((list1 list) (list2 list)
+                        &key scalar1 scalar2)
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar1 scalar2))
+  (unless (= (length list1) (length list2))
+    (error "LIST1 and LIST2 are not of equal length.")))
+
+(defmethod add ((list1 list) (list2 list) &key scalar1 scalar2)
+  "Return the addition of scalar1*list1 with scalar2*list2"
+  (loop with op = (scaled-binary-op #'+ scalar1 scalar2)
+        for item1 in list1
+        and item2 in list2
+        collect (funcall op item1 item2)))
+
+(defmethod nadd :before ((list1 list) (list2 list)
+                         &key scalar1 scalar2)
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar1 scalar2))
+  (unless (= (length list1) (length list2))
+    (error
+     "LENGTH1 and LENGTH2 are not of equal length in NADD-SCALED.")))
+
+(defmethod nadd ((list1 list) (list2 list) &key scalar1 scalar2)
+  "Return the addition of scalar2*list2 to scalar1*list1."
+  (map-into list1 (scaled-binary-op #'+ scalar1 scalar2) list1 list2))

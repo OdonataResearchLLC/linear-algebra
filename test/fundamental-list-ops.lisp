@@ -247,3 +247,65 @@
     (assert-float-equal
      '(#C(0.0 4.0) #C(0.0 8.0) #C(0.0 12.0) #C(0.0 16.0) #C(0.0 20.0))
      list)))
+
+;;; Vector addition
+
+(define-test add-list
+  ;; Real
+  (let ((list1 '(1.1 2.2 3.3 4.4))
+        (list2 '(1.1 2.2 3.3 4.4)))
+    (assert-float-equal
+     '(2.2 4.4 6.6 8.8) (linear-algebra:add list1 list2))
+    (assert-float-equal
+    '(3.3 6.6 9.9 13.2) (linear-algebra:add list1 list2 :scalar1 2.0))
+    (assert-float-equal
+     '(3.3 6.6 9.9 13.2) (linear-algebra:add list1 list2 :scalar2 2.0))
+    (assert-float-equal
+     '(4.4 8.8 13.2 17.6)
+     (linear-algebra:add list1 list2 :scalar1 2.0 :scalar2 2.0)))
+  ;; Complex
+  (let ((list1 '(#C(1.1 2.2) #C(3.3 4.4)))
+        (list2 '(#C(1.1 2.2) #C(3.3 4.4))))
+    (assert-float-equal
+     '(#C(2.2 4.4) #C(6.6 8.8)) (linear-algebra:add list1 list2))
+    (assert-float-equal
+     '(#C(3.3 6.6) #C(9.9 13.2))
+     (linear-algebra:add list1 list2 :scalar1 2.0))
+    (assert-float-equal
+     '(#C(3.3 6.6) #C(9.9 13.2))
+     (linear-algebra:add list1 list2 :scalar2 2.0))
+    (assert-float-equal
+     '(#C(4.4 8.8) #C(13.2 17.6))
+     (linear-algebra:add list1 list2 :scalar1 2.0 :scalar2 2.0))))
+
+;;; Destructive vector addition
+
+(define-test nadd-list
+  ;; Real
+  (let ((list1 '(1.1 2.2 3.3 4.4))
+        (list2 '(1.1 2.2 3.3 4.4)))
+    (assert-eq list1 (linear-algebra:nadd list1 list2))
+    (assert-float-equal '(2.2 4.4 6.6 8.8) list1)
+    (assert-float-equal
+     '(4.4 8.8 13.2 17.6)
+     (linear-algebra:nadd list1 list2 :scalar2 2.0))
+    (assert-float-equal
+     '(9.9 19.8 29.7 39.6)
+     (linear-algebra:nadd list1 list2 :scalar1 2.0))
+    (assert-float-equal
+     '(22.0 44.0 66.0 88.0)
+     (linear-algebra:nadd list1 list2 :scalar1 2.0 :scalar2 2.0)))
+  ;; Complex
+  (let ((list1 '(#C(1.1 2.2) #C(3.3 4.4)))
+        (list2 '(#C(1.1 2.2) #C(3.3 4.4))))
+    (assert-eq list1 (linear-algebra:nadd list1 list2))
+    (assert-float-equal '(#C(2.2 4.4) #C(6.6 8.8)) list1)
+    (assert-float-equal
+     '(#C(4.4 8.8) #C(13.2 17.6))
+     (linear-algebra:nadd list1 list2 :scalar2 2.0))
+    (assert-float-equal
+     '(#C(9.9 19.8) #C(29.7 39.6))
+     (linear-algebra:nadd list1 list2 :scalar1 2.0))
+    (assert-float-equal
+     '(#C(22.0 44.0) #C(66.0 88.0))
+     (linear-algebra:nadd list1 list2 :scalar1 2.0 :scalar2 2.0))))
