@@ -309,3 +309,70 @@
     (assert-float-equal
      '(#C(22.0 44.0) #C(66.0 88.0))
      (linear-algebra:nadd list1 list2 :scalar1 2.0 :scalar2 2.0))))
+
+;;; List subtraction
+
+(define-test subtract-list
+  ;; Real
+  (let ((list1 '(1.1 2.2 3.3 4.4))
+        (list2 '(1.1 2.2 3.3 4.4)))
+    (assert-float-equal
+     '(0.0 0.0 0.0 0.0)
+     (linear-algebra:subtract list1 list2))
+    (assert-float-equal
+     '(1.1 2.2 3.3 4.4)
+     (linear-algebra:subtract list1 list2 :scalar1 2.0))
+    (assert-float-equal
+     '(-1.1 -2.2 -3.3 -4.4)
+     (linear-algebra:subtract list1 list2 :scalar2 2.0))
+    (assert-float-equal
+     '(0.0 0.0 0.0 0.0)
+     (linear-algebra:subtract list1 list2 :scalar1 2.0 :scalar2 2.0)))
+  ;; Complex
+  (let ((list1 '(#C(1.1 2.2) #C(3.3 4.4)))
+        (list2 '(#C(1.1 2.2) #C(3.3 4.4))))
+    (assert-float-equal
+     '(#C(0.0 0.0) #C(0.0 0.0))
+     (linear-algebra:subtract list1 list2))
+    (assert-float-equal
+     '(#C(1.1 2.2) #C(3.3 4.4))
+     (linear-algebra:subtract list1 list2 :scalar1 2.0))
+    (assert-float-equal
+     '(#C(-1.1 -2.2) #C(-3.3 -4.4))
+     (linear-algebra:subtract list1 list2 :scalar2 2.0))
+    (assert-float-equal
+     '(#C(0.0 0.0) #C(0.0 0.0))
+     (linear-algebra:subtract list1 list2 :scalar1 2.0 :scalar2 2.0))))
+
+;;; Destructive list subtraction
+
+(define-test nsubtract-list
+  ;; Real
+  (let ((list1 '(1.1 2.2 3.3 4.4))
+        (list2 '(1.1 2.2 3.3 4.4)))
+    (assert-eq list1 (linear-algebra:nsubtract list1 list2))
+    (assert-float-equal '(0.0 0.0 0.0 0.0) list1)
+    (assert-float-equal
+     '(-2.2 -4.4 -6.6 -8.8)
+     (linear-algebra:nsubtract list1 list2 :scalar2 2.0))
+    (assert-float-equal
+     '(-5.5 -11.0 -16.5 -22.0)
+     (linear-algebra:nsubtract list1 list2 :scalar1 2.0))
+    (assert-float-equal
+     '(-13.2 -26.4 -39.6 -52.8)
+     (linear-algebra:nsubtract list1 list2 :scalar1 2.0 :scalar2 2.0)))
+  ;; Complex
+  (let ((list1 '(#C(1.1 2.2) #C(3.3 4.4)))
+        (list2 '(#C(1.1 2.2) #C(3.3 4.4))))
+    (assert-eq list1 (linear-algebra:nsubtract list1 list2))
+    (assert-float-equal
+     '(#C(0.0 0.0) #C(0.0 0.0)) list1)
+    (assert-float-equal
+     '(#C(-2.2 -4.4) #C(-6.6 -8.8))
+     (linear-algebra:nsubtract list1 list2 :scalar2 2.0))
+    (assert-float-equal
+     '(#C(-5.5 -11.0) #C(-16.5 -22.0))
+     (linear-algebra:nsubtract list1 list2 :scalar1 2.0))
+    (assert-float-equal
+     '(#C(-13.2 -26.4) #C(-39.6 -52.8))
+     (linear-algebra:nsubtract list1 list2 :scalar1 2.0 :scalar2 2.0))))

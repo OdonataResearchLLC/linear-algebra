@@ -187,3 +187,28 @@ data."
 (defmethod nadd ((list1 list) (list2 list) &key scalar1 scalar2)
   "Return the addition of scalar2*list2 to scalar1*list1."
   (map-into list1 (scaled-binary-op #'+ scalar1 scalar2) list1 list2))
+
+(defmethod subtract :before ((list1 list) (list2 list)
+                             &key scalar1 scalar2)
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar1 scalar2))
+  (unless (= (length list1) (length list2))
+    (error "LIST1 and LIST2 are not of equal length.")))
+
+(defmethod subtract ((list1 list) (list2 list) &key scalar1 scalar2)
+  "Return the subraction of scalar2*list2 from scalar1*list1."
+  (loop with op = (scaled-binary-op #'- scalar1 scalar2)
+        for item1 in list1
+        and item2 in list2
+        collect (funcall op item1 item2)))
+
+(defmethod nsubtract :before ((list1 list) (list2 list)
+                              &key scalar1 scalar2)
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar1 scalar2))
+  (unless (= (length list1) (length list2))
+    (error "LIST1 and LIST2 are not of equal length.")))
+
+(defmethod nsubtract ((list1 list) (list2 list) &key scalar1 scalar2)
+  "Return the subraction of scalar2*list2 from scalar1*list1."
+  (map-into list1 (scaled-binary-op #'- scalar1 scalar2) list1 list2))
