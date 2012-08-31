@@ -47,3 +47,16 @@ vector."
              sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
              scale abs-val)
             (incf sumsq (expt (/ (svref data index) scale) 2)))))))
+
+(defmethod sump ((data vector) (p real) &key (scale 0) (sump 1))
+  "Return the scaling parameter and the sum of the powers of p of the
+vector."
+  (let ((size (length data))
+        (abs-val nil))
+    (dotimes (index size (values scale sump))
+      (when (plusp (setf abs-val (abs (svref data index))))
+        (if (< scale abs-val)
+            (setf
+             sump (1+ (* sump (expt (/ scale abs-val) p)))
+             scale abs-val)
+            (incf sump (expt (/ (svref data index) scale) p)))))))
