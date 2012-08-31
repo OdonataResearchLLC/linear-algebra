@@ -165,3 +165,16 @@ vector."
           as column = (aref mat row)
           do (rotatef (aref data row) (aref data column))
           finally (return data))))
+
+(defmethod scale ((scalar number) (data vector))
+  "Return the vector scaled by scalar."
+  (map-into
+   (make-array (length data) :element-type
+               (upgraded-array-element-type
+                (type-of data)))
+   (lambda (item) (* scalar item))
+   data))
+
+(defmethod nscale ((scalar number) (data vector))
+  "Return the vector destructively scaled by scalar."
+  (map-into data (lambda (x) (* scalar x)) data))
