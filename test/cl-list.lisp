@@ -75,7 +75,7 @@
 
 ;;; Taxicab norm
 
-(define-test %norm-list-1
+(define-test %norm-1-list
   (assert-rational-equal
    36 (linear-algebra::%norm
        '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5) 1))
@@ -97,7 +97,7 @@
 
 ;;; Euclidean norm
 
-(define-test %norm-list-2
+(define-test %norm-2-list
   (assert-float-equal
    12.083046
    (linear-algebra::%norm
@@ -121,7 +121,7 @@
 
 ;;; P-norm
 
-(define-test %norm-list-p
+(define-test %norm-p-list
   (let ((data '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
         (zdata '(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
                  #C(-2 3) #C(-3 1) #C(-1 0))))
@@ -137,7 +137,7 @@
 
 ;;; Infinity norm
 
-(define-test %norm-list-infinity
+(define-test %norm-infinity-list
   (assert-rational-equal
    6 (linear-algebra::%norm
       '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5)
