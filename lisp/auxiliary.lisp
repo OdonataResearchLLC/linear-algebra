@@ -78,12 +78,18 @@
              (find-class default-class)
              (error "No common or default class."))))))
 
-;;; FIXME : Generalize to remove the assumption of numeric elements.
 (defun common-array-element-type (array1 array2)
-  "Return the common type of the 2 arrays or default type."
-  (upgraded-array-element-type
-   (type-of (+ (coerce 1 (array-element-type array1))
-               (coerce 1 (array-element-type array2))))))
+  "Return the array type common to both arrays."
+  (let ((type1 (array-element-type array1))
+        (type2 (array-element-type array2)))
+    (cond
+     ((eq type1 type2) type1)
+     ((subtypep type1 type2) type1)
+     ((subtypep type2 type1) type2)
+     ((and (subtypep type1 'number) (subtypep type2 'number))
+      (upgraded-array-element-type
+       (type-of (+ (coerce 1 type1) (coerce 1 type2)))))
+     (t))))
 
 ;;; (COMPLEX-EQUAL number1 number2) => true or false
 (defun complex-equal (complex1 complex2 &optional (epsilon *epsilon*))

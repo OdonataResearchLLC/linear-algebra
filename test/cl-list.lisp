@@ -248,7 +248,7 @@
      '(#C(0.0 4.0) #C(0.0 8.0) #C(0.0 12.0) #C(0.0 16.0) #C(0.0 20.0))
      list)))
 
-;;; Vector addition
+;;; List addition
 
 (define-test add-list
   ;; Real
@@ -278,7 +278,7 @@
      '(#C(4.4 8.8) #C(13.2 17.6))
      (linear-algebra:add list1 list2 :scalar1 2.0 :scalar2 2.0))))
 
-;;; Destructive vector addition
+;;; Destructive list addition
 
 (define-test nadd-list
   ;; Real
