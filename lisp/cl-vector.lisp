@@ -60,3 +60,26 @@ vector."
              sump (1+ (* sump (expt (/ scale abs-val) p)))
              scale abs-val)
             (incf sump (expt (/ (svref data index) scale) p)))))))
+
+(defmethod %norm ((data vector) (measure (eql 1)))
+  "Return the Taxicab norm of the list."
+  (loop for element across data sum (abs element)))
+
+(defmethod %norm ((data vector) (measure (eql 2)))
+  "Return the Euclidean norm of the vector."
+  (multiple-value-bind (scale sumsq)
+      (sumsq (loop for val across data collect (abs val)))
+    (* scale (sqrt sumsq))))
+
+(defmethod %norm ((data vector) (measure integer))
+  "Return the p-norm of the vector."
+  (multiple-value-bind (scale sump)
+      (sump (loop for val across data collect (abs val)) measure)
+    (* scale (expt sump (/ measure)))))
+
+(defmethod %norm ((data vector) (measure (eql :infinity)))
+  "Return the infinity, or maximum, norm of vector."
+  (loop for element across data maximize (abs element)))
+
+(defmethod norm ((data vector) &key (measure 1))
+  (%norm data measure))
