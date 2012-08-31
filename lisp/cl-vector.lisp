@@ -210,3 +210,33 @@ vector."
    vector1
    (scaled-binary-op #'+ scalar1 scalar2)
    vector1 vector2))
+
+(defmethod subtract :before ((vector1 vector) (vector2 vector)
+                             &key scalar1 scalar2)
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar1 scalar2))
+  (unless (= (length vector1) (length vector2))
+    (error "VECTOR1 and VECTOR2 are not of equal length.")))
+
+(defmethod subtract ((vector1 vector) (vector2 vector)
+                     &key scalar1 scalar2)
+  "Return the subraction of scalar2*vector2 from scalar1*vector1."
+  (map-into
+   (make-array (length vector1) :element-type
+               (common-array-element-type vector1 vector2))
+   (scaled-binary-op #'- scalar1 scalar2)
+   vector1 vector2))
+
+(defmethod nsubtract :before ((vector1 vector) (vector2 vector)
+                              &key scalar1 scalar2)
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar1 scalar2))
+  (unless (= (length vector1) (length vector2))
+    (error "VECTOR1 and VECTOR2 are not of equal length.")))
+
+(defmethod nsubtract ((vector1 vector) (vector2 vector) &key scalar1 scalar2)
+  "Return the subraction of scalar2*vector2 from scalar1*vector1."
+  (map-into
+   vector1
+   (scaled-binary-op #'- scalar1 scalar2)
+   vector1 vector2))

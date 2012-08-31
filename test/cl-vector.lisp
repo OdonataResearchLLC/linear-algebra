@@ -309,3 +309,72 @@
     (assert-float-equal
      #(#C(22.0 44.0) #C(66.0 88.0))
      (linear-algebra:nadd vector1 vector2 :scalar1 2.0 :scalar2 2.0))))
+
+;;; Vector subtraction
+
+(define-test subtract-vector
+  ;; Real
+  (let ((vector1 #(1.1 2.2 3.3 4.4))
+        (vector2 #(1.1 2.2 3.3 4.4)))
+    (assert-float-equal
+     #(0.0 0.0 0.0 0.0)
+     (linear-algebra:subtract vector1 vector2))
+    (assert-float-equal
+     #(1.1 2.2 3.3 4.4)
+     (linear-algebra:subtract vector1 vector2 :scalar1 2.0))
+    (assert-float-equal
+     #(-1.1 -2.2 -3.3 -4.4)
+     (linear-algebra:subtract vector1 vector2 :scalar2 2.0))
+    (assert-float-equal
+     #(0.0 0.0 0.0 0.0)
+     (linear-algebra:subtract
+      vector1 vector2 :scalar1 2.0 :scalar2 2.0)))
+  ;; Complex
+  (let ((vector1 #(#C(1.1 2.2) #C(3.3 4.4)))
+        (vector2 #(#C(1.1 2.2) #C(3.3 4.4))))
+    (assert-float-equal
+     #(#C(0.0 0.0) #C(0.0 0.0))
+     (linear-algebra:subtract vector1 vector2))
+    (assert-float-equal
+     #(#C(1.1 2.2) #C(3.3 4.4))
+     (linear-algebra:subtract vector1 vector2 :scalar1 2.0))
+    (assert-float-equal
+     #(#C(-1.1 -2.2) #C(-3.3 -4.4))
+     (linear-algebra:subtract vector1 vector2 :scalar2 2.0))
+    (assert-float-equal
+     #(#C(0.0 0.0) #C(0.0 0.0))
+     (linear-algebra:subtract
+      vector1 vector2 :scalar1 2.0 :scalar2 2.0))))
+
+;;; Destructive vector subtraction
+
+(define-test nsubtract-vector
+  ;; Real
+  (let ((vector1 (vector 1.1 2.2 3.3 4.4))
+        (vector2 (vector 1.1 2.2 3.3 4.4)))
+    (assert-eq vector1 (linear-algebra:nsubtract vector1 vector2))
+    (assert-float-equal #(0.0 0.0 0.0 0.0) vector1)
+    (assert-float-equal
+     #(-2.2 -4.4 -6.6 -8.8)
+     (linear-algebra:nsubtract vector1 vector2 :scalar2 2.0))
+    (assert-float-equal
+     #(-5.5 -11.0 -16.5 -22.0)
+     (linear-algebra:nsubtract vector1 vector2 :scalar1 2.0))
+    (assert-float-equal
+     #(-13.2 -26.4 -39.6 -52.8)
+     (linear-algebra:nsubtract vector1 vector2 :scalar1 2.0 :scalar2 2.0)))
+  ;; Complex
+  (let ((vector1 (vector #C(1.1 2.2) #C(3.3 4.4)))
+        (vector2 (vector #C(1.1 2.2) #C(3.3 4.4))))
+    (assert-eq vector1 (linear-algebra:nsubtract vector1 vector2))
+    (assert-float-equal
+     #(#C(0.0 0.0) #C(0.0 0.0)) vector1)
+    (assert-float-equal
+     #(#C(-2.2 -4.4) #C(-6.6 -8.8))
+     (linear-algebra:nsubtract vector1 vector2 :scalar2 2.0))
+    (assert-float-equal
+     #(#C(-5.5 -11.0) #C(-16.5 -22.0))
+     (linear-algebra:nsubtract vector1 vector2 :scalar1 2.0))
+    (assert-float-equal
+     #(#C(-13.2 -26.4) #C(-39.6 -52.8))
+     (linear-algebra:nsubtract vector1 vector2 :scalar1 2.0 :scalar2 2.0))))
