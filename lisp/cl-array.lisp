@@ -62,3 +62,42 @@ array."
                  sump (1+ (* sump (expt (/ scale abs-val) p)))
                  scale abs-val)
                 (incf sump (expt (/ (aref data i0 i1) scale) p)))))))))
+
+(defmethod %norm ((data array) (measure (eql 1)))
+  "Return the 1 norm of the array."
+  (destructuring-bind (numrows numcols) (array-dimensions data)
+    (let ((norm 0)
+          (sum 0))
+      (dotimes (i1 numcols norm)
+        (setf sum 0)
+        (dotimes (i0 numrows)
+          (incf sum (abs (aref data i0 i1))))
+        (setf norm (max sum norm))))))
+
+(defmethod %norm ((data array) (measure (eql :max)))
+  "Return the max norm of the array."
+  (destructuring-bind (numrows numcols) (array-dimensions data)
+    (let ((norm 0))
+      (dotimes (i0 numrows norm)
+        (dotimes (i1 numcols)
+          (setf norm (max norm (abs (aref data i0 i1)))))))))
+
+(defmethod %norm ((data array) (measure (eql :frobenius)))
+  "Return the Frobenius norm of the array."
+  (multiple-value-bind (scale sumsq) (sumsq data)
+    (* scale (sqrt sumsq))))
+
+(defmethod %norm ((data array) (measure (eql :infinity)))
+  "Return the infinity norm of the array."
+  (destructuring-bind (numrows numcols) (array-dimensions data)
+    (let ((norm 0)
+          (sum 0))
+      (dotimes (i0 numrows norm)
+        (setf sum 0)
+        (dotimes (i1 numcols)
+          (incf sum (abs (aref data i0 i1))))
+        (setf norm (max sum norm))))))
+
+(defmethod norm ((data array) &key (measure 1))
+  "Return the norm of the array."
+  (%norm data measure))
