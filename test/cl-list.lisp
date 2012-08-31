@@ -35,7 +35,7 @@
 
 (in-package :linear-algebra-test)
 
-(define-test list-sumsq
+(define-test sumsq-list
   ;; Real
   (let ((data '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5)))
     (multiple-value-bind (scale sumsq)
@@ -50,7 +50,7 @@
       (assert-float-equal 4.0 scale)
       (assert-float-equal #C(2.75 -1.125) sumsq))))
 
-(define-test list-sump
+(define-test sump-list
   ;; Real
   (let ((data '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5)))
     (multiple-value-bind (scale sump)
