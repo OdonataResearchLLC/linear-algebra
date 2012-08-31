@@ -47,6 +47,7 @@
    (:file "auxiliary" :depends-on ("defpackage"))
    (:file "vector" :depends-on ("defpackage"))
    (:file "cl-list" :depends-on ("defpackage"))
+   (:file "cl-vector" :depends-on ("defpackage"))
    (:file "data-vector" :depends-on ("defpackage"))
    (:file "matrix" :depends-on ("defpackage"))
    (:file "identity-matrix" :depends-on ("matrix"))
