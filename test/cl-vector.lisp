@@ -378,3 +378,53 @@
     (assert-float-equal
      #(#C(-13.2 -26.4) #C(-39.6 -52.8))
      (linear-algebra:nsubtract vector1 vector2 :scalar1 2.0 :scalar2 2.0))))
+
+;;; Vector dot product
+
+(define-test dot-product-vector
+  ;; Real vectors
+  (assert-rational-equal
+   55 (linear-algebra:product #(1 2 3 4 5) #(1 2 3 4 5)))
+  (assert-float-equal
+   55F0 (linear-algebra:product
+         #(1.0 2.0 3.0 4.0 5.0) #(1.0 2.0 3.0 4.0 5.0)))
+  (assert-float-equal
+   55D0 (linear-algebra:product
+         #(1D0 2D0 3D0 4D0 5D0)
+         #(1D0 2D0 3D0 4D0 5D0)))
+  ;; Real vectors with conjugate keyword
+  (assert-rational-equal
+   55 (linear-algebra:product
+       #(1 2 3 4 5) #(1 2 3 4 5) :conjugate t))
+  ;; Complex vectors
+  (assert-rational-equal
+   #C(8 18) (linear-algebra:product
+             #(#C(1 1) #C(2 1) #C(3 1))
+             #(#C(1 2) #C(2 2) #C(3 2))))
+  (assert-float-equal
+   #C(8.0 18.0) (linear-algebra:product
+                 #(#C(1.0 1.0) #C(2.0 1.0) #C(3.0 1.0))
+                 #(#C(1.0 2.0) #C(2.0 2.0) #C(3.0 2.0))))
+  (assert-float-equal
+   #C(8D0 18D0)
+   (linear-algebra:product
+    #(#C(1D0 1D0) #C(2D0 1D0) #C(3D0 1D0))
+    #(#C(1D0 2D0) #C(2D0 2D0) #C(3D0 2D0))))
+  ;; Complex conjugate
+  (assert-rational-equal
+   #C(20 6)
+   (linear-algebra:product
+    #(#C(1 1) #C(2 1) #C(3 1)) #(#C(1 2) #C(2 2) #C(3 2))
+    :conjugate t))
+  (assert-float-equal
+   #C(20.0 6.0)
+   (linear-algebra:product
+    #(#C(1.0 1.0) #C(2.0 1.0) #C(3.0 1.0))
+    #(#C(1.0 2.0) #C(2.0 2.0) #C(3.0 2.0))
+    :conjugate t))
+  (assert-float-equal
+   #C(20D0 6D0)
+   (linear-algebra:product
+    #(#C(1D0 1D0) #C(2D0 1D0) #C(3D0 1D0))
+    #(#C(1D0 2D0) #C(2D0 2D0) #C(3D0 2D0))
+    :conjugate t)))

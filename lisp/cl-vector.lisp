@@ -240,3 +240,22 @@ vector."
    vector1
    (scaled-binary-op #'- scalar1 scalar2)
    vector1 vector2))
+
+(defmethod product :before ((vector1 vector) (vector2 vector)
+                            &key scalar conjugate)
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar conjugate))
+  (unless (= (length vector1) (length vector2))
+    (error "VECTOR1 and VECTOR2 are not of equal length.")))
+
+(defmethod product ((vector1 vector) (vector2 vector)
+                    &key (scalar nil scalarp) conjugate)
+  "Return the dot product of vector1 and vector2."
+  (loop with op = (if conjugate
+                      (lambda (x y) (* (conjugate x) y))
+                      #'*)
+        for element1 across vector1
+        and element2 across vector2
+        sum (funcall op element1 element2) into result
+        finally
+        (return (if scalarp (* scalar result) result))))
