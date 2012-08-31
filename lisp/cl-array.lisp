@@ -164,7 +164,7 @@ array."
     (error "The array dimensions are not compatible.")))
 
 (defmethod add ((array1 array) (array2 array) &key scalar1 scalar2)
-  "Return the addition of the 2 matrices."
+  "Return the addition of the 2 arrays."
   (destructuring-bind (numrows numcols) (array-dimensions array1)
     (let ((op (scaled-binary-op #'+ scalar1 scalar2))
           (result
@@ -191,6 +191,49 @@ array."
   "Destructively add array2 to array1."
   (destructuring-bind (numrows numcols) (array-dimensions array1)
     (let ((op (scaled-binary-op #'+ scalar1 scalar2)))
+      (dotimes (i0 numrows array1)
+        (dotimes (i1 numcols)
+          (setf
+           (aref array1 i0 i1)
+           (funcall op (aref array1 i0 i1) (aref array2 i0 i1))))))))
+
+(defmethod subtract :before
+  ((array1 array) (array2 array) &key scalar1 scalar2)
+  "Audit the input data."
+  (declare (ignore scalar1 scalar2))
+  (unless (every #'=
+                 (array-dimensions array1)
+                 (array-dimensions array2))
+    (error "The array dimensions are not compatible.")))
+
+(defmethod subtract ((array1 array) (array2 array) &key scalar1 scalar2)
+  "Return the subtraction of the 2 arrays."
+  (destructuring-bind (numrows numcols) (array-dimensions array1)
+    (let ((op (scaled-binary-op #'- scalar1 scalar2))
+          (result
+           (make-array
+            (list numrows numcols)
+            :element-type
+            (common-array-element-type array1 array2))))
+      (dotimes (i0 numrows result)
+        (dotimes (i1 numcols)
+          (setf
+           (aref result i0 i1)
+           (funcall op (aref array1 i0 i1) (aref array2 i0 i1))))))))
+
+(defmethod nsubtract :before
+  ((array1 array) (array2 array) &key scalar1 scalar2)
+  "Audit the input data."
+  (declare (ignore scalar1 scalar2))
+  (unless (every #'=
+                 (array-dimensions array1)
+                 (array-dimensions array2))
+    (error "The array dimensions are not compatible.")))
+
+(defmethod nsubtract ((array1 array) (array2 array) &key scalar1 scalar2)
+  "Destructively subtract array2 from array1."
+  (destructuring-bind (numrows numcols) (array-dimensions array1)
+    (let ((op (scaled-binary-op #'- scalar1 scalar2)))
       (dotimes (i0 numrows array1)
         (dotimes (i1 numcols)
           (setf
