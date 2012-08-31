@@ -169,3 +169,40 @@
   (let ((data (vector 1.0 2.0 3.0 4.0 5.0)))
     (assert-equal
      data (linear-algebra:ntranspose data))))
+
+;;; Vector permutation
+
+(define-test permute-vector
+  (let ((list (vector 1.1 2.2 3.3 4.4 5.5))
+        (pmat (linear-algebra:make-matrix
+               5 5 :matrix-type
+               'linear-algebra:permutation-matrix
+               :initial-contents
+               '((0 0 1 0 0)
+                 (0 0 0 0 1)
+                 (1 0 0 0 0)
+                 (0 1 0 0 0)
+                 (0 0 0 1 0)))))
+    (assert-float-equal
+     (vector 3.3 4.4 1.1 5.5 2.2)
+     (linear-algebra:permute list pmat))
+    (assert-float-equal
+     (vector 3.3 5.5 1.1 2.2 4.4)
+     (linear-algebra:permute pmat list))))
+
+(define-test npermute-vector
+  (let ((vec1 (vector 1.1 2.2 3.3 4.4 5.5))
+        (vec2 (vector 1.1 2.2 3.3 4.4 5.5))
+        (pmat (linear-algebra:make-matrix
+               5 5 :matrix-type
+               'linear-algebra:permutation-matrix
+               :initial-contents
+               '((0 0 0 0 1)
+                 (0 0 1 0 0)
+                 (1 0 0 0 0)
+                 (0 1 0 0 0)
+                 (0 0 0 1 0)))))
+    (assert-eq vec1 (linear-algebra:npermute vec1 pmat))
+    (assert-float-equal #(3.3 4.4 2.2 5.5 1.1) vec1)
+    (assert-eq vec2 (linear-algebra:npermute pmat vec2))
+    (assert-float-equal #(5.5 3.3 1.1 2.2 4.4) vec2)))
