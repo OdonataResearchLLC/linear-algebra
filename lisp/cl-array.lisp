@@ -131,3 +131,25 @@ array."
                (aref data i0 i1) (funcall op (aref data i1 i0))
                (aref data i1 i0) (funcall op (aref data i0 i1))))))
         (error "Rows and columns unequal."))))
+
+(defmethod scale ((scalar number) (data array))
+  "Scale each element of the array."
+  (destructuring-bind (numrows numcols) (array-dimensions data)
+    (let ((result
+           (make-array
+            (list numrows numcols)
+            :element-type (array-element-type data))))
+      (dotimes (i0 numrows result)
+        (dotimes (i1 numcols)
+          (setf
+           (aref result i0 i1)
+           (* scalar (aref data i0 i1))))))))
+
+(defmethod nscale ((scalar number) (data array))
+  "Scale each element of the array."
+  (destructuring-bind (numrows numcols) (array-dimensions data)
+    (dotimes (i0 numrows data)
+      (dotimes (i1 numcols)
+        (setf
+         (aref data i0 i1)
+         (* scalar (aref data i0 i1)))))))

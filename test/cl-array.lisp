@@ -164,3 +164,34 @@
     (assert-eq
      original (linear-algebra:ntranspose original :conjugate t))
     (assert-float-equal transpose original)))
+
+(define-test scale-array
+  (assert-float-equal
+   #2A(( 3.3  3.6  3.9  4.2)
+       ( 6.3  6.6  6.9  7.2)
+       ( 9.3  9.6  9.9 10.2)
+       (12.3 12.6 12.9 13.2)
+       (15.3 15.6 15.9 16.2))
+   (linear-algebra:scale
+    3.0
+    #2A((1.1 1.2 1.3 1.4)
+        (2.1 2.2 2.3 2.4)
+        (3.1 3.2 3.3 3.4)
+        (4.1 4.2 4.3 4.4)
+        (5.1 5.2 5.3 5.4)))))
+
+(define-test nscale-array
+  (let ((array
+         #2A((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)
+             (5.1 5.2 5.3 5.4))))
+    (assert-eq array (linear-algebra:nscale 3.0 array))
+    (assert-float-equal
+     #2A(( 3.3  3.6  3.9  4.2)
+         ( 6.3  6.6  6.9  7.2)
+         ( 9.3  9.6  9.9 10.2)
+         (12.3 12.6 12.9 13.2)
+         (15.3 15.6 15.9 16.2))
+     array)))
