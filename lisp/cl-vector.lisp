@@ -88,8 +88,7 @@ vector."
   "Return a row vector."
   (map-into
    (make-array (length data)
-               :element-type
-               (upgraded-array-element-type (type-of data)))
+               :element-type (array-element-type data))
    (if conjugate #'conjugate #'identity)
    data))
 
@@ -108,11 +107,11 @@ vector."
 (defmethod permute ((data vector) (matrix permutation-matrix))
   "Return the permutation of the list."
   (loop with permuted =
-        (make-array (length data) :element-type
-                    (upgraded-array-element-type
-                     (type-of data)))
-        for column across (contents matrix)
-        and row = 0 then (1+ row)
+        (make-array
+         (length data)
+         :element-type (array-element-type data))
+        for row = 0 then (1+ row)
+        and column across (contents matrix)
         do (setf (aref permuted column) (aref data row))
         finally (return permuted)))
 
@@ -125,11 +124,11 @@ vector."
 (defmethod permute ((matrix permutation-matrix) (data vector))
   "Return the permutation of the list."
   (loop with permuted =
-        (make-array (length data) :element-type
-                    (upgraded-array-element-type
-                     (type-of data)))
-        for column across (contents matrix)
-        and row = 0 then (1+ row)
+        (make-array
+         (length data)
+         :element-type (array-element-type data))
+        for row = 0 then (1+ row)
+        and column across (contents matrix)
         do (setf (aref permuted row) (aref data column))
         finally (return permuted)))
 
