@@ -100,3 +100,67 @@
     (assert-float-equal
      21.0 (linear-algebra:norm array :measure :infinity))))
 
+(define-test transpose-array
+  (assert-float-equal
+   #2A((1.1 2.1 3.1 4.1 5.1)
+       (1.2 2.2 3.2 4.2 5.2)
+       (1.3 2.3 3.3 4.3 5.3)
+       (1.4 2.4 3.4 4.4 5.4))
+   (linear-algebra:transpose
+    #2A((1.1 1.2 1.3 1.4)
+        (2.1 2.2 2.3 2.4)
+        (3.1 3.2 3.3 3.4)
+        (4.1 4.2 4.3 4.4)
+        (5.1 5.2 5.3 5.4))))
+  (assert-float-equal
+   #2A((#C(1.1 1.2) #C(2.1 2.2) #C(3.1 3.2) #C(4.1 4.2) #C(5.1 5.2))
+       (#C(1.3 1.4) #C(2.3 2.4) #C(3.3 3.4) #C(4.3 4.4) #C(5.3 5.4)))
+   (linear-algebra:transpose
+    #2A((#C(1.1 1.2) #C(1.3 1.4))
+        (#C(2.1 2.2) #C(2.3 2.4))
+        (#C(3.1 3.2) #C(3.3 3.4))
+        (#C(4.1 4.2) #C(4.3 4.4))
+        (#C(5.1 5.2) #C(5.3 5.4)))))
+  (assert-float-equal
+   #2A((#C(1.1 -1.2) #C(2.1 -2.2) #C(3.1 -3.2)
+        #C(4.1 -4.2) #C(5.1 -5.2))
+       (#C(1.3 -1.4) #C(2.3 -2.4) #C(3.3 -3.4)
+        #C(4.3 -4.4) #C(5.3 -5.4)))
+   (linear-algebra:transpose
+    #2A((#C(1.1 1.2) #C(1.3 1.4))
+        (#C(2.1 2.2) #C(2.3 2.4))
+        (#C(3.1 3.2) #C(3.3 3.4))
+        (#C(4.1 4.2) #C(4.3 4.4))
+        (#C(5.1 5.2) #C(5.3 5.4)))
+    :conjugate t)))
+
+(define-test ntranspose-array
+  (let ((original
+         #2A((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)))
+        (transpose
+         #2A((1.1 2.1 3.1 4.1)
+             (1.2 2.2 3.2 4.2)
+             (1.3 2.3 3.3 4.3)
+             (1.4 2.4 3.4 4.4))))
+    (assert-eq original (linear-algebra:ntranspose original))
+    (assert-float-equal transpose original))
+  (let ((original
+         #2A((#C(1.1 1.2) #C(1.3 1.4))
+             (#C(2.1 2.2) #C(2.3 2.4))))
+        (transpose
+         #2A((#C(1.1 1.2) #C(2.1 2.2))
+             (#C(1.3 1.4) #C(2.3 2.4)))))
+    (assert-eq original (linear-algebra:ntranspose original))
+    (assert-float-equal transpose original))
+  (let ((original
+         #2A((#C(1.1 1.2) #C(1.3 1.4))
+             (#C(2.1 2.2) #C(2.3 2.4))))
+        (transpose
+         #2A((#C(1.1 -1.2) #C(2.1 -2.2))
+             (#C(1.3 -1.4) #C(2.3 -2.4)))))
+    (assert-eq
+     original (linear-algebra:ntranspose original :conjugate t))
+    (assert-float-equal transpose original)))

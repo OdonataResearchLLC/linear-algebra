@@ -101,3 +101,33 @@ array."
 (defmethod norm ((data array) &key (measure 1))
   "Return the norm of the array."
   (%norm data measure))
+
+(defmethod transpose ((data array) &key conjugate)
+  "Return the transpose of the array."
+  (destructuring-bind (numrows numcols)
+      (array-dimensions data)
+    (let ((op (if conjugate #'conjugate #'identity))
+          (result
+           (make-array
+            (list numcols numrows)
+            :element-type (array-element-type data))))
+      (dotimes (i0 numrows result)
+        (dotimes (i1 numcols)
+          (setf
+           (aref result i1 i0)
+           (funcall op (aref data i0 i1))))))))
+
+(defmethod ntranspose ((data array) &key conjugate)
+  "Replace the contents of the array with the transpose."
+  (destructuring-bind (numrows numcols) (array-dimensions data)
+    (if (= numrows numcols)
+        (let ((op (if conjugate #'conjugate #'identity)))
+          (dotimes (i0 numrows data)
+            ;; FIXME : Conjugate on the diagonal may not be correct.
+            (setf (aref data i0 i0) (funcall op (aref data i0 i0)))
+            (do ((i1 (1+ i0) (1+ i1)))
+                ((>= i1 numcols))
+              (psetf
+               (aref data i0 i1) (funcall op (aref data i1 i0))
+               (aref data i1 i0) (funcall op (aref data i0 i1))))))
+        (error "Rows and columns unequal."))))
