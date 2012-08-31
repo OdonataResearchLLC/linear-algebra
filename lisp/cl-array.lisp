@@ -48,3 +48,17 @@ array."
                  sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
                  scale abs-val)
                 (incf sumsq (expt (/ abs-val scale) 2)))))))))
+
+(defmethod sump ((data array) (p number) &key (scale 0) (sump 1))
+  "Return the scaling parameter and the sum of the P powers of the matrix."
+  (unless (plusp p) (error "The power(~A) must be positive." p))
+  (destructuring-bind (numrows numcols) (array-dimensions data)
+    (let ((abs-val 0))
+      (dotimes (i0 numrows (values scale sump))
+        (dotimes (i1 numcols)
+          (when (plusp (setf abs-val (abs (aref data i0 i1))))
+            (if (< scale abs-val)
+                (setf
+                 sump (1+ (* sump (expt (/ scale abs-val) p)))
+                 scale abs-val)
+                (incf sump (expt (/ (aref data i0 i1) scale) p)))))))))
