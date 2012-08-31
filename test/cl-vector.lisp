@@ -156,3 +156,16 @@
         #(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
           #C(-2 3) #C(-3 1) #C(-1 0))
         :measure :infinity)))
+
+;;; Vector transpose
+
+(define-test transpose-vector
+  (assert-float-equal
+   #(1.0 2.0 3.0 4.0 5.0)
+   (linear-algebra:transpose
+    #(1.0 2.0 3.0 4.0 5.0))))
+
+(define-test ntranspose-vector
+  (let ((data (vector 1.0 2.0 3.0 4.0 5.0)))
+    (assert-equal
+     data (linear-algebra:ntranspose data))))

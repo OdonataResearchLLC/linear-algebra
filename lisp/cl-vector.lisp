@@ -83,3 +83,18 @@ vector."
 
 (defmethod norm ((data vector) &key (measure 1))
   (%norm data measure))
+
+(defmethod transpose ((data vector) &key conjugate)
+  "Return a row vector."
+  (map-into
+   (make-array (length data)
+               :element-type
+               (upgraded-array-element-type (type-of data)))
+   (if conjugate #'conjugate #'identity)
+   data))
+
+(defmethod ntranspose ((data vector) &key conjugate)
+  "Return a row vector destructively."
+  (if conjugate
+      (map-into data #'conjugate data)
+      data))
