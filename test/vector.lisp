@@ -35,11 +35,6 @@
 
 (in-package :linear-algebra-test)
 
-(define-test vector-object-p
-  (assert-true (linear-algebra:vector-object-p
-                (make-instance 'linear-algebra:vector-object)))
-  (assert-false (linear-algebra:vector-object-p t)))
-
 ;;; Givens Rotation
 (define-test givens-rotation
   ;; g = 0

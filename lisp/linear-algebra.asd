@@ -34,7 +34,6 @@
 
 |#
 
-
 (in-package :asdf)
 
 (defsystem :linear-algebra

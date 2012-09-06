@@ -36,7 +36,7 @@
 (in-package :linear-algebra)
 
 ;;; Data vector classes
-(defclass data-vector (vector-object)
+(defclass data-vector ()
   ((contents
     :type (array * (*))
     :initarg :contents

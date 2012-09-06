@@ -39,7 +39,7 @@
   ;; A default vector.
   (assert-true
    (typep (linear-algebra:make-vector 10)
-          'linear-algebra::vector-object))
+          'linear-algebra:data-vector))
   (assert-true
    (typep (linear-algebra:make-vector 10)
           'linear-algebra:column-vector))

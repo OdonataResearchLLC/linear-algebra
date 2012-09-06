@@ -35,13 +35,8 @@
 
 (in-package :linear-algebra)
 
-;;; Linear algebra vector superclass
-(defclass vector-object ()
-  ()
-  (:documentation
-   "Linear algebra vector superclass."))
-
 ;;; Vector interface operations
+
 (defgeneric initialize-vector (vector data size &optional element-type)
   (:documentation
    "Initialize the vector with data."))
@@ -63,10 +58,6 @@
       (t
        (initialize-vector
         new-vector (coerce 0 element-type) size element-type)))))
-
-(defun vector-object-p (object)
-  "Return true if the object is a vector-object."
-  (typep object 'vector-object))
 
 (defgeneric vector-in-bounds-p (vector index)
   (:documentation
