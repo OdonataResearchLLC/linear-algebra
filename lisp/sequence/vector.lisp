@@ -148,11 +148,7 @@ vector."
                 &key scalar1 scalar2)
   "Return the addition of scalar1*vector1 with scalar2*vector2"
   (if (= (length vector1) (length vector2))
-      (map-into
-       (make-array (length vector1) :element-type
-                   (common-array-element-type vector1 vector2))
-       (scaled-binary-op #'+ scalar1 scalar2)
-       vector1 vector2)
+      (binary-operation :add vector1 vector2 scalar1 scalar2)
       (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
              (length vector1) (length vector2))))
 
@@ -160,10 +156,7 @@ vector."
                  &key scalar1 scalar2)
   "Return the addition of scalar2*vector2 to scalar1*vector1."
   (if (= (length vector1) (length vector2))
-      (map-into
-       vector1
-       (scaled-binary-op #'+ scalar1 scalar2)
-       vector1 vector2)
+      (binary-operation :nadd vector1 vector2 scalar1 scalar2)
       (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
              (length vector1) (length vector2))))
 
@@ -171,11 +164,7 @@ vector."
                      &key scalar1 scalar2)
   "Return the subraction of scalar2*vector2 from scalar1*vector1."
   (if (= (length vector1) (length vector2))
-      (map-into
-       (make-array (length vector1) :element-type
-                   (common-array-element-type vector1 vector2))
-       (scaled-binary-op #'- scalar1 scalar2)
-       vector1 vector2)
+      (binary-operation :subtract vector1 vector2 scalar1 scalar2)
       (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
              (length vector1) (length vector2))))
 
@@ -183,10 +172,7 @@ vector."
                       &key scalar1 scalar2)
   "Return the subraction of scalar2*vector2 from scalar1*vector1."
   (if (= (length vector1) (length vector2))
-      (map-into
-       vector1
-       (scaled-binary-op #'- scalar1 scalar2)
-       vector1 vector2)
+      (binary-operation :nsubtract vector1 vector2 scalar1 scalar2)
       (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
              (length vector1) (length vector2))))
 

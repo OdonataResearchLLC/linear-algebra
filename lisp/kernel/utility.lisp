@@ -54,17 +54,6 @@
          (z/w (/ abs-z w)))
     (* w (sqrt (+ (* x/w x/w) (* y/w y/w) (* z/w z/w))))))
 
-(defun scaled-binary-op (op scalar1 scalar2)
-  "Return the correct scaled binary operation."
-  (cond
-    ((and (null scalar1) (null scalar2)) op)
-    ((null scalar1)
-     (lambda (n1 n2) (funcall op n1 (* scalar2 n2))))
-    ((null scalar2)
-     (lambda (n1 n2) (funcall op (* scalar1 n1) n2)))
-    (t (lambda (n1 n2)
-         (funcall op (* scalar1 n1) (* scalar2 n2))))))
-
 (defun common-class-of (object1 object2 &optional
                         (default-class nil default-class-p))
   "Return the common class of the 2 objects or default-class."

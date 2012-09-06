@@ -39,11 +39,12 @@
   (:use :common-lisp :floating-point)
   ;; Utility functions
   (:export :lapy2 :lapy3
-           :scaled-binary-op
            :common-class-of
            :common-array-element-type
            :complex-equal
            :number-equal)
   ;; Fundamental operations
   (:export :right-permute :right-npermute
-           :left-permute :left-npermute))
+           :left-permute :left-npermute
+           :scaled-binary-op
+           :binary-operation))
