@@ -1,7 +1,6 @@
-;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp -*-
 #|
 
- Linear Algebra in Common Lisp
+ Linear Algebra Kernel Functions
 
  Copyright (c) 2011-2012, Odonata Research LLC
  All rights reserved.
@@ -34,41 +33,14 @@
 
 |#
 
-(in-package :asdf)
+(in-package :cl-user)
 
-(defsystem :linear-algebra
-  :description "Linear Algebra in Common Lisp."
-  :version "0.1.0"
-  :author "Thomas M. Hermann <thomas.m.hermann@odonata-research.com>"
-  :license "BSD"
-  :depends-on ("floating-point")
-  :components
-  ((:file "linear-algebra" :depends-on ("kernel"))
-   ;; Linear algebra kernel functions
-   (:module kernel
-    :components
-    ((:file "linear-algebra-kernel")
-     (:file "utility" :depends-on ("linear-algebra-kernel"))))
-   ;; Interface
-   (:module interface
-    :depends-on ("kernel")
-    :components
-    ((:file "fundamental-ops")
-     (:file "vector" :depends-on ("fundamental-ops"))
-     (:file "matrix" :depends-on ("fundamental-ops"))
-     (:file "identity-matrix" :depends-on ("matrix"))
-     (:file "permutation-matrix" :depends-on ("matrix"))))
-   ;; Common Lisp sequences
-   (:module sequence
-    :depends-on ("interface")
-    :components
-    ((:file "list")
-     (:file "vector")
-     (:file "array")))
-   ;; Linear algebra classes and operations
-   (:file "data-vector" :depends-on ("interface"))
-   (:file "dense-matrix" :depends-on ("data-vector"))
-   (:file "square-matrix" :depends-on ("dense-matrix"))
-   (:file "hermitian-matrix" :depends-on ("square-matrix"))
-   (:file "symmetric-matrix" :depends-on ("square-matrix"))
-   (:file "triangular-matrix" :depends-on ("square-matrix"))))
+(defpackage :linear-algebra-kernel
+  (:use :common-lisp :floating-point)
+  ;; Utility functions
+  (:export :lapy2 :lapy3
+           :scaled-binary-op
+           :common-class-of
+           :common-array-element-type
+           :complex-equal
+           :number-equal))

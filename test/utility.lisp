@@ -39,44 +39,61 @@
 (define-test lapy2
   ;; Real values
   (dolist (args (cartesian-product '(-3.0 3.0) '(-4.0 4.0)))
-    (assert-float-equal 5.0 (apply #'linear-algebra::lapy2 args)))
+    (assert-float-equal
+     5.0 (apply #'linear-algebra-kernel:lapy2 args)))
   ;; Complex values
-  (let ((args1 (mapcar
-                (lambda (x) (apply #'complex x))
-                (cartesian-product '(-1.1 1.1) '(-2.2 2.2))))
-        (args2 (mapcar
-                (lambda (x) (apply #'complex x))
-                (cartesian-product '(-3.3 3.3) '(-4.4 4.4)))))
+  (let ((args1
+         (mapcar
+          (lambda (x) (apply #'complex x))
+          (cartesian-product '(-1.1 1.1) '(-2.2 2.2))))
+        (args2
+         (mapcar
+          (lambda (x) (apply #'complex x))
+          (cartesian-product '(-3.3 3.3) '(-4.4 4.4)))))
     (dolist (args (cartesian-product args1 args2))
-      (assert-float-equal 6.024948 (apply #'linear-algebra::lapy2 args)))))
+      (assert-float-equal
+       6.024948 (apply #'linear-algebra-kernel:lapy2 args)))))
 
 ;;; sqrt |x|^2 + |y|^2 + |z|^2
 (define-test lapy3
   ;; Real values
   (dolist (args (nary-product '(-2.0 2.0) '(-3.0 3.0) '(-4.0 4.0)))
-    (assert-float-equal 5.3851647 (apply #'linear-algebra::lapy3 args)))
+    (assert-float-equal
+     5.3851647 (apply #'linear-algebra-kernel:lapy3 args)))
   ;; Complex values
-  (let ((args1 (mapcar
-                (lambda (x) (apply #'complex x))
-                (cartesian-product '(-1.1 1.1) '(-2.2 2.2))))
-        (args2 (mapcar
-                (lambda (x) (apply #'complex x))
-                (cartesian-product '(-3.3 3.3) '(-4.4 4.4))))
-        (args3 (mapcar
-                (lambda (x) (apply #'complex x))
-                (cartesian-product '(-5.5 5.5) '(-6.6 6.6)))))
+  (let ((args1
+         (mapcar
+          (lambda (x) (apply #'complex x))
+          (cartesian-product '(-1.1 1.1) '(-2.2 2.2))))
+        (args2
+         (mapcar
+          (lambda (x) (apply #'complex x))
+          (cartesian-product '(-3.3 3.3) '(-4.4 4.4))))
+        (args3
+         (mapcar
+          (lambda (x) (apply #'complex x))
+          (cartesian-product '(-5.5 5.5) '(-6.6 6.6)))))
     (dolist (args (nary-product args1 args2 args3))
-      (assert-float-equal 10.49333 (apply #'linear-algebra::lapy3 args)))))
+      (assert-float-equal
+       10.49333 (apply #'linear-algebra-kernel:lapy3 args)))))
 
 (define-test scaled-binary-op
   (assert-float-equal
-   5.0 (funcall (linear-algebra::scaled-binary-op #'+ nil nil) 2.0 3.0))
+   5.0 (funcall
+        (linear-algebra-kernel:scaled-binary-op #'+ nil nil)
+        2.0 3.0))
   (assert-float-equal
-   7.0 (funcall (linear-algebra::scaled-binary-op #'+ 2.0 nil) 2.0 3.0))
+   7.0 (funcall
+        (linear-algebra-kernel:scaled-binary-op #'+ 2.0 nil)
+        2.0 3.0))
   (assert-float-equal
-   8.0 (funcall (linear-algebra::scaled-binary-op #'+ nil 2.0) 2.0 3.0))
+   8.0 (funcall
+        (linear-algebra-kernel:scaled-binary-op #'+ nil 2.0)
+        2.0 3.0))
   (assert-float-equal
-   10.0 (funcall (linear-algebra::scaled-binary-op #'+ 2.0 2.0) 2.0 3.0)))
+   10.0 (funcall
+         (linear-algebra-kernel:scaled-binary-op #'+ 2.0 2.0)
+         2.0 3.0)))
 
 (define-test common-class-of
   (let ((object-a (make-array '(3 3) :adjustable t))
@@ -85,60 +102,89 @@
         (class-a (find-class 'array))
         (class-v (find-class 'vector))
         (class-t (find-class t)))
-    (assert-eq class-a (linear-algebra::common-class-of object-a object-a))
-    (assert-eq class-a (linear-algebra::common-class-of object-a object-v))
-    (assert-eq class-a (linear-algebra::common-class-of object-v object-a))
-    (assert-eq class-v (linear-algebra::common-class-of object-v object-v))
-    (assert-eq class-t (linear-algebra::common-class-of object-v object-l t))
-    (assert-error 'error (linear-algebra::common-class-of object-v object-l))))
+    (assert-eq
+     class-a
+     (linear-algebra-kernel:common-class-of object-a object-a))
+    (assert-eq
+     class-a
+     (linear-algebra-kernel:common-class-of object-a object-v))
+    (assert-eq
+     class-a
+     (linear-algebra-kernel:common-class-of object-v object-a))
+    (assert-eq
+     class-v
+     (linear-algebra-kernel:common-class-of object-v object-v))
+    (assert-eq
+     class-t
+     (linear-algebra-kernel:common-class-of object-v object-l t))
+    (assert-error
+     'error
+     (linear-algebra-kernel:common-class-of object-v object-l))))
 
 (define-test common-array-element-type
   (let ((array-s (make-array 0 :element-type 'single-float))
         (array-d (make-array 0 :element-type 'double-float)))
-    (assert-eq 'single-float
-               (linear-algebra::common-array-element-type array-s array-s))
-    (assert-eq 'double-float
-               (linear-algebra::common-array-element-type array-s array-d))
-    (assert-eq 'double-float
-               (linear-algebra::common-array-element-type array-d array-s))
-    (assert-eq 'double-float
-               (linear-algebra::common-array-element-type array-d array-d))))
+    (assert-eq
+     'single-float
+     (linear-algebra-kernel:common-array-element-type array-s array-s))
+    (assert-eq
+     'double-float
+     (linear-algebra-kernel:common-array-element-type array-s array-d))
+    (assert-eq
+     'double-float
+     (linear-algebra-kernel:common-array-element-type array-d array-s))
+    (assert-eq
+     'double-float
+     (linear-algebra-kernel:common-array-element-type array-d array-d))))
 
 (define-test complex-equal
   ;; complex float
-  (assert-true (linear-algebra::complex-equal #C(1.0 2.0) #C(1.0 2.0)))
-  (assert-true (linear-algebra::complex-equal 1.0 #C(1.0 0.0)))
-  (assert-true (linear-algebra::complex-equal #C(1.0 0.0) 1.0))
-  (assert-false (linear-algebra::complex-equal #C(1.0 2.0) #C(2.0 1.0)))
-  (assert-false (linear-algebra::complex-equal 1.0 #C(0.0 1.0)))
-  (assert-false (linear-algebra::complex-equal #C(0.0 1.0) 1.0))
+  (assert-true
+   (linear-algebra-kernel:complex-equal #C(1.0 2.0) #C(1.0 2.0)))
+  (assert-true
+   (linear-algebra-kernel:complex-equal 1.0 #C(1.0 0.0)))
+  (assert-true
+   (linear-algebra-kernel:complex-equal #C(1.0 0.0) 1.0))
+  (assert-false
+   (linear-algebra-kernel:complex-equal #C(1.0 2.0) #C(2.0 1.0)))
+  (assert-false
+   (linear-algebra-kernel:complex-equal 1.0 #C(0.0 1.0)))
+  (assert-false
+   (linear-algebra-kernel:complex-equal #C(0.0 1.0) 1.0))
   ;; complex integer
-  (assert-true (linear-algebra::complex-equal #C(1 2) #C(1 2)))
+  (assert-true
+   (linear-algebra-kernel:complex-equal #C(1 2) #C(1 2)))
   ;; Error
-  (assert-error 'error (linear-algebra::complex-equal 1.0 1.0))
-  (assert-error 'error (linear-algebra::complex-equal 1 1)))
+  (assert-error 'error (linear-algebra-kernel:complex-equal 1.0 1.0))
+  (assert-error 'error (linear-algebra-kernel:complex-equal 1 1)))
 
 (define-test number-equal
   ;; float
-  (assert-true (linear-algebra::number-equal 2.2 2.2))
-  (assert-true (linear-algebra::number-equal 2 2.0))
-  (assert-true (linear-algebra::number-equal 2.0 2))
-  (assert-false (linear-algebra::number-equal 2 2.2))
+  (assert-true (linear-algebra-kernel:number-equal 2.2 2.2))
+  (assert-true (linear-algebra-kernel:number-equal 2 2.0))
+  (assert-true (linear-algebra-kernel:number-equal 2.0 2))
+  (assert-false (linear-algebra-kernel:number-equal 2 2.2))
   ;; rational
-  (assert-true (linear-algebra::number-equal 1/3 1/3))
-  (assert-true (linear-algebra::number-equal 3 3))
-  (assert-false (linear-algebra::number-equal 1/3 3))
+  (assert-true (linear-algebra-kernel:number-equal 1/3 1/3))
+  (assert-true (linear-algebra-kernel:number-equal 3 3))
+  (assert-false (linear-algebra-kernel:number-equal 1/3 3))
   ;; complex float
-  (assert-true (linear-algebra::number-equal #C(1.1 2.2) #C(1.1 2.2)))
-  (assert-true (linear-algebra::number-equal #C(1.0 2.0) #C(1 2)))
-  (assert-true (linear-algebra::number-equal #C(1 2) #C(1.0 2.0)))
-  (assert-false (linear-algebra::number-equal #C(1.1 2.2) #C(2.2 1.1)))
+  (assert-true
+   (linear-algebra-kernel:number-equal #C(1.1 2.2) #C(1.1 2.2)))
+  (assert-true
+   (linear-algebra-kernel:number-equal #C(1.0 2.0) #C(1 2)))
+  (assert-true
+   (linear-algebra-kernel:number-equal #C(1 2) #C(1.0 2.0)))
+  (assert-false
+   (linear-algebra-kernel:number-equal #C(1.1 2.2) #C(2.2 1.1)))
   ;; complex rational
-  (assert-true (linear-algebra::number-equal #C(1 2) #C(1 2)))
-  (assert-true (linear-algebra::number-equal #C(1/2 1/2) #C(1/2 1/2)))
-  (assert-false (linear-algebra::number-equal #C(1 2) #C(1/2 1/2)))
+  (assert-true
+   (linear-algebra-kernel:number-equal #C(1 2) #C(1 2)))
+  (assert-true
+   (linear-algebra-kernel:number-equal #C(1/2 1/2) #C(1/2 1/2)))
+  (assert-false
+   (linear-algebra-kernel:number-equal #C(1 2) #C(1/2 1/2)))
   ;; error
-  (assert-error 'error (linear-algebra::number-equal 1 t))
-  (assert-error 'error (linear-algebra::number-equal t 1))
-  (assert-error 'error (linear-algebra::number-equal t t)))
-
+  (assert-error 'error (linear-algebra-kernel:number-equal 1 t))
+  (assert-error 'error (linear-algebra-kernel:number-equal t 1))
+  (assert-error 'error (linear-algebra-kernel:number-equal t t)))

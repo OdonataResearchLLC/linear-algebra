@@ -33,7 +33,7 @@
 
 |#
 
-(in-package :linear-algebra)
+(in-package :linear-algebra-kernel)
 
 (defun lapy2 (x y)
   "Return the square root of |x|^2 + |y|^2."
