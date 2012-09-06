@@ -93,66 +93,59 @@ data."
       (map-into data #'conjugate data)
       data))
 
-(defmethod permute :before
-  ((data list) (matrix permutation-matrix))
-  "Verify that the dimensions are compatible."
-  (unless (= (length data) (matrix-row-dimension matrix))
-    (error "List and permutation matrix sizes incompatible.")))
-
 (defmethod permute ((data list) (matrix permutation-matrix))
   "Return the permutation of the list."
-  (loop with permuted = (make-list (length data))
-        for column across (contents matrix)
-        and row = 0 then (1+ row)
-        do (setf (nth column permuted) (nth row data))
-        finally (return permuted)))
-
-(defmethod permute :before
-  ((matrix permutation-matrix) (data list))
-  "Verify that the dimensions are compatible."
-  (unless (= (length data) (matrix-column-dimension matrix))
-    (error "List and permutation matrix sizes incompatible.")))
+  (if (= (length data) (matrix-row-dimension matrix))
+      (loop with permuted = (make-list (length data))
+            for column across (contents matrix)
+            and row = 0 then (1+ row)
+            do (setf (nth column permuted) (nth row data))
+            finally (return permuted))
+      (error
+       "List(~D) and permutation~A matrix sizes are incompatible."
+       (length data) (matrix-dimensions matrix))))
 
 (defmethod permute ((matrix permutation-matrix) (data list))
   "Return the permutation of the list."
-  (loop with permuted = (make-list (length data))
-        for column across (contents matrix)
-        and row = 0 then (1+ row)
-        do (setf (nth row permuted) (nth column data))
-        finally (return permuted)))
-
-(defmethod npermute :before
-  ((data list) (matrix permutation-matrix))
-  "Verify that the dimensions are compatible."
-  (unless (= (length data) (matrix-row-dimension matrix))
-    (error "List and permutation matrix sizes incompatible.")))
+  (if (= (length data) (matrix-row-dimension matrix))
+      (loop with permuted = (make-list (length data))
+            for column across (contents matrix)
+            and row = 0 then (1+ row)
+            do (setf (nth row permuted) (nth column data))
+            finally (return permuted))
+      (error
+       "Permutation matrix~A and list(~D) sizes are incompatible."
+       (matrix-dimensions matrix) (length data))))
 
 (defmethod npermute ((data list) (matrix permutation-matrix))
   "Destructively permute the list."
-  (multiple-value-bind (row0 skip)
-      (%init-ntranspose (contents matrix))
-    (loop with mat = (contents matrix)
-          repeat (- (length mat) skip)
-          for column = (aref mat row0) then (aref mat column)
-          do (rotatef (nth column data) (nth row0 data))
-          finally (return data))))
-
-(defmethod npermute :before
-  ((matrix permutation-matrix) (data list))
-  "Verify that the dimensions are compatible."
-  (unless (= (length data) (matrix-column-dimension matrix))
-    (error "Vector and permutation matrix sizes incompatible.")))
+  (if (= (length data) (matrix-row-dimension matrix))
+      (loop with mat = (contents matrix)
+            with end = (1- (length mat))
+            for row = 0 then (if (= row column) (1+ row) row)
+            as column = (aref mat row)
+            until (= row end) unless (= row column) do
+            (rotatef (nth row data) (nth column data))
+            (rotatef (aref mat row) (aref mat column))
+            finally (return data))
+      (error
+       "List(~D) and permutation~A matrix sizes are incompatible."
+       (length data) (matrix-dimensions matrix))))
 
 (defmethod npermute ((matrix permutation-matrix) (data list))
   "Destructively permute the list."
-  (multiple-value-bind (row0 skip)
-      (%init-ntranspose (contents matrix))
-    (loop with mat = (contents matrix)
-          repeat (- (length mat) skip 1)
-          for row = row0 then column
-          as column = (aref mat row)
-          do (rotatef (nth row data) (nth column data))
-          finally (return data))))
+  (if (= (length data) (matrix-row-dimension matrix))
+      (loop with mat = (contents (ntranspose matrix))
+            with end = (1- (length mat))
+            for row = 0 then (if (= row column) (1+ row) row)
+            as column = (aref mat row)
+            until (= row end) unless (= row column) do
+            (rotatef (nth row data) (nth column data))
+            (rotatef (aref mat row) (aref mat column))
+            finally (return data))
+      (error
+       "Permutation matrix~A and list(~D) sizes are incompatible."
+       (matrix-dimensions matrix) (length data))))
 
 (defmethod scale ((scalar number) (data list))
   "Return the list scaled by scalar."
