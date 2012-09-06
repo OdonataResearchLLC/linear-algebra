@@ -80,3 +80,75 @@
         (pmat (vector 2 3 1 4 0)))
     (assert-eq vect (linear-algebra-kernel:left-npermute pmat vect))
     (assert-float-equal #(5.5 3.3 1.1 2.2 4.4) vect)))
+
+;;; Array permutation
+
+(define-test right-permute-array
+  (assert-float-equal
+   #2A((1.2 1.3 1.0 1.4 1.1)
+       (2.2 2.3 2.0 2.4 2.1)
+       (3.2 3.3 3.0 3.4 3.1)
+       (4.2 4.3 4.0 4.4 4.1)
+       (5.2 5.3 5.0 5.4 5.1))
+   (linear-algebra-kernel:right-permute
+    #2A((1.0 1.1 1.2 1.3 1.4)
+        (2.0 2.1 2.2 2.3 2.4)
+        (3.0 3.1 3.2 3.3 3.4)
+        (4.0 4.1 4.2 4.3 4.4)
+        (5.0 5.1 5.2 5.3 5.4))
+    (vector 2 4 0 1 3))))
+
+(define-test left-permute-array
+  (assert-float-equal
+   #2A((3.0 3.1 3.2 3.3 3.4)
+       (5.0 5.1 5.2 5.3 5.4)
+       (1.0 1.1 1.2 1.3 1.4)
+       (2.0 2.1 2.2 2.3 2.4)
+       (4.0 4.1 4.2 4.3 4.4))
+   (linear-algebra-kernel:left-permute
+    (vector 2 4 0 1 3)
+    #2A((1.0 1.1 1.2 1.3 1.4)
+        (2.0 2.1 2.2 2.3 2.4)
+        (3.0 3.1 3.2 3.3 3.4)
+        (4.0 4.1 4.2 4.3 4.4)
+        (5.0 5.1 5.2 5.3 5.4)))))
+
+(define-test right-npermute-array
+  (let ((array
+         (make-array
+          '(5 5) :initial-contents
+          '((1.0 1.1 1.2 1.3 1.4)
+            (2.0 2.1 2.2 2.3 2.4)
+            (3.0 3.1 3.2 3.3 3.4)
+            (4.0 4.1 4.2 4.3 4.4)
+            (5.0 5.1 5.2 5.3 5.4)))))
+    (assert-eq
+     array (linear-algebra-kernel:right-npermute
+            array (vector 2 4 0 1 3)))
+    (assert-float-equal
+     #2A((1.2 1.3 1.0 1.4 1.1)
+         (2.2 2.3 2.0 2.4 2.1)
+         (3.2 3.3 3.0 3.4 3.1)
+         (4.2 4.3 4.0 4.4 4.1)
+         (5.2 5.3 5.0 5.4 5.1))
+     array)))
+
+(define-test left-npermute-array
+  (let ((array
+         (make-array
+          '(5 5) :initial-contents
+          '((1.0 1.1 1.2 1.3 1.4)
+            (2.0 2.1 2.2 2.3 2.4)
+            (3.0 3.1 3.2 3.3 3.4)
+            (4.0 4.1 4.2 4.3 4.4)
+            (5.0 5.1 5.2 5.3 5.4)))))
+    (assert-eq
+     array (linear-algebra-kernel:left-npermute
+            (vector 2 3 0 4 1) array))
+    (assert-float-equal
+     #2A((3.0 3.1 3.2 3.3 3.4)
+         (5.0 5.1 5.2 5.3 5.4)
+         (1.0 1.1 1.2 1.3 1.4)
+         (2.0 2.1 2.2 2.3 2.4)
+         (4.0 4.1 4.2 4.3 4.4))
+     array)))

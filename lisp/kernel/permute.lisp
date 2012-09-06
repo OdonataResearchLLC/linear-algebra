@@ -92,3 +92,57 @@
         (rotatef (aref data row) (aref data column))
         (rotatef (aref permutation row) (aref permutation column))
         finally (return data)))
+
+;;; Permute Arrays
+
+(defmethod right-permute ((data array) (permutation vector))
+  (loop with m-rows = (array-dimension data 0)
+        with result =
+        (make-array
+         (array-dimensions data)
+         :element-type (array-element-type data))
+        for row = 0 then (1+ row)
+        and column across permutation
+        do (loop for irow below m-rows do
+                 (setf
+                  (aref result irow column)
+                  (aref data irow row)))
+        finally (return result)))
+
+(defmethod left-permute ((permutation vector) (data array))
+  (loop with n-columns = (array-dimension data 1)
+        with result =
+        (make-array
+         (array-dimensions data)
+         :element-type (array-element-type data))
+        for row = 0 then (1+ row)
+        and column across permutation
+        do (loop for icol below n-columns do
+                 (setf
+                  (aref result row icol)
+                  (aref data column icol)))
+        finally (return result)))
+
+(defmethod right-npermute ((data array) (permutation vector))
+  (loop with m-rows = (array-dimension data 0)
+        with end = (1- (length permutation))
+        for row = 0 then (if (= row column) (1+ row) row)
+        as column = (aref permutation row)
+        until (= row end) unless (= row column) do
+        (loop for irow below m-rows do
+              (rotatef (aref data irow row) (aref data irow column)))
+        (rotatef (aref permutation row) (aref permutation column))
+        finally (return data)))
+
+(defmethod left-npermute ((permutation vector) (data array))
+  (loop with n-columns = (array-dimension data 1)
+        with end = (1- (length permutation))
+        for row = 0 then (if (= row column) (1+ row) row)
+        as column = (aref permutation row)
+        until (= row end) unless (= row column) do
+        (loop for icolumn below n-columns do
+              (rotatef
+               (aref data row icolumn)
+               (aref data column icolumn)))
+        (rotatef (aref permutation row) (aref permutation column))
+        finally (return data)))
