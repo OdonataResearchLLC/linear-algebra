@@ -37,18 +37,18 @@
 
 (define-test sumsq-list
   ;; Real
-  (let ((data '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5)))
-    (multiple-value-bind (scale sumsq)
-        (linear-algebra:sumsq data)
-      (assert-rational-equal 6 scale)
-      (assert-rational-equal 73/18 sumsq)))
+  (multiple-value-bind (scale sumsq)
+      (linear-algebra:sumsq
+       '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
+    (assert-rational-equal 6 scale)
+    (assert-rational-equal 73/18 sumsq))
   ;; Complex
-  (let ((data '(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
-                #C(-2 3) #C(-3 1) #C(-1 0))))
-    (multiple-value-bind (scale sumsq)
-        (linear-algebra:sumsq data)
-      (assert-float-equal 4.0 scale)
-      (assert-float-equal #C(2.75 -1.125) sumsq))))
+  (multiple-value-bind (scale sumsq)
+      (linear-algebra:sumsq
+       '(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
+         #C(-2 3) #C(-3 1) #C(-1 0)))
+    (assert-float-equal 4.0 scale)
+    (assert-float-equal #C(2.75 -1.125) sumsq)))
 
 (define-test sump-list
   ;; Real

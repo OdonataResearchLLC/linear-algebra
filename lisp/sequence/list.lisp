@@ -1,6 +1,6 @@
 #|
 
- Fundamental List Operations
+ Fundamental Common Lisp List Operations
 
  Copyright (c) 2009-2012, Odonata Research LLC
  All rights reserved.
@@ -38,9 +38,9 @@
 (defmethod sumsq ((data list) &key (scale 0) (sumsq 1))
   "Return the scaling parameter and the sum of the squares of the
 list."
-  (let ((abs-val nil))
+  (let ((abs-val))
     (dolist (elm data (values scale sumsq))
-      (when (< 0 (setf abs-val (abs elm)))
+      (when (plusp (setf abs-val (abs elm)))
         (if (< scale abs-val)
             (setf
              sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
@@ -52,7 +52,7 @@ list."
 data."
   (let ((abs-val nil))
     (dolist (elm data (values scale sump))
-      (when (< 0 (setf abs-val (abs elm)))
+      (when (plusp (setf abs-val (abs elm)))
         (if (< scale abs-val)
             (setf
              sump  (1+ (* sump (expt (/ scale abs-val) p)))
