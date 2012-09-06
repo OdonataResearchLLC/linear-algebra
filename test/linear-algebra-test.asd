@@ -44,6 +44,12 @@
   :depends-on ("lisp-unit" "linear-algebra")
   :components
   ((:file "linear-algebra-test")
+   ;; Linear algebra kernel tests
+   (:module kernel
+    :depends-on ("linear-algebra-test")
+    :components
+    ((:file "permute")))
+   ;; Linear algebra tests
    (:file "utility" :depends-on ("linear-algebra-test"))
    (:file "vector" :depends-on ("linear-algebra-test"))
    (:file "cl-list" :depends-on ("linear-algebra-test"))

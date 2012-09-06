@@ -43,4 +43,7 @@
            :common-class-of
            :common-array-element-type
            :complex-equal
-           :number-equal))
+           :number-equal)
+  ;; Fundamental operations
+  (:export :right-permute :right-npermute
+           :left-permute :left-npermute))

@@ -173,7 +173,7 @@
 ;;; Vector permutation
 
 (define-test permute-vector
-  (let ((vector (vector 1.1 2.2 3.3 4.4 5.5))
+  (let ((vect (vector 1.1 2.2 3.3 4.4 5.5))
         (pmat (linear-algebra:make-matrix
                5 5 :matrix-type
                'linear-algebra:permutation-matrix
@@ -185,12 +185,11 @@
                  (0 0 0 1 0)))))
     (assert-float-equal
      #(3.3 4.4 1.1 5.5 2.2)
-     (linear-algebra:permute vector pmat))
+     (linear-algebra:permute vect pmat))
     (assert-float-equal
      #(3.3 5.5 1.1 2.2 4.4)
-     (linear-algebra:permute pmat vector)))
-  (let ((vec1 (vector 1.1 2.2 3.3 4.4 5.5))
-        (vec2 (vector 1.1 2.2 3.3 4.4 5.5))
+     (linear-algebra:permute pmat vect)))
+  (let ((vect (vector 1.1 2.2 3.3 4.4 5.5))
         (pmat (linear-algebra:make-matrix
                5 5 :matrix-type
                'linear-algebra:permutation-matrix
@@ -202,10 +201,10 @@
                  (0 0 0 1 0)))))
     (assert-float-equal
      #(3.3 4.4 2.2 5.5 1.1)
-     (linear-algebra:permute vec1 pmat))
+     (linear-algebra:permute vect pmat))
     (assert-float-equal
      #(5.5 3.3 1.1 2.2 4.4)
-     (linear-algebra:npermute pmat vec2))))
+     (linear-algebra:permute pmat vect))))
 
 (define-test npermute-vector
   (let ((vect (vector 1.1 2.2 3.3 4.4 5.5))

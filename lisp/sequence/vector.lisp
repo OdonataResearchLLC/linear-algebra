@@ -1,6 +1,6 @@
 #|
 
- Fundamental Vector Operations
+ Fundamental Common Lisp Vector Operations
 
  Copyright (c) 2009-2012, Odonata Research LLC
  All rights reserved.
@@ -39,7 +39,7 @@
   "Return the scaling parameter and the sum of the squares of the
 vector."
   (let ((size (length data))
-        (abs-val nil))
+        (abs-val))
     (dotimes (index size (values scale sumsq))
       (when (plusp (setf abs-val (abs (svref data index))))
         (if (< scale abs-val)
@@ -52,7 +52,7 @@ vector."
   "Return the scaling parameter and the sum of the powers of p of the
 vector."
   (let ((size (length data))
-        (abs-val nil))
+        (abs-val))
     (dotimes (index size (values scale sump))
       (when (plusp (setf abs-val (abs (svref data index))))
         (if (< scale abs-val)
@@ -87,8 +87,9 @@ vector."
 (defmethod transpose ((data vector) &key conjugate)
   "Return a row vector."
   (map-into
-   (make-array (length data)
-               :element-type (array-element-type data))
+   (make-array
+    (length data)
+    :element-type (array-element-type data))
    (if conjugate #'conjugate #'identity)
    data))
 
@@ -98,73 +99,37 @@ vector."
       (map-into data #'conjugate data)
       data))
 
-(defmethod permute :before
-  ((data vector) (matrix permutation-matrix))
-  "Verify that the dimensions are compatible."
-  (unless (= (length data) (matrix-row-dimension matrix))
-    (error "Vector and permutation matrix sizes incompatible.")))
-
 (defmethod permute ((data vector) (matrix permutation-matrix))
   "Return the permutation of the list."
-  (loop with permuted =
-        (make-array
-         (length data)
-         :element-type (array-element-type data))
-        for row = 0 then (1+ row)
-        and column across (contents matrix)
-        do (setf (aref permuted column) (aref data row))
-        finally (return permuted)))
-
-(defmethod permute :before
-  ((matrix permutation-matrix) (data vector))
-  "Verify that the dimensions are compatible."
-  (unless (= (length data) (matrix-column-dimension matrix))
-    (error "Vector and permutation matrix sizes incompatible.")))
+  (if (= (length data) (matrix-row-dimension matrix))
+      (right-permute data (contents matrix))
+      (error
+       "Vector(~D) and permutation matrix~A are incompatible."
+       (length data) (matrix-dimensions matrix))))
 
 (defmethod permute ((matrix permutation-matrix) (data vector))
   "Return the permutation of the list."
-  (loop with permuted =
-        (make-array
-         (length data)
-         :element-type (array-element-type data))
-        for row = 0 then (1+ row)
-        and column across (contents matrix)
-        do (setf (aref permuted row) (aref data column))
-        finally (return permuted)))
-
-(defmethod npermute :before
-  ((data vector) (matrix permutation-matrix))
-  "Verify that the dimensions are compatible."
-  (unless (= (length data) (matrix-row-dimension matrix))
-    (error "Vector and permutation matrix sizes incompatible.")))
+  (if (= (length data) (matrix-column-dimension matrix))
+      (left-permute (contents matrix) data)
+      (error
+       "Permutation matrix~A and vector(~D) are incompatible."
+       (matrix-dimensions matrix) (length data))))
 
 (defmethod npermute ((data vector) (matrix permutation-matrix))
   "Destructively permute the vector."
-  (loop with mat = (contents matrix)
-        with end = (1- (length mat))
-        for row = 0 then (if (= row column) (1+ row) row)
-        as column = (aref mat row)
-        until (= row end) unless (= row column) do
-        (rotatef (aref data row) (aref data column))
-        (rotatef (aref mat row) (aref mat column))
-        finally (return data)))
-
-(defmethod npermute :before
-  ((matrix permutation-matrix) (data vector))
-  "Verify that the dimensions are compatible."
-  (unless (= (length data) (matrix-column-dimension matrix))
-    (error "Vector and permutation matrix sizes incompatible.")))
+  (if (= (length data) (matrix-row-dimension matrix))
+      (right-npermute data (contents matrix))
+      (error
+       "Vector(~D) and permutation matrix~A are incompatible."
+       (length data) (matrix-dimensions matrix))))
 
 (defmethod npermute ((matrix permutation-matrix) (data vector))
   "Destructively permute the list."
-  (loop with mat = (contents (ntranspose matrix))
-        with end = (1- (length mat))
-        for row = 0 then (if (= row column) (1+ row) row)
-        as column = (aref mat row)
-        until (= row end) unless (= row column) do
-        (rotatef (aref data row) (aref data column))
-        (rotatef (aref mat row) (aref mat column))
-        finally (return data)))
+  (if (= (length data) (matrix-column-dimension matrix))
+      (left-npermute (contents (ntranspose matrix)) data)
+      (error
+       "Permutation matrix~A and vector(~D) are incompatible."
+       (matrix-dimensions matrix) (length data))))
 
 (defmethod scale ((scalar number) (data vector))
   "Return the vector scaled by scalar."
