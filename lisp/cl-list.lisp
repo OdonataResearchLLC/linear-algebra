@@ -155,72 +155,56 @@ data."
   "Return the list destructively scaled by scalar."
   (map-into data (lambda (x) (* scalar x)) data))
 
-(defmethod add :before ((list1 list) (list2 list)
-                        &key scalar1 scalar2)
-  "Verify that the dimensions are equal."
-  (declare (ignore scalar1 scalar2))
-  (unless (= (length list1) (length list2))
-    (error "LIST1 and LIST2 are not of equal length.")))
-
 (defmethod add ((list1 list) (list2 list) &key scalar1 scalar2)
   "Return the addition of scalar1*list1 with scalar2*list2"
-  (loop with op = (scaled-binary-op #'+ scalar1 scalar2)
-        for item1 in list1
-        and item2 in list2
-        collect (funcall op item1 item2)))
-
-(defmethod nadd :before ((list1 list) (list2 list)
-                         &key scalar1 scalar2)
-  "Verify that the dimensions are equal."
-  (declare (ignore scalar1 scalar2))
-  (unless (= (length list1) (length list2))
-    (error
-     "LENGTH1 and LENGTH2 are not of equal length in NADD-SCALED.")))
+  (if (= (length list1) (length list2))
+      (loop with op = (scaled-binary-op #'+ scalar1 scalar2)
+            for item1 in list1
+            and item2 in list2
+            collect (funcall op item1 item2))
+      (error "LIST1(~D) and LIST2(~D) are not of equal length."
+             (length list1) (length list2))))
 
 (defmethod nadd ((list1 list) (list2 list) &key scalar1 scalar2)
   "Return the addition of scalar2*list2 to scalar1*list1."
-  (map-into list1 (scaled-binary-op #'+ scalar1 scalar2) list1 list2))
-
-(defmethod subtract :before ((list1 list) (list2 list)
-                             &key scalar1 scalar2)
-  "Verify that the dimensions are equal."
-  (declare (ignore scalar1 scalar2))
-  (unless (= (length list1) (length list2))
-    (error "LIST1 and LIST2 are not of equal length.")))
+  (if (= (length list1) (length list2))
+      (map-into
+       list1 (scaled-binary-op #'+ scalar1 scalar2)
+       list1 list2)
+      (error "LIST1(~D) and LIST2(~D) are not of equal length."
+             (length list1) (length list2))))
 
 (defmethod subtract ((list1 list) (list2 list) &key scalar1 scalar2)
   "Return the subraction of scalar2*list2 from scalar1*list1."
-  (loop with op = (scaled-binary-op #'- scalar1 scalar2)
-        for item1 in list1
-        and item2 in list2
-        collect (funcall op item1 item2)))
-
-(defmethod nsubtract :before ((list1 list) (list2 list)
-                              &key scalar1 scalar2)
-  "Verify that the dimensions are equal."
-  (declare (ignore scalar1 scalar2))
-  (unless (= (length list1) (length list2))
-    (error "LIST1 and LIST2 are not of equal length.")))
+  (if (= (length list1) (length list2))
+      (loop with op = (scaled-binary-op #'- scalar1 scalar2)
+            for item1 in list1
+            and item2 in list2
+            collect (funcall op item1 item2))
+      (error "LIST1(~D) and LIST2(~D) are not of equal length."
+             (length list1) (length list2))))
 
 (defmethod nsubtract ((list1 list) (list2 list) &key scalar1 scalar2)
   "Return the subraction of scalar2*list2 from scalar1*list1."
-  (map-into list1 (scaled-binary-op #'- scalar1 scalar2) list1 list2))
-
-(defmethod product :before ((list1 list) (list2 list)
-                            &key scalar conjugate)
-  "Verify that the dimensions are equal."
-  (declare (ignore scalar conjugate))
-  (unless (= (length list1) (length list2))
-    (error "LIST1 and LIST2 are not of equal length.")))
+  (if (= (length list1) (length list2))
+      (map-into
+       list1 (scaled-binary-op #'- scalar1 scalar2)
+       list1 list2)
+      (error "LIST1(~D) and LIST2(~D) are not of equal length."
+             (length list1) (length list2))))
 
 (defmethod product ((list1 list) (list2 list)
                     &key (scalar nil scalarp) conjugate)
   "Return the dot product of list1 and list2."
-  (loop with op = (if conjugate
-                      (lambda (x y) (* (conjugate x) y))
-                      #'*)
-        for element1 in list1
-        and element2 in list2
-        sum (funcall op element1 element2) into result
-        finally
-        (return (if scalarp (* scalar result) result))))
+  (if (= (length list1) (length list2))
+      (loop with op =
+            (if conjugate
+                (lambda (x y) (* (conjugate x) y))
+                #'*)
+            for element1 in list1
+            and element2 in list2
+            sum (funcall op element1 element2) into result
+            finally
+            (return (if scalarp (* scalar result) result)))
+      (error "LIST1(~D) and LIST2(~D) are not of equal length."
+             (length list1) (length list2))))

@@ -317,8 +317,8 @@
 
 (define-test nadd-list
   ;; Real
-  (let ((list1 '(1.1 2.2 3.3 4.4))
-        (list2 '(1.1 2.2 3.3 4.4)))
+  (let ((list1 (list 1.1 2.2 3.3 4.4))
+        (list2 (list 1.1 2.2 3.3 4.4)))
     (assert-eq list1 (linear-algebra:nadd list1 list2))
     (assert-float-equal '(2.2 4.4 6.6 8.8) list1)
     (assert-float-equal
@@ -331,8 +331,8 @@
      '(22.0 44.0 66.0 88.0)
      (linear-algebra:nadd list1 list2 :scalar1 2.0 :scalar2 2.0)))
   ;; Complex
-  (let ((list1 '(#C(1.1 2.2) #C(3.3 4.4)))
-        (list2 '(#C(1.1 2.2) #C(3.3 4.4))))
+  (let ((list1 (list #C(1.1 2.2) #C(3.3 4.4)))
+        (list2 (list #C(1.1 2.2) #C(3.3 4.4))))
     (assert-eq list1 (linear-algebra:nadd list1 list2))
     (assert-float-equal '(#C(2.2 4.4) #C(6.6 8.8)) list1)
     (assert-float-equal
@@ -383,8 +383,8 @@
 
 (define-test nsubtract-list
   ;; Real
-  (let ((list1 '(1.1 2.2 3.3 4.4))
-        (list2 '(1.1 2.2 3.3 4.4)))
+  (let ((list1 (list 1.1 2.2 3.3 4.4))
+        (list2 (list 1.1 2.2 3.3 4.4)))
     (assert-eq list1 (linear-algebra:nsubtract list1 list2))
     (assert-float-equal '(0.0 0.0 0.0 0.0) list1)
     (assert-float-equal
@@ -397,8 +397,8 @@
      '(-13.2 -26.4 -39.6 -52.8)
      (linear-algebra:nsubtract list1 list2 :scalar1 2.0 :scalar2 2.0)))
   ;; Complex
-  (let ((list1 '(#C(1.1 2.2) #C(3.3 4.4)))
-        (list2 '(#C(1.1 2.2) #C(3.3 4.4))))
+  (let ((list1 (list #C(1.1 2.2) #C(3.3 4.4)))
+        (list2 (list #C(1.1 2.2) #C(3.3 4.4))))
     (assert-eq list1 (linear-algebra:nsubtract list1 list2))
     (assert-float-equal
      '(#C(0.0 0.0) #C(0.0 0.0)) list1)
@@ -414,7 +414,7 @@
 
 ;;; List dot product
 
-(define-test dot-product-list
+(define-test product-list
   ;; Real vectors
   (assert-rational-equal
    55 (linear-algebra:product '(1 2 3 4 5) '(1 2 3 4 5)))
