@@ -132,6 +132,90 @@ array."
                (aref data i1 i0) (funcall op (aref data i0 i1))))))
         (error "Rows and columns unequal."))))
 
+(defmethod permute :before
+  ((data array) (matrix permutation-matrix))
+  "Verify that the dimensions are compatible."
+  (unless (every #'= (array-dimensions data)
+                 (matrix-dimensions matrix))
+    (error "Array and permutation matrix sizes incompatible.")))
+
+(defmethod permute ((data array) (matrix permutation-matrix))
+  (loop with numrows = (array-dimension data 0)
+        with permuted =
+        (make-array
+         (array-dimensions data)
+         :element-type (array-element-type data))
+        for row = 0 then (1+ row)
+        and column across (contents matrix)
+        do (loop for irow below numrows do
+                 (setf
+                  (aref permuted irow column)
+                  (aref data irow row)))
+        finally (return permuted)))
+
+(defmethod permute :before
+  ((matrix permutation-matrix) (data array))
+  "Verify that the dimensions are compatible."
+  (unless (every #'= (array-dimensions data)
+                 (matrix-dimensions matrix))
+    (error "Array and permutation matrix sizes incompatible.")))
+
+(defmethod permute ((matrix permutation-matrix) (data array))
+  (loop with numcols = (array-dimension data 1)
+        with permuted =
+        (make-array
+         (array-dimensions data)
+         :element-type (array-element-type data))
+        for row = 0 then (1+ row)
+        and column across (contents matrix)
+        do (loop for icol below numcols do
+                 (setf
+                  (aref permuted row icol)
+                  (aref data column icol)))
+        finally (return permuted)))
+
+(defmethod npermute :before
+  ((data array) (matrix permutation-matrix))
+  "Verify that the dimensions are compatible."
+  (unless (every #'= (array-dimensions data)
+                 (matrix-dimensions matrix))
+    (error "Array and permutation matrix sizes incompatible.")))
+
+(defmethod npermute ((data array) (matrix permutation-matrix))
+  "Destructively permute the array."
+  (loop with mat = (contents matrix)
+        with m-rows = (array-dimension data 0)
+        with end = (1- (length mat))
+        for row = 0 then (if (= row column) (1+ row) row)
+        as column = (aref mat row)
+        until (= row end) unless (= row column) do
+        (loop for irow below m-rows do
+              (rotatef (aref data irow row) (aref data irow column)))
+        (rotatef (aref mat row) (aref mat column))
+        finally (return data)))
+
+(defmethod npermute :before
+  ((matrix permutation-matrix) (data array))
+  "Verify that the dimensions are compatible."
+  (unless (every #'= (array-dimensions data)
+                 (matrix-dimensions matrix))
+    (error "Array and permutation matrix sizes incompatible.")))
+
+(defmethod npermute ((matrix permutation-matrix) (data array))
+  "Destructively permute the array."
+  (loop with mat = (contents (ntranspose matrix))
+        with n-columns = (array-dimension data 1)
+        with end = (1- (length mat))
+        for row = 0 then (if (= row column) (1+ row) row)
+        as column = (aref mat row)
+        until (= row end) unless (= row column) do
+        (loop for icolumn below n-columns do
+              (rotatef
+               (aref data row icolumn)
+               (aref data column icolumn)))
+        (rotatef (aref mat row) (aref mat column))
+        finally (return data)))
+
 (defmethod scale ((scalar number) (data array))
   "Scale each element of the array."
   (destructuring-bind (numrows numcols) (array-dimensions data)
