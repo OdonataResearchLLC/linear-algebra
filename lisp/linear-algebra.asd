@@ -48,7 +48,8 @@
    (:module kernel
     :components
     ((:file "linear-algebra-kernel")
-     (:file "utility" :depends-on ("linear-algebra-kernel"))))
+     (:file "utility" :depends-on ("linear-algebra-kernel"))
+     (:file "permute" :depends-on ("linear-algebra-kernel"))))
    ;; Interface
    (:module interface
     :depends-on ("kernel")
