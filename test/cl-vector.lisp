@@ -431,7 +431,7 @@
 
 ;;; Vector dot product
 
-(define-test dot-product-vector
+(define-test product-vector
   ;; Real vectors
   (assert-rational-equal
    55 (linear-algebra:product #(1 2 3 4 5) #(1 2 3 4 5)))
