@@ -299,31 +299,37 @@
     (assert-eql 0 row0)
     (assert-eql 3 skip)))
 
+;;; FIXME : Expand to cover all permutations of #(0 1 2 3 4)
+
 (define-test permutation-matrix-ntranspose
-  (let ((matrix (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type
-                 'linear-algebra:permutation-matrix
-                 :initial-contents
-                 '((0 0 0 0 1)
-                   (0 0 0 1 0)
-                   (0 0 1 0 0)
-                   (1 0 0 0 0)
-                   (0 1 0 0 0)))))
+  (let ((matrix
+         (make-instance
+          'linear-algebra:permutation-matrix
+          :contents (vector 4 0 2 3 1))))
+    (assert-eq matrix (linear-algebra:ntranspose matrix))
+    (assert-rational-equal
+     #(1 4 2 3 0)
+     (linear-algebra::contents matrix)))
+  (let ((matrix
+         (make-instance
+          'linear-algebra:permutation-matrix
+          :contents (vector 4 3 2 0 1))))
     (assert-eq matrix (linear-algebra:ntranspose matrix))
     (assert-rational-equal
      #(3 4 2 1 0)
      (linear-algebra::contents matrix)))
-  (let ((matrix (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type
-                 'linear-algebra:permutation-matrix
-                 :initial-contents
-                 '((1 0 0 0 0)
-                   (0 1 0 0 0)
-                   (0 0 0 1 0)
-                   (0 0 0 0 1)
-                   (0 0 1 0 0)))))
+  (let ((matrix
+         (make-instance
+          'linear-algebra:permutation-matrix
+          :contents (vector 2 4 0 1 3))))
+    (assert-eq matrix (linear-algebra:ntranspose matrix))
+    (assert-rational-equal
+     #(2 3 0 4 1)
+     (linear-algebra::contents matrix)))
+  (let ((matrix
+         (make-instance
+          'linear-algebra:permutation-matrix
+          :contents (vector 0 1 3 4 2))))
     (assert-eq matrix (linear-algebra:ntranspose matrix))
     (assert-rational-equal
      #(0 1 4 2 3)

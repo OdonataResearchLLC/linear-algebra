@@ -220,13 +220,35 @@
 (defmethod ntranspose ((matrix permutation-matrix) &key conjugate)
   "Destructively transpose the permutation matrix."
   (declare (ignore conjugate))
-  (multiple-value-bind (row0 skip)
-      (%init-ntranspose (contents matrix))
-    (loop with contents = (contents matrix)
-          repeat (- (length contents) skip)
-          for row = row0 then column
-          and column = (aref contents row0) then nextrow
-          as nextrow = (aref contents column)
-          do (setf (aref contents column) row)
-          finally (return matrix))))
-
+  (loop with mat = (contents matrix)
+        with update-datum-p
+        with datum = 0
+        with row = 0
+        with column = (aref mat 0)
+        with cache = (aref mat column)
+        repeat (length mat)
+        ;; Finish shift loop
+        if update-datum-p do
+        (setf
+         update-datum-p nil
+         row (1+ (min row column))
+         datum row
+         column (aref mat row)
+         cache (aref mat column))
+        ;; On diagonal
+        else if (= row column) do
+        (setf datum (incf row))
+        (when (array-in-bounds-p mat row)
+          (setf
+           column (aref mat row)
+           cache (aref mat column)))
+        ;; Found end of shift loop
+        else if (= datum cache) do
+        (setf
+         update-datum-p t
+         (aref mat column) row
+         (aref mat cache) column)
+        ;; Shift the elements
+        else do
+        (shiftf (aref mat column) row column cache (aref mat cache))
+        finally (return matrix)))
