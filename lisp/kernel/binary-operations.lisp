@@ -139,3 +139,68 @@ vector."
   (%destructive-vector-binary-operation
    (scaled-binary-op #'- scalar1 scalar2)
    vector1 vector2))
+
+;;; Binary array operations
+
+(defun %array-binary-operation (operation array1 array2)
+  (let ((m-rows (array-dimension array1 0))
+        (n-columns (array-dimension array1 1))
+        (result
+         (make-array
+          (array-dimensions array1)
+          :element-type
+          (common-array-element-type array1 array2))))
+    (dotimes (i0 m-rows result)
+      (dotimes (i1 n-columns)
+        (setf
+         (aref result i0 i1)
+         (funcall operation
+                  (aref array1 i0 i1)
+                  (aref array2 i0 i1)))))))
+
+(defun %destructive-array-binary-operation (operation array1 array2)
+  (let ((m-rows (array-dimension array1 0))
+        (n-columns (array-dimension array1 1)))
+    (dotimes (i0 m-rows array1)
+      (dotimes (i1 n-columns)
+        (setf
+         (aref array1 i0 i1)
+         (funcall operation
+                  (aref array1 i0 i1)
+                  (aref array2 i0 i1)))))))
+
+(defmethod binary-operation ((operation (eql :add))
+                             (array1 array)
+                             (array2 array)
+                             scalar1 scalar2)
+  "Add the elements of the vectors and store the result in a new
+vector."
+  (%array-binary-operation
+   (scaled-binary-op #'+ scalar1 scalar2)
+   array1 array2))
+
+(defmethod binary-operation ((operation (eql :nadd))
+                             (array1 array)
+                             (array2 array)
+                             scalar1 scalar2)
+  (%destructive-array-binary-operation
+   (scaled-binary-op #'+ scalar1 scalar2)
+   array1 array2))
+
+(defmethod binary-operation ((operation (eql :subtract))
+                             (array1 array)
+                             (array2 array)
+                             scalar1 scalar2)
+  "Add the elements of the vectors and store the result in a new
+vector."
+  (%array-binary-operation
+   (scaled-binary-op #'- scalar1 scalar2)
+   array1 array2))
+
+(defmethod binary-operation ((operation (eql :nsubtract))
+                             (array1 array)
+                             (array2 array)
+                             scalar1 scalar2)
+  (%destructive-array-binary-operation
+   (scaled-binary-op #'- scalar1 scalar2)
+   array1 array2))

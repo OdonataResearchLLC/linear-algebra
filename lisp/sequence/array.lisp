@@ -194,66 +194,28 @@ addition."
 (defmethod add ((array1 array) (array2 array) &key scalar1 scalar2)
   "Return the addition of the 2 arrays."
   (if (compatible-dimensions-p :add array1 array2)
-      (let ((m-rows (array-dimension array1 0))
-            (n-columns (array-dimension array1 1))
-            (op (scaled-binary-op #'+ scalar1 scalar2))
-            (result
-             (make-array
-              (array-dimensions array1)
-              :element-type
-              (common-array-element-type array1 array2))))
-        (dotimes (i0 m-rows result)
-          (dotimes (i1 n-columns)
-            (setf
-             (aref result i0 i1)
-             (funcall op (aref array1 i0 i1) (aref array2 i0 i1))))))
+      (binary-operation :add array1 array2 scalar1 scalar2)
       (error "The array dimensions, ~A,~A, are not compatible."
              (array-dimensions array1) (array-dimensions array2))))
 
 (defmethod nadd ((array1 array) (array2 array) &key scalar1 scalar2)
   "Destructively add array2 to array1."
   (if (compatible-dimensions-p :add array1 array2)
-      (let ((m-rows (array-dimension array1 0))
-            (n-columns (array-dimension array1 1))
-            (op (scaled-binary-op #'+ scalar1 scalar2)))
-        (dotimes (i0 m-rows array1)
-          (dotimes (i1 n-columns)
-            (setf
-             (aref array1 i0 i1)
-             (funcall op (aref array1 i0 i1) (aref array2 i0 i1))))))
+      (binary-operation :nadd array1 array2 scalar1 scalar2)
       (error "The array dimensions, ~A,~A, are not compatible."
              (array-dimensions array1) (array-dimensions array2))))
 
 (defmethod subtract ((array1 array) (array2 array) &key scalar1 scalar2)
   "Return the subtraction of the 2 arrays."
   (if (compatible-dimensions-p :add array1 array2)
-      (let ((m-rows (array-dimension array1 0))
-            (n-columns (array-dimension array1 1))
-            (op (scaled-binary-op #'- scalar1 scalar2))
-            (result
-             (make-array
-              (array-dimensions array1)
-              :element-type
-              (common-array-element-type array1 array2))))
-        (dotimes (i0 m-rows result)
-          (dotimes (i1 n-columns)
-            (setf
-             (aref result i0 i1)
-             (funcall op (aref array1 i0 i1) (aref array2 i0 i1))))))
+      (binary-operation :subtract array1 array2 scalar1 scalar2)
       (error "The array dimensions, ~A,~A, are not compatible."
              (array-dimensions array1) (array-dimensions array2))))
 
 (defmethod nsubtract ((array1 array) (array2 array) &key scalar1 scalar2)
   "Destructively subtract array2 from array1."
   (if (compatible-dimensions-p :add array1 array2)
-      (let ((m-rows (array-dimension array1 0))
-            (n-columns (array-dimension array1 1))
-            (op (scaled-binary-op #'- scalar1 scalar2)))
-        (dotimes (i0 m-rows array1)
-          (dotimes (i1 n-columns)
-            (setf
-             (aref array1 i0 i1)
-             (funcall op (aref array1 i0 i1) (aref array2 i0 i1))))))
+      (binary-operation :nsubtract array1 array2 scalar1 scalar2)
       (error "The array dimensions, ~A and ~A, are not compatible."
              (array-dimensions array1) (array-dimensions array2))))
 
