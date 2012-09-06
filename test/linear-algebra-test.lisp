@@ -8,6 +8,7 @@
 (in-package :linear-algebra-test)
 
 ;;; Convenience functions
+
 (defun random-interior-index (size)
   "Return an interior index that is guaranteed not to be an end
 point."
@@ -147,6 +148,7 @@ point."
        list1)))
 
 ;;; Data vector equality
+
 (defmethod rational-equal ((result1 sequence)
                            (result2 linear-algebra:data-vector))
   (rational-equal
@@ -171,6 +173,7 @@ point."
                epsilon))
 
 ;;; Dense matrix equality
+
 (defmethod rational-equal ((result1 list)
                            (result2 linear-algebra:dense-matrix))
   (let* ((contents (linear-algebra::contents result2))

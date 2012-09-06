@@ -47,14 +47,17 @@
            :subtract :nsubtract
            :product)
   ;; Vector exports
-  (:export :vector-object
-           :make-vector :initialize-vector
-           :vector-object-p :vector-in-bounds-p
-           :vector-element-type :vector-length
+  (:export :initialize-vector
+           :make-vector
+           :vector-in-bounds-p
+           :vector-element-type
+           :vector-length
            :vref
            :copy-vector
-           :subvector :replace-vector
-           :map-vector :map-into-vector
+           :subvector
+           :replace-vector
+           :map-vector
+           :map-into-vector
            :dovector
            :givens-rotation
            :jacobi-rotation
@@ -62,15 +65,18 @@
            :apply-rotation :napply-rotation)
   ;; Matrix interface
   (:export :matrix-object
-           :make-matrix :initialize-matrix
-           :matrixp :matrix-in-bounds-p
+           :initialize-matrix
+           :make-matrix
+           :matrixp
+           :matrix-in-bounds-p
            :matrix-element-type
            :matrix-dimensions
            :matrix-row-dimension
            :matrix-column-dimension
            :mref
            :copy-matrix
-           :submatrix :replace-matrix
+           :submatrix
+           :replace-matrix
            :matrix-validated-range)
   ;; Identity matrix
   (:export :identity-matrix
@@ -81,9 +87,9 @@
   ;; Data vector exports
   (:export :data-vector
            :row-vector
+           :row-vector-p
            :column-vector
-           :column-vector-p
-           :row-vector-p)
+           :column-vector-p)
   ;; Dense matrix
   (:export :dense-matrix
            :dense-matrix-p)
@@ -98,6 +104,6 @@
            :symmetric-matrix-p)
   ;; Triangular matrix
   (:export :upper-triangular-matrix
-           :lower-triangular-matrix
            :upper-triangular-matrix-p
+           :lower-triangular-matrix
            :lower-triangular-matrix-p))
