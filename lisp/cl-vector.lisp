@@ -140,13 +140,14 @@ vector."
 
 (defmethod npermute ((data vector) (matrix permutation-matrix))
   "Destructively permute the vector."
-  (multiple-value-bind (row0 skip)
-      (%init-ntranspose (contents matrix))
-    (loop with mat = (contents matrix)
-          repeat (- (length mat) skip)
-          for column = (aref mat row0) then (aref mat column)
-          do (rotatef (aref data column) (aref data row0))
-          finally (return data))))
+  (loop with mat = (contents matrix)
+        with end = (1- (length mat))
+        for row = 0 then (if (= row column) (1+ row) row)
+        as column = (aref mat row)
+        until (= row end) unless (= row column) do
+        (rotatef (aref data row) (aref data column))
+        (rotatef (aref mat row) (aref mat column))
+        finally (return data)))
 
 (defmethod npermute :before
   ((matrix permutation-matrix) (data vector))
@@ -156,14 +157,14 @@ vector."
 
 (defmethod npermute ((matrix permutation-matrix) (data vector))
   "Destructively permute the list."
-  (multiple-value-bind (row0 skip)
-      (%init-ntranspose (contents matrix))
-    (loop with mat = (contents matrix)
-          repeat (- (length mat) skip 1)
-          for row = row0 then column
-          as column = (aref mat row)
-          do (rotatef (aref data row) (aref data column))
-          finally (return data))))
+  (loop with mat = (contents (ntranspose matrix))
+        with end = (1- (length mat))
+        for row = 0 then (if (= row column) (1+ row) row)
+        as column = (aref mat row)
+        until (= row end) unless (= row column) do
+        (rotatef (aref data row) (aref data column))
+        (rotatef (aref mat row) (aref mat column))
+        finally (return data)))
 
 (defmethod scale ((scalar number) (data vector))
   "Return the vector scaled by scalar."
