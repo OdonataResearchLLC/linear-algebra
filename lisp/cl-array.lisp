@@ -119,102 +119,88 @@ array."
 
 (defmethod ntranspose ((data array) &key conjugate)
   "Replace the contents of the array with the transpose."
-  (destructuring-bind (numrows numcols) (array-dimensions data)
-    (if (= numrows numcols)
+  (let ((m-rows (array-dimension data 0))
+        (n-columns (array-dimension data 1)))
+    (if (= m-rows n-columns)
         (let ((op (if conjugate #'conjugate #'identity)))
-          (dotimes (i0 numrows data)
+          (dotimes (i0 m-rows data)
             ;; FIXME : Conjugate on the diagonal may not be correct.
             (setf (aref data i0 i0) (funcall op (aref data i0 i0)))
             (do ((i1 (1+ i0) (1+ i1)))
-                ((>= i1 numcols))
+                ((>= i1 n-columns))
               (psetf
                (aref data i0 i1) (funcall op (aref data i1 i0))
                (aref data i1 i0) (funcall op (aref data i0 i1))))))
-        (error "Rows and columns unequal."))))
-
-(defmethod permute :before
-  ((data array) (matrix permutation-matrix))
-  "Verify that the dimensions are compatible."
-  (unless (every #'= (array-dimensions data)
-                 (matrix-dimensions matrix))
-    (error "Array and permutation matrix sizes incompatible.")))
+        (error "Rows(~D) and columns(~D) unequal."
+               m-rows n-columns))))
 
 (defmethod permute ((data array) (matrix permutation-matrix))
-  (loop with numrows = (array-dimension data 0)
-        with permuted =
-        (make-array
-         (array-dimensions data)
-         :element-type (array-element-type data))
-        for row = 0 then (1+ row)
-        and column across (contents matrix)
-        do (loop for irow below numrows do
-                 (setf
-                  (aref permuted irow column)
-                  (aref data irow row)))
-        finally (return permuted)))
-
-(defmethod permute :before
-  ((matrix permutation-matrix) (data array))
-  "Verify that the dimensions are compatible."
-  (unless (every #'= (array-dimensions data)
-                 (matrix-dimensions matrix))
-    (error "Array and permutation matrix sizes incompatible.")))
+  (if (every #'= (array-dimensions data) (matrix-dimensions matrix))
+      (loop with m-rows = (array-dimension data 0)
+            with permuted =
+            (make-array
+             (array-dimensions data)
+             :element-type (array-element-type data))
+            for row = 0 then (1+ row)
+            and column across (contents matrix)
+            do (loop for irow below m-rows do
+                     (setf
+                      (aref permuted irow column)
+                      (aref data irow row)))
+            finally (return permuted))
+      (error "Array~A and permutation matrix~A sizes incompatible."
+             (array-dimensions data) (matrix-dimensions matrix))))
 
 (defmethod permute ((matrix permutation-matrix) (data array))
-  (loop with numcols = (array-dimension data 1)
-        with permuted =
-        (make-array
-         (array-dimensions data)
-         :element-type (array-element-type data))
-        for row = 0 then (1+ row)
-        and column across (contents matrix)
-        do (loop for icol below numcols do
-                 (setf
-                  (aref permuted row icol)
-                  (aref data column icol)))
-        finally (return permuted)))
-
-(defmethod npermute :before
-  ((data array) (matrix permutation-matrix))
-  "Verify that the dimensions are compatible."
-  (unless (every #'= (array-dimensions data)
-                 (matrix-dimensions matrix))
-    (error "Array and permutation matrix sizes incompatible.")))
+  (if (every #'= (array-dimensions data) (matrix-dimensions matrix))
+      (loop with n-columns = (array-dimension data 1)
+            with permuted =
+            (make-array
+             (array-dimensions data)
+             :element-type (array-element-type data))
+            for row = 0 then (1+ row)
+            and column across (contents matrix)
+            do (loop for icol below n-columns do
+                     (setf
+                      (aref permuted row icol)
+                      (aref data column icol)))
+            finally (return permuted))
+      (error "Permutation matrix~A and array~A sizes incompatible."
+             (matrix-dimensions matrix) (array-dimensions data))))
 
 (defmethod npermute ((data array) (matrix permutation-matrix))
   "Destructively permute the array."
-  (loop with mat = (contents matrix)
-        with m-rows = (array-dimension data 0)
-        with end = (1- (length mat))
-        for row = 0 then (if (= row column) (1+ row) row)
-        as column = (aref mat row)
-        until (= row end) unless (= row column) do
-        (loop for irow below m-rows do
-              (rotatef (aref data irow row) (aref data irow column)))
-        (rotatef (aref mat row) (aref mat column))
-        finally (return data)))
-
-(defmethod npermute :before
-  ((matrix permutation-matrix) (data array))
-  "Verify that the dimensions are compatible."
-  (unless (every #'= (array-dimensions data)
-                 (matrix-dimensions matrix))
-    (error "Array and permutation matrix sizes incompatible.")))
+  (if (every #'= (array-dimensions data) (matrix-dimensions matrix))
+      (loop with mat = (contents matrix)
+            with m-rows = (array-dimension data 0)
+            with end = (1- (length mat))
+            for row = 0 then (if (= row column) (1+ row) row)
+            as column = (aref mat row)
+            until (= row end) unless (= row column) do
+            (loop for irow below m-rows do
+                  (rotatef (aref data irow row) (aref data irow column)))
+            (rotatef (aref mat row) (aref mat column))
+            finally (return data))
+      (error "Array~A and permutation matrix~A sizes incompatible."
+             (array-dimensions data) (matrix-dimensions matrix))))
 
 (defmethod npermute ((matrix permutation-matrix) (data array))
   "Destructively permute the array."
-  (loop with mat = (contents (ntranspose matrix))
-        with n-columns = (array-dimension data 1)
-        with end = (1- (length mat))
-        for row = 0 then (if (= row column) (1+ row) row)
-        as column = (aref mat row)
-        until (= row end) unless (= row column) do
-        (loop for icolumn below n-columns do
-              (rotatef
-               (aref data row icolumn)
-               (aref data column icolumn)))
-        (rotatef (aref mat row) (aref mat column))
-        finally (return data)))
+  (if (every #'= (array-dimensions data) (matrix-dimensions matrix))
+      (loop with mat = (contents (ntranspose matrix))
+            with n-columns = (array-dimension data 1)
+            with end = (1- (length mat))
+            for row = 0 then (if (= row column) (1+ row) row)
+            as column = (aref mat row)
+            until (= row end) unless (= row column) do
+            (loop for icolumn below n-columns do
+                  (rotatef
+                   (aref data row icolumn)
+                   (aref data column icolumn)))
+            (rotatef (aref mat row) (aref mat column))
+            finally (return data))
+      (error "Permutation matrix~A and array~A sizes incompatible."
+             (matrix-dimensions matrix) (array-dimensions data))))
 
 (defmethod scale ((scalar number) (data array))
   "Scale each element of the array."
@@ -238,96 +224,92 @@ array."
          (aref data i0 i1)
          (* scalar (aref data i0 i1)))))))
 
-(defmethod add :before
-  ((array1 array) (array2 array) &key scalar1 scalar2)
-  "Audit the input data."
-  (declare (ignore scalar1 scalar2))
-  (unless (every #'=
-                 (array-dimensions array1)
-                 (array-dimensions array2))
-    (error "The array dimensions are not compatible.")))
+(defmethod compatible-dimensions-p
+           ((operation (eql :add)) (array1 array) (array2 array))
+  "Return true if the array dimensions are compatible for an
+addition."
+  (and
+   (= 2 (array-rank array1) (array-rank array2))
+   (= (array-dimension array1 0) (array-dimension array2 0))
+   (= (array-dimension array1 1) (array-dimension array2 1))))
 
 (defmethod add ((array1 array) (array2 array) &key scalar1 scalar2)
   "Return the addition of the 2 arrays."
-  (destructuring-bind (numrows numcols) (array-dimensions array1)
-    (let ((op (scaled-binary-op #'+ scalar1 scalar2))
-          (result
-           (make-array
-            (list numrows numcols)
-            :element-type
-            (common-array-element-type array1 array2))))
-      (dotimes (i0 numrows result)
-        (dotimes (i1 numcols)
-          (setf
-           (aref result i0 i1)
-           (funcall op (aref array1 i0 i1) (aref array2 i0 i1))))))))
-
-(defmethod nadd :before
-  ((array1 array) (array2 array) &key scalar1 scalar2)
-  "Audit the input data."
-  (declare (ignore scalar1 scalar2))
-  (unless (every #'=
-                 (array-dimensions array1)
-                 (array-dimensions array2))
-    (error "The array dimensions are not compatible.")))
+  (if (compatible-dimensions-p :add array1 array2)
+      (let ((m-rows (array-dimension array1 0))
+            (n-columns (array-dimension array1 1))
+            (op (scaled-binary-op #'+ scalar1 scalar2))
+            (result
+             (make-array
+              (array-dimensions array1)
+              :element-type
+              (common-array-element-type array1 array2))))
+        (dotimes (i0 m-rows result)
+          (dotimes (i1 n-columns)
+            (setf
+             (aref result i0 i1)
+             (funcall op (aref array1 i0 i1) (aref array2 i0 i1))))))
+      (error "The array dimensions, ~A,~A, are not compatible."
+             (array-dimensions array1) (array-dimensions array2))))
 
 (defmethod nadd ((array1 array) (array2 array) &key scalar1 scalar2)
   "Destructively add array2 to array1."
-  (destructuring-bind (numrows numcols) (array-dimensions array1)
-    (let ((op (scaled-binary-op #'+ scalar1 scalar2)))
-      (dotimes (i0 numrows array1)
-        (dotimes (i1 numcols)
-          (setf
-           (aref array1 i0 i1)
-           (funcall op (aref array1 i0 i1) (aref array2 i0 i1))))))))
-
-(defmethod subtract :before
-  ((array1 array) (array2 array) &key scalar1 scalar2)
-  "Audit the input data."
-  (declare (ignore scalar1 scalar2))
-  (unless (every #'=
-                 (array-dimensions array1)
-                 (array-dimensions array2))
-    (error "The array dimensions are not compatible.")))
+  (if (compatible-dimensions-p :add array1 array2)
+      (let ((m-rows (array-dimension array1 0))
+            (n-columns (array-dimension array1 1))
+            (op (scaled-binary-op #'+ scalar1 scalar2)))
+        (dotimes (i0 m-rows array1)
+          (dotimes (i1 n-columns)
+            (setf
+             (aref array1 i0 i1)
+             (funcall op (aref array1 i0 i1) (aref array2 i0 i1))))))
+      (error "The array dimensions, ~A,~A, are not compatible."
+             (array-dimensions array1) (array-dimensions array2))))
 
 (defmethod subtract ((array1 array) (array2 array) &key scalar1 scalar2)
   "Return the subtraction of the 2 arrays."
-  (destructuring-bind (numrows numcols) (array-dimensions array1)
-    (let ((op (scaled-binary-op #'- scalar1 scalar2))
-          (result
-           (make-array
-            (list numrows numcols)
-            :element-type
-            (common-array-element-type array1 array2))))
-      (dotimes (i0 numrows result)
-        (dotimes (i1 numcols)
-          (setf
-           (aref result i0 i1)
-           (funcall op (aref array1 i0 i1) (aref array2 i0 i1))))))))
-
-(defmethod nsubtract :before
-  ((array1 array) (array2 array) &key scalar1 scalar2)
-  "Audit the input data."
-  (declare (ignore scalar1 scalar2))
-  (unless (every #'=
-                 (array-dimensions array1)
-                 (array-dimensions array2))
-    (error "The array dimensions are not compatible.")))
+  (if (compatible-dimensions-p :add array1 array2)
+      (let ((m-rows (array-dimension array1 0))
+            (n-columns (array-dimension array1 1))
+            (op (scaled-binary-op #'- scalar1 scalar2))
+            (result
+             (make-array
+              (array-dimensions array1)
+              :element-type
+              (common-array-element-type array1 array2))))
+        (dotimes (i0 m-rows result)
+          (dotimes (i1 n-columns)
+            (setf
+             (aref result i0 i1)
+             (funcall op (aref array1 i0 i1) (aref array2 i0 i1))))))
+      (error "The array dimensions, ~A,~A, are not compatible."
+             (array-dimensions array1) (array-dimensions array2))))
 
 (defmethod nsubtract ((array1 array) (array2 array) &key scalar1 scalar2)
   "Destructively subtract array2 from array1."
-  (destructuring-bind (numrows numcols) (array-dimensions array1)
-    (let ((op (scaled-binary-op #'- scalar1 scalar2)))
-      (dotimes (i0 numrows array1)
-        (dotimes (i1 numcols)
-          (setf
-           (aref array1 i0 i1)
-           (funcall op (aref array1 i0 i1) (aref array2 i0 i1))))))))
+  (if (compatible-dimensions-p :add array1 array2)
+      (let ((m-rows (array-dimension array1 0))
+            (n-columns (array-dimension array1 1))
+            (op (scaled-binary-op #'- scalar1 scalar2)))
+        (dotimes (i0 m-rows array1)
+          (dotimes (i1 n-columns)
+            (setf
+             (aref array1 i0 i1)
+             (funcall op (aref array1 i0 i1) (aref array2 i0 i1))))))
+      (error "The array dimensions, ~A and ~A, are not compatible."
+             (array-dimensions array1) (array-dimensions array2))))
+
+(defmethod compatible-dimensions-p
+           ((operation (eql :product)) (vector vector) (array array))
+  "Return true if the array dimensions are compatible for product."
+  (and
+   (= 2 (array-rank array))
+   (= (length vector) (array-dimension array 0))))
 
 (defmethod product ((vector vector) (array array) &key scalar)
   "Return a vector generated by the pre-multiplication of a array by a
 vector."
-  (if (= (length vector) (array-dimension array 0))
+  (if (compatible-dimensions-p :product vector array)
       (let* ((m-rows (array-dimension array 0))
              (n-columns (array-dimension array 1))
              (zero (coerce 0 (array-element-type vector)))
@@ -346,10 +328,17 @@ vector."
       (error "Vector(~D) is incompatible with array~A."
              (length vector) (array-dimensions array))))
 
+(defmethod compatible-dimensions-p
+           ((operation (eql :product)) (array array) (vector vector))
+  "Return true if the array dimensions are compatible for product."
+  (and
+   (= 2 (array-rank array))
+   (= (array-dimension array 1) (length vector))))
+
 (defmethod product ((array array) (vector vector) &key scalar)
   "Return a vector generated by the multiplication of the array with a
 vector."
-  (if (= (array-dimension array 1) (length vector))
+  (if (compatible-dimensions-p :product array vector)
       (let* ((m-rows (array-dimension array 0))
              (n-columns (array-dimension array 1))
              (zero (coerce 0 (array-element-type vector)))
@@ -368,9 +357,16 @@ vector."
       (error "Array~A is incompatible with vector(~D)."
              (array-dimensions array) (length vector))))
 
+(defmethod compatible-dimensions-p
+           ((operation (eql :product)) (array1 array) (array2 array))
+  "Return true if the array dimensions are compatible for product."
+  (and
+   (= 2 (array-rank array1) (array-rank array2))
+   (= (array-dimension array1 1) (array-dimension array2 0))))
+
 (defmethod product ((array1 array) (array2 array) &key scalar)
   "Return the product of the arrays."
-  (if (= (array-dimension array1 1) (array-dimension array2 0))
+  (if (compatible-dimensions-p :product array1 array2)
       (let* ((l-columns (array-dimension array1 1))
              (m-rows (array-dimension array1 0))
              (n-columns (array-dimension array2 1))
