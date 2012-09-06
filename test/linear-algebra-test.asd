@@ -48,19 +48,27 @@
    (:module kernel
     :depends-on ("linear-algebra-test")
     :components
-    ((:file "permute")))
+    ((:file "utility")
+     (:file "permute")))
+   ;; Linear algebra interface
+   (:module interface
+    :depends-on ("linear-algebra-test")
+    :components
+    ((:file "vector")
+     (:file "matrix")
+     (:file "identity-matrix" :depends-on ("matrix"))
+     (:file "permutation-matrix" :depends-on ("matrix"))))
+   ;; Common lisp sequence tests
+   (:module sequence
+    :depends-on ("linear-algebra-test")
+    :components
+    ((:file "list")
+     (:file "vector")
+     (:file "array")))
    ;; Linear algebra tests
-   (:file "utility" :depends-on ("linear-algebra-test"))
-   (:file "vector" :depends-on ("linear-algebra-test"))
-   (:file "cl-list" :depends-on ("linear-algebra-test"))
-   (:file "cl-vector" :depends-on ("linear-algebra-test"))
-   (:file "cl-array" :depends-on ("linear-algebra-test"))
    (:file "data-vector" :depends-on ("linear-algebra-test"))
-   (:file "matrix" :depends-on ("linear-algebra-test"))
-   (:file "identity-matrix" :depends-on ("matrix"))
-   (:file "permutation-matrix" :depends-on ("matrix"))
-   (:file "dense-matrix" :depends-on ("matrix"))
-   (:file "square-matrix" :depends-on ("matrix"))
-   (:file "hermitian-matrix" :depends-on ("matrix"))
-   (:file "symmetric-matrix" :depends-on ("matrix"))
-   (:file "triangular-matrix" :depends-on ("matrix"))))
+   (:file "dense-matrix" :depends-on ("interface"))
+   (:file "square-matrix" :depends-on ("interface"))
+   (:file "hermitian-matrix" :depends-on ("interface"))
+   (:file "symmetric-matrix" :depends-on ("interface"))
+   (:file "triangular-matrix" :depends-on ("interface"))))
