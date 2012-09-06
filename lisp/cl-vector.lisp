@@ -179,67 +179,51 @@ vector."
   "Return the vector destructively scaled by scalar."
   (map-into data (lambda (x) (* scalar x)) data))
 
-(defmethod add :before ((vector1 vector) (vector2 vector)
-                        &key scalar1 scalar2)
-  "Verify that the dimensions are equal."
-  (declare (ignore scalar1 scalar2))
-  (unless (= (length vector1) (length vector2))
-    (error "VECTOR1 and VECTOR2 are not of equal length.")))
-
 (defmethod add ((vector1 vector) (vector2 vector)
                 &key scalar1 scalar2)
   "Return the addition of scalar1*vector1 with scalar2*vector2"
-  (map-into
-   (make-array (length vector1) :element-type
-               (common-array-element-type vector1 vector2))
-   (scaled-binary-op #'+ scalar1 scalar2)
-   vector1 vector2))
-
-(defmethod nadd :before ((vector1 vector) (vector2 vector)
-                         &key scalar1 scalar2)
-  "Verify that the dimensions are equal."
-  (declare (ignore scalar1 scalar2))
-  (unless (= (length vector1) (length vector2))
-    (error
-     "VECTOR1 and VECTOR2 are not of equal length in NADD-SCALED.")))
+  (if (= (length vector1) (length vector2))
+      (map-into
+       (make-array (length vector1) :element-type
+                   (common-array-element-type vector1 vector2))
+       (scaled-binary-op #'+ scalar1 scalar2)
+       vector1 vector2)
+      (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
+             (length vector1) (length vector2))))
 
 (defmethod nadd ((vector1 vector) (vector2 vector)
                  &key scalar1 scalar2)
   "Return the addition of scalar2*vector2 to scalar1*vector1."
-  (map-into
-   vector1
-   (scaled-binary-op #'+ scalar1 scalar2)
-   vector1 vector2))
-
-(defmethod subtract :before ((vector1 vector) (vector2 vector)
-                             &key scalar1 scalar2)
-  "Verify that the dimensions are equal."
-  (declare (ignore scalar1 scalar2))
-  (unless (= (length vector1) (length vector2))
-    (error "VECTOR1 and VECTOR2 are not of equal length.")))
+  (if (= (length vector1) (length vector2))
+      (map-into
+       vector1
+       (scaled-binary-op #'+ scalar1 scalar2)
+       vector1 vector2)
+      (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
+             (length vector1) (length vector2))))
 
 (defmethod subtract ((vector1 vector) (vector2 vector)
                      &key scalar1 scalar2)
   "Return the subraction of scalar2*vector2 from scalar1*vector1."
-  (map-into
-   (make-array (length vector1) :element-type
-               (common-array-element-type vector1 vector2))
-   (scaled-binary-op #'- scalar1 scalar2)
-   vector1 vector2))
+  (if (= (length vector1) (length vector2))
+      (map-into
+       (make-array (length vector1) :element-type
+                   (common-array-element-type vector1 vector2))
+       (scaled-binary-op #'- scalar1 scalar2)
+       vector1 vector2)
+      (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
+             (length vector1) (length vector2))))
 
-(defmethod nsubtract :before ((vector1 vector) (vector2 vector)
-                              &key scalar1 scalar2)
-  "Verify that the dimensions are equal."
-  (declare (ignore scalar1 scalar2))
-  (unless (= (length vector1) (length vector2))
-    (error "VECTOR1 and VECTOR2 are not of equal length.")))
-
-(defmethod nsubtract ((vector1 vector) (vector2 vector) &key scalar1 scalar2)
+(defmethod nsubtract ((vector1 vector) (vector2 vector)
+                      &key scalar1 scalar2)
   "Return the subraction of scalar2*vector2 from scalar1*vector1."
-  (map-into
-   vector1
-   (scaled-binary-op #'- scalar1 scalar2)
-   vector1 vector2))
+  (if (= (length vector1) (length vector2))
+      (map-into
+       vector1
+       (scaled-binary-op #'- scalar1 scalar2)
+       vector1 vector2)
+      (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
+             (length vector1) (length vector2))))
 
 (defmethod product ((vector1 vector) (vector2 vector)
                     &key (scalar nil scalarp) conjugate)

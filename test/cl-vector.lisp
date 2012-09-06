@@ -332,8 +332,8 @@
 
 (define-test nadd-vector
   ;; Real
-  (let ((vector1 #(1.1 2.2 3.3 4.4))
-        (vector2 #(1.1 2.2 3.3 4.4)))
+  (let ((vector1 (vector 1.1 2.2 3.3 4.4))
+        (vector2 (vector 1.1 2.2 3.3 4.4)))
     (assert-eq vector1 (linear-algebra:nadd vector1 vector2))
     (assert-float-equal #(2.2 4.4 6.6 8.8) vector1)
     (assert-float-equal
@@ -346,8 +346,8 @@
      #(22.0 44.0 66.0 88.0)
      (linear-algebra:nadd vector1 vector2 :scalar1 2.0 :scalar2 2.0)))
   ;; Complex
-  (let ((vector1 #(#C(1.1 2.2) #C(3.3 4.4)))
-        (vector2 #(#C(1.1 2.2) #C(3.3 4.4))))
+  (let ((vector1 (vector #C(1.1 2.2) #C(3.3 4.4)))
+        (vector2 (vector #C(1.1 2.2) #C(3.3 4.4))))
     (assert-eq vector1 (linear-algebra:nadd vector1 vector2))
     (assert-float-equal #(#C(2.2 4.4) #C(6.6 8.8)) vector1)
     (assert-float-equal
