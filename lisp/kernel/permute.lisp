@@ -55,43 +55,43 @@
 
 ;;; Permute Vectors
 
-(defmethod right-permute ((data vector) (permutation vector))
+(defun right-permute-vector (vector permutation)
   (loop with result =
         (make-array
-         (length data)
-         :element-type (array-element-type data))
+         (length vector)
+         :element-type (array-element-type vector))
         for row = 0 then (1+ row)
         and column across permutation
-        do (setf (aref result column) (aref data row))
+        do (setf (aref result column) (aref vector row))
         finally (return result)))
 
-(defmethod left-permute ((permutation vector) (data vector))
+(defun left-permute-vector (permutation vector)
   (loop with result =
         (make-array
-         (length data)
-         :element-type (array-element-type data))
+         (length vector)
+         :element-type (array-element-type vector))
         for row = 0 then (1+ row)
         and column across permutation
-        do (setf (aref result row) (aref data column))
+        do (setf (aref result row) (aref vector column))
         finally (return result)))
 
-(defmethod right-npermute ((data vector) (permutation vector))
+(defun right-npermute-vector (vector permutation)
   (loop with end = (1- (length permutation))
         for row = 0 then (if (= row column) (1+ row) row)
         as column = (aref permutation row)
         until (= row end) unless (= row column) do
-        (rotatef (aref data row) (aref data column))
+        (rotatef (aref vector row) (aref vector column))
         (rotatef (aref permutation row) (aref permutation column))
-        finally (return data)))
+        finally (return vector)))
 
-(defmethod left-npermute ((permutation vector) (data vector))
+(defun left-npermute-vector (permutation vector)
   (loop with end = (1- (length permutation))
         for row = 0 then (if (= row column) (1+ row) row)
         as column = (aref permutation row)
         until (= row end) unless (= row column) do
-        (rotatef (aref data row) (aref data column))
+        (rotatef (aref vector row) (aref vector column))
         (rotatef (aref permutation row) (aref permutation column))
-        finally (return data)))
+        finally (return vector)))
 
 ;;; Permute Arrays
 

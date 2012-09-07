@@ -40,45 +40,53 @@
 (define-test right-permute-vector
   (assert-float-equal
    #(3.3 4.4 1.1 5.5 2.2)
-   (linear-algebra-kernel:right-permute
+   (linear-algebra-kernel:right-permute-vector
     (vector 1.1 2.2 3.3 4.4 5.5)
     (vector 2 4 0 1 3)))
   (assert-float-equal
    #(3.3 4.4 2.2 5.5 1.1)
-   (linear-algebra-kernel:right-permute
+   (linear-algebra-kernel:right-permute-vector
     (vector 1.1 2.2 3.3 4.4 5.5)
     (vector 4 2 0 1 3))))
 
 (define-test left-permute-vector
   (assert-float-equal
    #(3.3 5.5 1.1 2.2 4.4)
-   (linear-algebra-kernel:left-permute
+   (linear-algebra-kernel:left-permute-vector
     (vector 2 4 0 1 3)
     (vector 1.1 2.2 3.3 4.4 5.5)))
   (assert-float-equal
    #(5.5 3.3 1.1 2.2 4.4)
-   (linear-algebra-kernel:left-permute
+   (linear-algebra-kernel:left-permute-vector
     (vector 4 2 0 1 3)
     (vector 1.1 2.2 3.3 4.4 5.5))))
 
 (define-test right-npermute-vector
   (let ((vect (vector 1.1 2.2 3.3 4.4 5.5))
         (pmat (vector 2 4 0 1 3)))
-    (assert-eq vect (linear-algebra-kernel:right-npermute vect pmat))
+    (assert-eq
+     vect
+     (linear-algebra-kernel:right-npermute-vector vect pmat))
     (assert-float-equal #(3.3 4.4 1.1 5.5 2.2) vect))
   (let ((vect (vector 1.1 2.2 3.3 4.4 5.5))
         (pmat (vector 4 2 0 1 3)))
-    (assert-eq vect (linear-algebra-kernel:right-npermute vect pmat))
+    (assert-eq
+     vect
+     (linear-algebra-kernel:right-npermute-vector vect pmat))
     (assert-float-equal #(3.3 4.4 2.2 5.5 1.1) vect)))
 
 (define-test left-npermute-vector
   (let ((vect (vector 1.1 2.2 3.3 4.4 5.5))
         (pmat (vector 2 3 0 4 1)))
-    (assert-eq vect (linear-algebra-kernel:left-npermute pmat vect))
+    (assert-eq
+     vect
+     (linear-algebra-kernel:left-npermute-vector pmat vect))
     (assert-float-equal #(3.3 5.5 1.1 2.2 4.4) vect))
   (let ((vect (vector 1.1 2.2 3.3 4.4 5.5))
         (pmat (vector 2 3 1 4 0)))
-    (assert-eq vect (linear-algebra-kernel:left-npermute pmat vect))
+    (assert-eq
+     vect
+     (linear-algebra-kernel:left-npermute-vector pmat vect))
     (assert-float-equal #(5.5 3.3 1.1 2.2 4.4) vect)))
 
 ;;; Array permutation

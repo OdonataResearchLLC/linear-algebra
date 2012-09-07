@@ -102,7 +102,7 @@ vector."
 (defmethod permute ((data vector) (matrix permutation-matrix))
   "Return the permutation of the list."
   (if (= (length data) (matrix-row-dimension matrix))
-      (right-permute data (contents matrix))
+      (right-permute-vector data (contents matrix))
       (error
        "Vector(~D) and permutation matrix~A are incompatible."
        (length data) (matrix-dimensions matrix))))
@@ -110,7 +110,7 @@ vector."
 (defmethod permute ((matrix permutation-matrix) (data vector))
   "Return the permutation of the list."
   (if (= (length data) (matrix-column-dimension matrix))
-      (left-permute (contents matrix) data)
+      (left-permute-vector (contents matrix) data)
       (error
        "Permutation matrix~A and vector(~D) are incompatible."
        (matrix-dimensions matrix) (length data))))
@@ -118,7 +118,7 @@ vector."
 (defmethod npermute ((data vector) (matrix permutation-matrix))
   "Destructively permute the vector."
   (if (= (length data) (matrix-row-dimension matrix))
-      (right-npermute data (contents matrix))
+      (right-npermute-vector data (contents matrix))
       (error
        "Vector(~D) and permutation matrix~A are incompatible."
        (length data) (matrix-dimensions matrix))))
@@ -126,7 +126,7 @@ vector."
 (defmethod npermute ((matrix permutation-matrix) (data vector))
   "Destructively permute the list."
   (if (= (length data) (matrix-column-dimension matrix))
-      (left-npermute (contents (ntranspose matrix)) data)
+      (left-npermute-vector (contents (ntranspose matrix)) data)
       (error
        "Permutation matrix~A and vector(~D) are incompatible."
        (matrix-dimensions matrix) (length data))))
