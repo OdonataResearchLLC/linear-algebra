@@ -49,7 +49,8 @@
     :depends-on ("linear-algebra-test")
     :components
     ((:file "utility")
-     (:file "permute")))
+     (:file "permute")
+     (:file "binary-operations")))
    ;; Linear algebra interface
    (:module interface
     :depends-on ("linear-algebra-test")
