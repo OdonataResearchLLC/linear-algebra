@@ -131,10 +131,7 @@
    (scaled-binary-op #'- scalar1 scalar2)
    vector1 vector2))
 
-(defmethod binary-operation ((operation (eql :inner-product))
-                             (vector1 vector)
-                             (vector2 vector)
-                             scalar conjugate)
+(defun inner-product-vector (vector1 vector2 scalar conjugate)
   (loop with op = (scaled-binary-op #'* nil conjugate)
         for element1 across vector1
         and element2 across vector2

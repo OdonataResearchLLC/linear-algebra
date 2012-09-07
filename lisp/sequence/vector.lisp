@@ -180,7 +180,6 @@ vector."
                     &key scalar conjugate)
   "Return the dot product of vector1 and vector2."
   (if (= (length vector1) (length vector2))
-      (binary-operation
-       :inner-product vector1 vector2 scalar conjugate)
+      (inner-product-vector vector1 vector2 scalar conjugate)
       (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
              (length vector1) (length vector2))))
