@@ -92,7 +92,7 @@
 
 ;;; Binary vector operations
 
-(defun %vector-binary-operation (operation vector1 vector2)
+(defun %vector<-vector1-op-vector2 (operation vector1 vector2)
   (map-into
    (make-array
     (length vector1)
@@ -100,8 +100,7 @@
    operation
    vector1 vector2))
 
-(defun %destructive-vector-binary-operation
-       (operation vector1 vector2)
+(defun %vector1<-vector1-op-vector2 (operation vector1 vector2)
   (map-into vector1 operation vector1 vector2))
 
 (defmethod binary-operation ((operation (eql :add))
@@ -110,7 +109,7 @@
                              scalar1 scalar2)
   "Add the elements of the vectors and store the result in a new
 vector."
-  (%vector-binary-operation
+  (%vector<-vector1-op-vector2
    (scaled-binary-op #'+ scalar1 scalar2)
    vector1 vector2))
 
@@ -118,7 +117,7 @@ vector."
                              (vector1 vector)
                              (vector2 vector)
                              scalar1 scalar2)
-  (%destructive-vector-binary-operation
+  (%vector1<-vector1-op-vector2
    (scaled-binary-op #'+ scalar1 scalar2)
    vector1 vector2))
 
@@ -128,7 +127,7 @@ vector."
                              scalar1 scalar2)
   "Add the elements of the vectors and store the result in a new
 vector."
-  (%vector-binary-operation
+  (%vector<-vector1-op-vector2
    (scaled-binary-op #'- scalar1 scalar2)
    vector1 vector2))
 
@@ -136,13 +135,13 @@ vector."
                              (vector1 vector)
                              (vector2 vector)
                              scalar1 scalar2)
-  (%destructive-vector-binary-operation
+  (%vector1<-vector1-op-vector2
    (scaled-binary-op #'- scalar1 scalar2)
    vector1 vector2))
 
 ;;; Binary array operations
 
-(defun %array-binary-operation (operation array1 array2)
+(defun %array<-array1-op-array2 (operation array1 array2)
   (let ((m-rows (array-dimension array1 0))
         (n-columns (array-dimension array1 1))
         (result
@@ -158,7 +157,7 @@ vector."
                   (aref array1 i0 i1)
                   (aref array2 i0 i1)))))))
 
-(defun %destructive-array-binary-operation (operation array1 array2)
+(defun %array1<-array1-op-array2 (operation array1 array2)
   (let ((m-rows (array-dimension array1 0))
         (n-columns (array-dimension array1 1)))
     (dotimes (i0 m-rows array1)
@@ -175,7 +174,7 @@ vector."
                              scalar1 scalar2)
   "Add the elements of the vectors and store the result in a new
 vector."
-  (%array-binary-operation
+  (%array<-array1-op-array2
    (scaled-binary-op #'+ scalar1 scalar2)
    array1 array2))
 
@@ -183,7 +182,7 @@ vector."
                              (array1 array)
                              (array2 array)
                              scalar1 scalar2)
-  (%destructive-array-binary-operation
+  (%array1<-array1-op-array2
    (scaled-binary-op #'+ scalar1 scalar2)
    array1 array2))
 
@@ -193,7 +192,7 @@ vector."
                              scalar1 scalar2)
   "Add the elements of the vectors and store the result in a new
 vector."
-  (%array-binary-operation
+  (%array<-array1-op-array2
    (scaled-binary-op #'- scalar1 scalar2)
    array1 array2))
 
@@ -201,6 +200,6 @@ vector."
                              (array1 array)
                              (array2 array)
                              scalar1 scalar2)
-  (%destructive-array-binary-operation
+  (%array1<-array1-op-array2
    (scaled-binary-op #'- scalar1 scalar2)
    array1 array2))
