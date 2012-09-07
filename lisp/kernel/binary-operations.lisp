@@ -192,38 +192,22 @@
                   (aref array1 i0 i1)
                   (aref array2 i0 i1)))))))
 
-(defmethod binary-operation ((operation (eql :add))
-                             (array1 array)
-                             (array2 array)
-                             scalar1 scalar2)
-  "Add the elements of the vectors and store the result in a new
-vector."
+(defun add-array (array1 array2 scalar1 scalar2)
   (%array<-array1-op-array2
    (scaled-binary-op #'+ scalar1 scalar2)
    array1 array2))
 
-(defmethod binary-operation ((operation (eql :nadd))
-                             (array1 array)
-                             (array2 array)
-                             scalar1 scalar2)
+(defun nadd-array (array1 array2 scalar1 scalar2)
   (%array1<-array1-op-array2
    (scaled-binary-op #'+ scalar1 scalar2)
    array1 array2))
 
-(defmethod binary-operation ((operation (eql :subtract))
-                             (array1 array)
-                             (array2 array)
-                             scalar1 scalar2)
-  "Add the elements of the vectors and store the result in a new
-vector."
+(defun subtract-array (array1 array2 scalar1 scalar2)
   (%array<-array1-op-array2
    (scaled-binary-op #'- scalar1 scalar2)
    array1 array2))
 
-(defmethod binary-operation ((operation (eql :nsubtract))
-                             (array1 array)
-                             (array2 array)
-                             scalar1 scalar2)
+(defun nsubtract-array (array1 array2 scalar1 scalar2)
   (%array1<-array1-op-array2
    (scaled-binary-op #'- scalar1 scalar2)
    array1 array2))

@@ -194,28 +194,28 @@ addition."
 (defmethod add ((array1 array) (array2 array) &key scalar1 scalar2)
   "Return the addition of the 2 arrays."
   (if (compatible-dimensions-p :add array1 array2)
-      (binary-operation :add array1 array2 scalar1 scalar2)
+      (add-array array1 array2 scalar1 scalar2)
       (error "The array dimensions, ~A,~A, are not compatible."
              (array-dimensions array1) (array-dimensions array2))))
 
 (defmethod nadd ((array1 array) (array2 array) &key scalar1 scalar2)
   "Destructively add array2 to array1."
   (if (compatible-dimensions-p :add array1 array2)
-      (binary-operation :nadd array1 array2 scalar1 scalar2)
+      (nadd-array array1 array2 scalar1 scalar2)
       (error "The array dimensions, ~A,~A, are not compatible."
              (array-dimensions array1) (array-dimensions array2))))
 
 (defmethod subtract ((array1 array) (array2 array) &key scalar1 scalar2)
   "Return the subtraction of the 2 arrays."
   (if (compatible-dimensions-p :add array1 array2)
-      (binary-operation :subtract array1 array2 scalar1 scalar2)
+      (subtract-array array1 array2 scalar1 scalar2)
       (error "The array dimensions, ~A,~A, are not compatible."
              (array-dimensions array1) (array-dimensions array2))))
 
 (defmethod nsubtract ((array1 array) (array2 array) &key scalar1 scalar2)
   "Destructively subtract array2 from array1."
   (if (compatible-dimensions-p :add array1 array2)
-      (binary-operation :nsubtract array1 array2 scalar1 scalar2)
+      (nsubtract-array array1 array2 scalar1 scalar2)
       (error "The array dimensions, ~A and ~A, are not compatible."
              (array-dimensions array1) (array-dimensions array2))))
 
