@@ -95,54 +95,54 @@
 
 ;;; Permute Arrays
 
-(defmethod right-permute ((data array) (permutation vector))
-  (loop with m-rows = (array-dimension data 0)
+(defun right-permute-array (array permutation)
+  (loop with m-rows = (array-dimension array 0)
         with result =
         (make-array
-         (array-dimensions data)
-         :element-type (array-element-type data))
+         (array-dimensions array)
+         :element-type (array-element-type array))
         for row = 0 then (1+ row)
         and column across permutation
         do (loop for irow below m-rows do
                  (setf
                   (aref result irow column)
-                  (aref data irow row)))
+                  (aref array irow row)))
         finally (return result)))
 
-(defmethod left-permute ((permutation vector) (data array))
-  (loop with n-columns = (array-dimension data 1)
+(defun left-permute-array (permutation array)
+  (loop with n-columns = (array-dimension array 1)
         with result =
         (make-array
-         (array-dimensions data)
-         :element-type (array-element-type data))
+         (array-dimensions array)
+         :element-type (array-element-type array))
         for row = 0 then (1+ row)
         and column across permutation
         do (loop for icol below n-columns do
                  (setf
                   (aref result row icol)
-                  (aref data column icol)))
+                  (aref array column icol)))
         finally (return result)))
 
-(defmethod right-npermute ((data array) (permutation vector))
-  (loop with m-rows = (array-dimension data 0)
+(defun right-npermute-array (array permutation)
+  (loop with m-rows = (array-dimension array 0)
         with end = (1- (length permutation))
         for row = 0 then (if (= row column) (1+ row) row)
         as column = (aref permutation row)
         until (= row end) unless (= row column) do
         (loop for irow below m-rows do
-              (rotatef (aref data irow row) (aref data irow column)))
+              (rotatef (aref array irow row) (aref array irow column)))
         (rotatef (aref permutation row) (aref permutation column))
-        finally (return data)))
+        finally (return array)))
 
-(defmethod left-npermute ((permutation vector) (data array))
-  (loop with n-columns = (array-dimension data 1)
+(defun left-npermute-array (permutation array)
+  (loop with n-columns = (array-dimension array 1)
         with end = (1- (length permutation))
         for row = 0 then (if (= row column) (1+ row) row)
         as column = (aref permutation row)
         until (= row end) unless (= row column) do
         (loop for icolumn below n-columns do
               (rotatef
-               (aref data row icolumn)
-               (aref data column icolumn)))
+               (aref array row icolumn)
+               (aref array column icolumn)))
         (rotatef (aref permutation row) (aref permutation column))
-        finally (return data)))
+        finally (return array)))
