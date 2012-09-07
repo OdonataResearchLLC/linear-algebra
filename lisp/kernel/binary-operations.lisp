@@ -111,38 +111,22 @@
 (defun %vector1<-vector1-op-vector2 (operation vector1 vector2)
   (map-into vector1 operation vector1 vector2))
 
-(defmethod binary-operation ((operation (eql :add))
-                             (vector1 vector)
-                             (vector2 vector)
-                             scalar1 scalar2)
-  "Add the elements of the vectors and store the result in a new
-vector."
+(defun add-vector (vector1 vector2 scalar1 scalar2)
   (%vector<-vector1-op-vector2
    (scaled-binary-op #'+ scalar1 scalar2)
    vector1 vector2))
 
-(defmethod binary-operation ((operation (eql :nadd))
-                             (vector1 vector)
-                             (vector2 vector)
-                             scalar1 scalar2)
+(defun nadd-vector (vector1 vector2 scalar1 scalar2)
   (%vector1<-vector1-op-vector2
    (scaled-binary-op #'+ scalar1 scalar2)
    vector1 vector2))
 
-(defmethod binary-operation ((operation (eql :subtract))
-                             (vector1 vector)
-                             (vector2 vector)
-                             scalar1 scalar2)
-  "Add the elements of the vectors and store the result in a new
-vector."
+(defun subtract-vector (vector1 vector2 scalar1 scalar2)
   (%vector<-vector1-op-vector2
    (scaled-binary-op #'- scalar1 scalar2)
    vector1 vector2))
 
-(defmethod binary-operation ((operation (eql :nsubtract))
-                             (vector1 vector)
-                             (vector2 vector)
-                             scalar1 scalar2)
+(defun nsubtract-vector (vector1 vector2 scalar1 scalar2)
   (%vector1<-vector1-op-vector2
    (scaled-binary-op #'- scalar1 scalar2)
    vector1 vector2))
@@ -157,6 +141,27 @@ vector."
         sum (funcall op element1 element2) into result
         finally
         (return (if scalar (* scalar result) result))))
+
+;;; Binary array/vector operations
+
+(defmethod binary-operation ((operation (eql :product))
+                             (vector vector) (array array)
+                             scalar conjugate)
+  (let* ((m-rows (array-dimension array 0))
+         (n-columns (array-dimension array 1))
+         (zero (coerce 0 (array-element-type vector)))
+         (element)
+         (result
+          (make-array
+           n-columns
+           :element-type (array-element-type vector))))
+    (dotimes (i1 n-columns result)
+      (setf element zero)
+      (dotimes (i0 m-rows)
+        (incf element (* (aref vector i0) (aref array i0 i1))))
+      (if scalar
+          (setf (aref result i1) (* scalar element))
+          (setf (aref result i1) element)))))
 
 ;;; Binary array operations
 

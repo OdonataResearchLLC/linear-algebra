@@ -93,176 +93,176 @@
 
 ;;; Vector binary operations unit tests
 
-(define-test binary-operation-add-vector
+(define-test binop-add-vector
   ;; Real
   (let ((vector1 #(1.1 2.2 3.3 4.4))
         (vector2 #(1.1 2.2 3.3 4.4)))
     (assert-float-equal
      #(2.2 4.4 6.6 8.8)
-     (linear-algebra-kernel:binary-operation
-      :add vector1 vector2 nil nil))
+     (linear-algebra-kernel:add-vector
+      vector1 vector2 nil nil))
     (assert-float-equal
      #(3.3 6.6 9.9 13.2)
-     (linear-algebra-kernel:binary-operation
-      :add vector1 vector2 2.0 nil))
+     (linear-algebra-kernel:add-vector
+      vector1 vector2 2.0 nil))
     (assert-float-equal
      #(3.3 6.6 9.9 13.2)
-     (linear-algebra-kernel:binary-operation
-      :add vector1 vector2 nil 2.0))
+     (linear-algebra-kernel:add-vector
+      vector1 vector2 nil 2.0))
     (assert-float-equal
      #(4.4 8.8 13.2 17.6)
-     (linear-algebra-kernel:binary-operation
-      :add vector1 vector2 2.0 2.0)))
+     (linear-algebra-kernel:add-vector
+      vector1 vector2 2.0 2.0)))
   ;; Complex
   (let ((vector1 #(#C(1.1 2.2) #C(3.3 4.4)))
         (vector2 #(#C(1.1 2.2) #C(3.3 4.4))))
     (assert-float-equal
      #(#C(2.2 4.4) #C(6.6 8.8))
-     (linear-algebra-kernel:binary-operation
-      :add vector1 vector2 nil nil))
+     (linear-algebra-kernel:add-vector
+      vector1 vector2 nil nil))
     (assert-float-equal
      #(#C(3.3 6.6) #C(9.9 13.2))
-     (linear-algebra-kernel:binary-operation
-      :add vector1 vector2 2.0 nil))
+     (linear-algebra-kernel:add-vector
+      vector1 vector2 2.0 nil))
     (assert-float-equal
      #(#C(3.3 6.6) #C(9.9 13.2))
-     (linear-algebra-kernel:binary-operation
-      :add vector1 vector2 nil 2.0))
+     (linear-algebra-kernel:add-vector
+      vector1 vector2 nil 2.0))
     (assert-float-equal
      #(#C(4.4 8.8) #C(13.2 17.6))
-     (linear-algebra-kernel:binary-operation
-      :add vector1 vector2 2.0 2.0))))
+     (linear-algebra-kernel:add-vector
+      vector1 vector2 2.0 2.0))))
 
 ;;; Destructive vector addition
 
-(define-test binary-operation-nadd-vector
+(define-test binop-nadd-vector
   ;; Real
   (let ((vector1 (vector 1.1 2.2 3.3 4.4))
         (vector2 (vector 1.1 2.2 3.3 4.4)))
     (assert-eq
      vector1
-     (linear-algebra-kernel:binary-operation
-      :nadd vector1 vector2 nil nil))
+     (linear-algebra-kernel:nadd-vector
+      vector1 vector2 nil nil))
     (assert-float-equal #(2.2 4.4 6.6 8.8) vector1)
     (assert-float-equal
      #(4.4 8.8 13.2 17.6)
-     (linear-algebra-kernel:binary-operation
-      :nadd vector1 vector2 nil 2.0))
+     (linear-algebra-kernel:nadd-vector
+      vector1 vector2 nil 2.0))
     (assert-float-equal
      #(9.9 19.8 29.7 39.6)
-     (linear-algebra-kernel:binary-operation
-      :nadd vector1 vector2 2.0 nil))
+     (linear-algebra-kernel:nadd-vector
+      vector1 vector2 2.0 nil))
     (assert-float-equal
      #(22.0 44.0 66.0 88.0)
-     (linear-algebra-kernel:binary-operation
-      :nadd vector1 vector2 2.0 2.0)))
+     (linear-algebra-kernel:nadd-vector
+      vector1 vector2 2.0 2.0)))
   ;; Complex
   (let ((vector1 (vector #C(1.1 2.2) #C(3.3 4.4)))
         (vector2 (vector #C(1.1 2.2) #C(3.3 4.4))))
     (assert-eq
      vector1
-     (linear-algebra-kernel:binary-operation
-      :nadd vector1 vector2 nil nil))
+     (linear-algebra-kernel:nadd-vector
+      vector1 vector2 nil nil))
     (assert-float-equal #(#C(2.2 4.4) #C(6.6 8.8)) vector1)
     (assert-float-equal
      #(#C(4.4 8.8) #C(13.2 17.6))
-     (linear-algebra-kernel:binary-operation
-      :nadd vector1 vector2 nil 2.0))
+     (linear-algebra-kernel:nadd-vector
+      vector1 vector2 nil 2.0))
     (assert-float-equal
      #(#C(9.9 19.8) #C(29.7 39.6))
-     (linear-algebra-kernel:binary-operation
-      :nadd vector1 vector2 2.0 nil))
+     (linear-algebra-kernel:nadd-vector
+      vector1 vector2 2.0 nil))
     (assert-float-equal
      #(#C(22.0 44.0) #C(66.0 88.0))
-     (linear-algebra-kernel:binary-operation
-      :nadd vector1 vector2 2.0 2.0))))
+     (linear-algebra-kernel:nadd-vector
+      vector1 vector2 2.0 2.0))))
 
 ;;; Vector subtraction
 
-(define-test binary-operation-subtract-vector
+(define-test binop-subtract-vector
   ;; Real
   (let ((vector1 #(1.1 2.2 3.3 4.4))
         (vector2 #(1.1 2.2 3.3 4.4)))
     (assert-float-equal
      #(0.0 0.0 0.0 0.0)
-     (linear-algebra-kernel:binary-operation
-      :subtract vector1 vector2 nil nil))
+     (linear-algebra-kernel:subtract-vector
+      vector1 vector2 nil nil))
     (assert-float-equal
      #(1.1 2.2 3.3 4.4)
-     (linear-algebra-kernel:binary-operation
-      :subtract vector1 vector2 2.0 nil))
+     (linear-algebra-kernel:subtract-vector
+      vector1 vector2 2.0 nil))
     (assert-float-equal
      #(-1.1 -2.2 -3.3 -4.4)
-     (linear-algebra-kernel:binary-operation
-      :subtract vector1 vector2 nil 2.0))
+     (linear-algebra-kernel:subtract-vector
+      vector1 vector2 nil 2.0))
     (assert-float-equal
      #(0.0 0.0 0.0 0.0)
-     (linear-algebra-kernel:binary-operation
-      :subtract vector1 vector2 2.0 2.0)))
+     (linear-algebra-kernel:subtract-vector
+      vector1 vector2 2.0 2.0)))
   ;; Complex
   (let ((vector1 #(#C(1.1 2.2) #C(3.3 4.4)))
         (vector2 #(#C(1.1 2.2) #C(3.3 4.4))))
     (assert-float-equal
      #(#C(0.0 0.0) #C(0.0 0.0))
-     (linear-algebra-kernel:binary-operation
-      :subtract vector1 vector2 nil nil))
+     (linear-algebra-kernel:subtract-vector
+      vector1 vector2 nil nil))
     (assert-float-equal
      #(#C(1.1 2.2) #C(3.3 4.4))
-     (linear-algebra-kernel:binary-operation
-      :subtract vector1 vector2 2.0 nil))
+     (linear-algebra-kernel:subtract-vector
+      vector1 vector2 2.0 nil))
     (assert-float-equal
      #(#C(-1.1 -2.2) #C(-3.3 -4.4))
-     (linear-algebra-kernel:binary-operation
-      :subtract vector1 vector2 nil 2.0))
+     (linear-algebra-kernel:subtract-vector
+      vector1 vector2 nil 2.0))
     (assert-float-equal
      #(#C(0.0 0.0) #C(0.0 0.0))
-     (linear-algebra-kernel:binary-operation
-      :subtract vector1 vector2 2.0 2.0))))
+     (linear-algebra-kernel:subtract-vector
+      vector1 vector2 2.0 2.0))))
 
 ;;; Destructive vector subtraction
 
-(define-test binary-operation-nsubtract-vector
+(define-test binop-nsubtract-vector
   ;; Real
   (let ((vector1 (vector 1.1 2.2 3.3 4.4))
         (vector2 (vector 1.1 2.2 3.3 4.4)))
     (assert-eq
      vector1
-     (linear-algebra-kernel:binary-operation
-      :nsubtract vector1 vector2 nil nil))
+     (linear-algebra-kernel:nsubtract-vector
+      vector1 vector2 nil nil))
     (assert-float-equal #(0.0 0.0 0.0 0.0) vector1)
     (assert-float-equal
      #(-2.2 -4.4 -6.6 -8.8)
-     (linear-algebra-kernel:binary-operation
-      :nsubtract vector1 vector2 nil 2.0))
+     (linear-algebra-kernel:nsubtract-vector
+      vector1 vector2 nil 2.0))
     (assert-float-equal
      #(-5.5 -11.0 -16.5 -22.0)
-     (linear-algebra-kernel:binary-operation
-      :nsubtract vector1 vector2 2.0 nil))
+     (linear-algebra-kernel:nsubtract-vector
+      vector1 vector2 2.0 nil))
     (assert-float-equal
      #(-13.2 -26.4 -39.6 -52.8)
-     (linear-algebra-kernel:binary-operation
-      :nsubtract vector1 vector2 2.0 2.0)))
+     (linear-algebra-kernel:nsubtract-vector
+      vector1 vector2 2.0 2.0)))
   ;; Complex
   (let ((vector1 (vector #C(1.1 2.2) #C(3.3 4.4)))
         (vector2 (vector #C(1.1 2.2) #C(3.3 4.4))))
     (assert-eq
      vector1
-     (linear-algebra-kernel:binary-operation
-      :nsubtract vector1 vector2 nil nil))
+     (linear-algebra-kernel:nsubtract-vector
+      vector1 vector2 nil nil))
     (assert-float-equal
      #(#C(0.0 0.0) #C(0.0 0.0)) vector1)
     (assert-float-equal
      #(#C(-2.2 -4.4) #C(-6.6 -8.8))
-     (linear-algebra-kernel:binary-operation
-      :nsubtract vector1 vector2 nil 2.0))
+     (linear-algebra-kernel:nsubtract-vector
+      vector1 vector2 nil 2.0))
     (assert-float-equal
      #(#C(-5.5 -11.0) #C(-16.5 -22.0))
-     (linear-algebra-kernel:binary-operation
-      :nsubtract vector1 vector2 2.0 nil))
+     (linear-algebra-kernel:nsubtract-vector
+      vector1 vector2 2.0 nil))
     (assert-float-equal
      #(#C(-13.2 -26.4) #C(-39.6 -52.8))
-     (linear-algebra-kernel:binary-operation
-      :nsubtract vector1 vector2 2.0 2.0))))
+     (linear-algebra-kernel:nsubtract-vector
+      vector1 vector2 2.0 2.0))))
 
 ;;; Vector inner product
 

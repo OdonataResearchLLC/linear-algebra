@@ -148,7 +148,7 @@ vector."
                 &key scalar1 scalar2)
   "Return the addition of scalar1*vector1 with scalar2*vector2"
   (if (= (length vector1) (length vector2))
-      (binary-operation :add vector1 vector2 scalar1 scalar2)
+      (add-vector vector1 vector2 scalar1 scalar2)
       (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
              (length vector1) (length vector2))))
 
@@ -156,7 +156,7 @@ vector."
                  &key scalar1 scalar2)
   "Return the addition of scalar2*vector2 to scalar1*vector1."
   (if (= (length vector1) (length vector2))
-      (binary-operation :nadd vector1 vector2 scalar1 scalar2)
+      (nadd-vector vector1 vector2 scalar1 scalar2)
       (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
              (length vector1) (length vector2))))
 
@@ -164,7 +164,7 @@ vector."
                      &key scalar1 scalar2)
   "Return the subraction of scalar2*vector2 from scalar1*vector1."
   (if (= (length vector1) (length vector2))
-      (binary-operation :subtract vector1 vector2 scalar1 scalar2)
+      (subtract-vector vector1 vector2 scalar1 scalar2)
       (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
              (length vector1) (length vector2))))
 
@@ -172,7 +172,7 @@ vector."
                       &key scalar1 scalar2)
   "Return the subraction of scalar2*vector2 from scalar1*vector1."
   (if (= (length vector1) (length vector2))
-      (binary-operation :nsubtract vector1 vector2 scalar1 scalar2)
+      (nsubtract-vector vector1 vector2 scalar1 scalar2)
       (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
              (length vector1) (length vector2))))
 
