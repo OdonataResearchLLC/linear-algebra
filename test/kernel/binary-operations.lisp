@@ -263,3 +263,314 @@
      #(#C(-13.2 -26.4) #C(-39.6 -52.8))
      (linear-algebra-kernel:binary-operation
       :nsubtract vector1 vector2 2.0 2.0))))
+
+;;; Array addition
+
+(define-test binary-operation-add-array
+  (let ((array
+         #2A((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)
+             (5.1 5.2 5.3 5.4))))
+    ;; No scalar
+    (assert-float-equal
+     #2A(( 2.2  2.4  2.6  2.8)
+         ( 4.2  4.4  4.6  4.8)
+         ( 6.2  6.4  6.6  6.8)
+         ( 8.2  8.4  8.6  8.8)
+         (10.2 10.4 10.6 10.8))
+     (linear-algebra-kernel:binary-operation
+      :add array array nil nil))
+    ;; Scalar1
+    (assert-float-equal
+     #2A(( 3.3  3.6  3.9  4.2)
+         ( 6.3  6.6  6.9  7.2)
+         ( 9.3  9.6  9.9 10.2)
+         (12.3 12.6 12.9 13.2)
+         (15.3 15.6 15.9 16.2))
+     (linear-algebra-kernel:binary-operation
+      :add array array 2.0 nil))
+    ;; Scalar2
+    (assert-float-equal
+     #2A(( 3.3  3.6  3.9  4.2)
+         ( 6.3  6.6  6.9  7.2)
+         ( 9.3  9.6  9.9 10.2)
+         (12.3 12.6 12.9 13.2)
+         (15.3 15.6 15.9 16.2))
+     (linear-algebra-kernel:binary-operation
+      :add array array nil 2.0))
+    ;; Scalar1 & Scalar2
+    (assert-float-equal
+     #2A(( 5.5  6.0  6.5  7.0)
+         (10.5 11.0 11.5 12.0)
+         (15.5 16.0 16.5 17.0)
+         (20.5 21.0 21.5 22.0)
+         (25.5 26.0 26.5 27.0))
+     (linear-algebra-kernel:binary-operation
+      :add array array 2.0 3.0))))
+
+(define-test binary-operation-nadd-array
+  ;; No scalar
+  (let ((array1
+         (make-array
+          '(5 4) :initial-contents
+          '((1.1 1.2 1.3 1.4)
+            (2.1 2.2 2.3 2.4)
+            (3.1 3.2 3.3 3.4)
+            (4.1 4.2 4.3 4.4)
+            (5.1 5.2 5.3 5.4))))
+        (array2
+         #2A((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)
+             (5.1 5.2 5.3 5.4))))
+    (assert-eq
+     array1
+     (linear-algebra-kernel:binary-operation
+      :nadd array1 array2 nil nil))
+    (assert-float-equal
+     #2A(( 2.2  2.4  2.6  2.8)
+         ( 4.2  4.4  4.6  4.8)
+         ( 6.2  6.4  6.6  6.8)
+         ( 8.2  8.4  8.6  8.8)
+         (10.2 10.4 10.6 10.8))
+     array1))
+  ;; Scalar1
+  (let ((array1
+         (make-array
+          '(5 4) :initial-contents
+          '((1.1 1.2 1.3 1.4)
+            (2.1 2.2 2.3 2.4)
+            (3.1 3.2 3.3 3.4)
+            (4.1 4.2 4.3 4.4)
+            (5.1 5.2 5.3 5.4))))
+        (array2
+         #2A((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)
+             (5.1 5.2 5.3 5.4))))
+    (assert-eq
+     array1
+     (linear-algebra-kernel:binary-operation
+      :nadd array1 array2 2.0 nil))
+    (assert-float-equal
+     #2A(( 3.3  3.6  3.9  4.2)
+         ( 6.3  6.6  6.9  7.2)
+         ( 9.3  9.6  9.9 10.2)
+         (12.3 12.6 12.9 13.2)
+         (15.3 15.6 15.9 16.2))
+     array1))
+  ;; Scalar2
+  (let ((array1
+         (make-array
+          '(5 4) :initial-contents
+          '((1.1 1.2 1.3 1.4)
+            (2.1 2.2 2.3 2.4)
+            (3.1 3.2 3.3 3.4)
+            (4.1 4.2 4.3 4.4)
+            (5.1 5.2 5.3 5.4))))
+        (array2
+         #2A((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)
+             (5.1 5.2 5.3 5.4))))
+    (assert-eq
+     array1
+     (linear-algebra-kernel:binary-operation
+      :nadd array1 array2 nil 2.0))
+    (assert-float-equal
+     #2A(( 3.3  3.6  3.9  4.2)
+         ( 6.3  6.6  6.9  7.2)
+         ( 9.3  9.6  9.9 10.2)
+         (12.3 12.6 12.9 13.2)
+         (15.3 15.6 15.9 16.2))
+     array1))
+  ;; Scalar1 & Scalar2
+  (let ((array1
+         (make-array
+          '(5 4) :initial-contents
+          '((1.1 1.2 1.3 1.4)
+            (2.1 2.2 2.3 2.4)
+            (3.1 3.2 3.3 3.4)
+            (4.1 4.2 4.3 4.4)
+            (5.1 5.2 5.3 5.4))))
+        (array2
+         #2A((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)
+             (5.1 5.2 5.3 5.4))))
+    (assert-eq
+     array1
+     (linear-algebra-kernel:binary-operation
+      :nadd array1 array2 2.0 3.0))
+    (assert-float-equal
+     #2A(( 5.5  6.0  6.5  7.0)
+         (10.5 11.0 11.5 12.0)
+         (15.5 16.0 16.5 17.0)
+         (20.5 21.0 21.5 22.0)
+         (25.5 26.0 26.5 27.0))
+     array1)))
+
+(define-test binary-operation-subtract-array
+  (let ((*epsilon* (* 3F0 single-float-epsilon))
+        (array1
+         #2A(( 2.2  2.4  2.6  2.8)
+             ( 4.2  4.4  4.6  4.8)
+             ( 6.2  6.4  6.6  6.8)
+             ( 8.2  8.4  8.6  8.8)
+             (10.2 10.4 10.6 10.8)))
+        (array2
+         #2A((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)
+             (5.1 5.2 5.3 5.4))))
+    ;; No scalar
+    (assert-float-equal
+     #2A((1.1 1.2 1.3 1.4)
+         (2.1 2.2 2.3 2.4)
+         (3.1 3.2 3.3 3.4)
+         (4.1 4.2 4.3 4.4)
+         (5.1 5.2 5.3 5.4))
+     (linear-algebra-kernel:binary-operation
+      :subtract array1 array2 nil nil))
+    ;; Scalar1
+    (assert-float-equal
+     #2A(( 3.3  3.6  3.9  4.2)
+         ( 6.3  6.6  6.9  7.2)
+         ( 9.3  9.6  9.9 10.2)
+         (12.3 12.6 12.9 13.2)
+         (15.3 15.6 15.9 16.2))
+     (linear-algebra-kernel:binary-operation
+      :subtract array1 array2 2.0 nil))
+    ;; Scalar2
+    (assert-float-equal
+     #2A((0.0 0.0 0.0 0.0)
+         (0.0 0.0 0.0 0.0)
+         (0.0 0.0 0.0 0.0)
+         (0.0 0.0 0.0 0.0)
+         (0.0 0.0 0.0 0.0))
+     (linear-algebra-kernel:binary-operation
+      :subtract array1 array2 nil 2.0))
+    ;; Scalar1 & Scalar2
+    (assert-float-equal
+     #2A((1.1 1.2 1.3 1.4)
+         (2.1 2.2 2.3 2.4)
+         (3.1 3.2 3.3 3.4)
+         (4.1 4.2 4.3 4.4)
+         (5.1 5.2 5.3 5.4))
+     (linear-algebra-kernel:binary-operation
+      :subtract array1 array2 2.0 3.0))))
+
+(define-test binary-operation-nsubtract-array
+  ;; No scalar
+  (let ((array1
+         (make-array
+          '(5 4) :initial-contents
+          '(( 2.2  2.4  2.6  2.8)
+            ( 4.2  4.4  4.6  4.8)
+            ( 6.2  6.4  6.6  6.8)
+            ( 8.2  8.4  8.6  8.8)
+            (10.2 10.4 10.6 10.8))))
+        (array2
+         #2A((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)
+             (5.1 5.2 5.3 5.4))))
+    (assert-eq
+     array1
+     (linear-algebra-kernel:binary-operation
+      :nsubtract array1 array2 nil nil))
+    (assert-float-equal
+     #2A((1.1 1.2 1.3 1.4)
+         (2.1 2.2 2.3 2.4)
+         (3.1 3.2 3.3 3.4)
+         (4.1 4.2 4.3 4.4)
+         (5.1 5.2 5.3 5.4))
+     array1))
+  ;; Scalar1
+  (let ((array1
+         (make-array
+          '(5 4) :initial-contents
+          '((1.1 1.2 1.3 1.4)
+            (2.1 2.2 2.3 2.4)
+            (3.1 3.2 3.3 3.4)
+            (4.1 4.2 4.3 4.4)
+            (5.1 5.2 5.3 5.4))))
+        (array2
+         #2A((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)
+             (5.1 5.2 5.3 5.4))))
+    (assert-eq
+     array1
+     (linear-algebra-kernel:binary-operation
+      :nsubtract array1 array2 2.0 nil))
+    (assert-float-equal
+     #2A((1.1 1.2 1.3 1.4)
+         (2.1 2.2 2.3 2.4)
+         (3.1 3.2 3.3 3.4)
+         (4.1 4.2 4.3 4.4)
+         (5.1 5.2 5.3 5.4))
+     array1))
+  ;; Scalar2
+  (let ((*epsilon* (* 4F0 single-float-epsilon))
+        (array1
+         (make-array
+          '(5 4) :initial-contents
+          '(( 3.3  3.6  3.9  4.2)
+            ( 6.3  6.6  6.9  7.2)
+            ( 9.3  9.6  9.9 10.2)
+            (12.3 12.6 12.9 13.2)
+            (15.3 15.6 15.9 16.2))))
+        (array2
+         #2A((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)
+             (5.1 5.2 5.3 5.4))))
+    (assert-eq
+     array1
+     (linear-algebra-kernel:binary-operation
+      :nsubtract array1 array2 nil 2.0))
+    (assert-float-equal
+     #2A((1.1 1.2 1.3 1.4)
+         (2.1 2.2 2.3 2.4)
+         (3.1 3.2 3.3 3.4)
+         (4.1 4.2 4.3 4.4)
+         (5.1 5.2 5.3 5.4))
+     array1))
+  ;; Scalar1 & Scalar2
+  (let ((*epsilon* (* 3F0 single-float-epsilon))
+        (array1
+         (make-array
+          '(5 4) :initial-contents
+          '(( 2.2  2.4  2.6  2.8)
+            ( 4.2  4.4  4.6  4.8)
+            ( 6.2  6.4  6.6  6.8)
+            ( 8.2  8.4  8.6  8.8)
+            (10.2 10.4 10.6 10.8))))
+        (array2
+         #2A((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)
+             (5.1 5.2 5.3 5.4))))
+    (assert-eq
+     array1
+     (linear-algebra-kernel:binary-operation
+      :nsubtract array1 array2 2.0 3.0))
+    (assert-float-equal
+     #2A((1.1 1.2 1.3 1.4)
+         (2.1 2.2 2.3 2.4)
+         (3.1 3.2 3.3 3.4)
+         (4.1 4.2 4.3 4.4)
+         (5.1 5.2 5.3 5.4))
+     array1)))
