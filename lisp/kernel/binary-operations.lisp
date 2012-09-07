@@ -42,7 +42,10 @@
    "Compile and return a scaled binary operation."))
 
 (defgeneric binary-operation
-    (operation vector-or-matrix-1 vector-or-matrix-2 scalar1 scalar2)
+    (operation
+     vector-or-matrix-1
+     vector-or-matrix-2
+     scalar1 scalar2-or-flag)
   (:documentation
    "Perform the binary operation on the vectors or matrices."))
 
@@ -89,6 +92,11 @@
                              (scalar2 number))
   "Return the scaled operation."
   (lambda (n1 n2) (funcall op (* scalar1 n1) (* scalar2 n2))))
+
+(defmethod scaled-binary-op ((op (eql #'*))
+                             (scalar (eql nil))
+                             (conjugate (eql t)))
+  (lambda (n1 n2) (* (conjugate n1) n2)))
 
 ;;; Binary vector operations
 
@@ -138,6 +146,17 @@ vector."
   (%vector1<-vector1-op-vector2
    (scaled-binary-op #'- scalar1 scalar2)
    vector1 vector2))
+
+(defmethod binary-operation ((operation (eql :inner-product))
+                             (vector1 vector)
+                             (vector2 vector)
+                             scalar conjugate)
+  (loop with op = (scaled-binary-op #'* nil conjugate)
+        for element1 across vector1
+        and element2 across vector2
+        sum (funcall op element1 element2) into result
+        finally
+        (return (if scalar (* scalar result) result))))
 
 ;;; Binary array operations
 

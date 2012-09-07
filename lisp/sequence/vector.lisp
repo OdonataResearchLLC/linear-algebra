@@ -177,17 +177,10 @@ vector."
              (length vector1) (length vector2))))
 
 (defmethod product ((vector1 vector) (vector2 vector)
-                    &key (scalar nil scalarp) conjugate)
+                    &key scalar conjugate)
   "Return the dot product of vector1 and vector2."
   (if (= (length vector1) (length vector2))
-      (loop with op =
-            (if conjugate
-                (lambda (x y) (* (conjugate x) y))
-                #'*)
-            for element1 across vector1
-            and element2 across vector2
-            sum (funcall op element1 element2) into result
-            finally
-            (return (if scalarp (* scalar result) result)))
+      (binary-operation
+       :inner-product vector1 vector2 scalar conjugate)
       (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
              (length vector1) (length vector2))))
