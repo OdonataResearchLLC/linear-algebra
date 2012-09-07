@@ -35,24 +35,6 @@
 
 (in-package :linear-algebra-kernel)
 
-;;; Interface
-
-(defgeneric right-permute (vector-or-array permutation)
-  (:documentation
-   "Permute the columns of the vector or array."))
-
-(defgeneric left-permute (permutation vector-or-array)
-  (:documentation
-   "Permute the rows of the vector or array."))
-
-(defgeneric right-npermute (vector-or-array permutation)
-  (:documentation
-   "Destructively permute teh columns of the vector or array."))
-
-(defgeneric left-npermute (permutation vector-or-array)
-  (:documentation
-   "Destructively permute the rows fo the vector or array."))
-
 ;;; Permute Vectors
 
 (defun right-permute-vector (vector permutation)

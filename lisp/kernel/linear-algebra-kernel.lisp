@@ -42,9 +42,10 @@
            :common-class-of
            :common-array-element-type
            :complex-equal
-           :number-equal)
-  ;; Fundamental operations
-  (:export :right-permute :right-npermute
-           :left-permute :left-npermute
-           :scaled-binary-op
-           :binary-operation))
+           :number-equal
+           :scaled-binary-op)
+  ;; Permutation
+  (:export :right-permute-vector :right-npermute-vector
+           :left-permute-vector :left-npermute-vector
+           :right-permute-array :right-npermute-array
+           :left-permute-array :left-npermute-array))
