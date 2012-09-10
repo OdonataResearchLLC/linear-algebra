@@ -141,9 +141,7 @@
 
 ;;; Binary array/vector operations
 
-(defmethod binary-operation ((operation (eql :product))
-                             (vector vector) (array array)
-                             scalar conjugate)
+(defun right-product-vector (vector array scalar)
   (let* ((m-rows (array-dimension array 0))
          (n-columns (array-dimension array 1))
          (zero (coerce 0 (array-element-type vector)))
@@ -156,6 +154,7 @@
       (setf element zero)
       (dotimes (i0 m-rows)
         (incf element (* (aref vector i0) (aref array i0 i1))))
+      ;; FIXME : Remove the IF form from the loop.
       (if scalar
           (setf (aref result i1) (* scalar element))
           (setf (aref result i1) element)))))

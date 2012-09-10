@@ -51,4 +51,6 @@
   ;; Binary operations
   (:export :scaled-binary-op
            :add-vector :nadd-vector
-           :subtract-vector :nsubtract-vector))
+           :subtract-vector :nsubtract-vector
+           :inner-product-vector
+           :right-product-vector))
