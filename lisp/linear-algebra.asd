@@ -54,7 +54,7 @@
       :depends-on ("linear-algebra-kernel"))))
    ;; Interface
    (:module interface
-    :depends-on ("kernel")
+    :depends-on ("linear-algebra" "kernel")
     :components
     ((:file "fundamental-ops")
      (:file "vector" :depends-on ("fundamental-ops"))
