@@ -418,8 +418,8 @@
              (5.1 5.2 5.3 5.4))))
     (assert-eq
      array1
-     (linear-algebra-kernel:binary-operation
-      :nadd array1 array2 2.0 nil))
+     (linear-algebra-kernel:nadd-array
+      array1 array2 2.0 nil))
     (assert-float-equal
      #2A(( 3.3  3.6  3.9  4.2)
          ( 6.3  6.6  6.9  7.2)
@@ -444,8 +444,8 @@
              (5.1 5.2 5.3 5.4))))
     (assert-eq
      array1
-     (linear-algebra-kernel:binary-operation
-      :nadd array1 array2 nil 2.0))
+     (linear-algebra-kernel:nadd-array
+      array1 array2 nil 2.0))
     (assert-float-equal
      #2A(( 3.3  3.6  3.9  4.2)
          ( 6.3  6.6  6.9  7.2)
@@ -470,8 +470,8 @@
              (5.1 5.2 5.3 5.4))))
     (assert-eq
      array1
-     (linear-algebra-kernel:binary-operation
-      :nadd array1 array2 2.0 3.0))
+     (linear-algebra-kernel:nadd-array
+      array1 array2 2.0 3.0))
     (assert-float-equal
      #2A(( 5.5  6.0  6.5  7.0)
          (10.5 11.0 11.5 12.0)

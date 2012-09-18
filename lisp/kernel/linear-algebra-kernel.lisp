@@ -52,5 +52,7 @@
   (:export :scaled-binary-op
            :add-vector :nadd-vector
            :subtract-vector :nsubtract-vector
+           :add-array :nadd-array
+           :subtract-array :nsubtract-array
            :inner-product-vector
            :right-product-vector))
