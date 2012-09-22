@@ -59,37 +59,37 @@ the operation."))
                              (scalar1 number)
                              (scalar2 (eql nil)))
   "Return the scaled operation."
-  (lambda (n1 n2) (funcall op (* scalar1 n1) n2)))
+  (lambda (n1 n2) (+ (* scalar1 n1) n2)))
 
 (defmethod scaled-binary-op ((op (eql #'-))
                              (scalar1 number)
                              (scalar2 (eql nil)))
   "Return the scaled operation."
-  (lambda (n1 n2) (funcall op (* scalar1 n1) n2)))
+  (lambda (n1 n2) (- (* scalar1 n1) n2)))
 
 (defmethod scaled-binary-op ((op (eql #'+))
                              (scalar1 (eql nil))
                              (scalar2 number))
   "Return the scaled operation."
-  (lambda (n1 n2) (funcall op n1 (* scalar2 n2))))
+  (lambda (n1 n2) (+ n1 (* scalar2 n2))))
 
 (defmethod scaled-binary-op ((op (eql #'-))
                              (scalar1 (eql nil))
                              (scalar2 number))
   "Return the scaled operation."
-  (lambda (n1 n2) (funcall op n1 (* scalar2 n2))))
+  (lambda (n1 n2) (- n1 (* scalar2 n2))))
 
 (defmethod scaled-binary-op ((op (eql #'+))
                              (scalar1 number)
                              (scalar2 number))
   "Return the scaled operation."
-  (lambda (n1 n2) (funcall op (* scalar1 n1) (* scalar2 n2))))
+  (lambda (n1 n2) (+ (* scalar1 n1) (* scalar2 n2))))
 
 (defmethod scaled-binary-op ((op (eql #'-))
                              (scalar1 number)
                              (scalar2 number))
   "Return the scaled operation."
-  (lambda (n1 n2) (funcall op (* scalar1 n1) (* scalar2 n2))))
+  (lambda (n1 n2) (- (* scalar1 n1) (* scalar2 n2))))
 
 (defmethod scaled-binary-op ((op (eql #'*))
                              (scalar (eql nil))
