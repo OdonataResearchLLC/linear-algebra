@@ -37,17 +37,15 @@
 
 ;;; Interface
 
+(defgeneric compatible-dimensions-p
+    (operation vector-or-matrix-1 vector-or-matrix-2)
+  (:documentation
+   "Return true if the vector and matrix dimensions are compatible for
+the operation."))
+
 (defgeneric scaled-binary-op (op scalar1 scalar2)
   (:documentation
    "Compile and return a scaled binary operation."))
-
-(defgeneric binary-operation
-    (operation
-     vector-or-matrix-1
-     vector-or-matrix-2
-     scalar1 scalar2-or-flag)
-  (:documentation
-   "Perform the binary operation on the vectors or matrices."))
 
 ;;; Scaled binary operations
 
@@ -141,7 +139,21 @@
 
 ;;; Binary array/vector operations
 
-(defun right-product-vector (vector array scalar)
+(defmethod compatible-dimensions-p
+           ((operation (eql :product)) (vector vector) (array array))
+  "Return true if the array dimensions are compatible for product."
+  (and
+   (= 2 (array-rank array))
+   (= (length vector) (array-dimension array 0))))
+
+(defmethod compatible-dimensions-p
+           ((operation (eql :product)) (array array) (vector vector))
+  "Return true if the array dimensions are compatible for product."
+  (and
+   (= 2 (array-rank array))
+   (= (array-dimension array 1) (length vector))))
+
+(defun %right-product-vector (vector array)
   (let* ((m-rows (array-dimension array 0))
          (n-columns (array-dimension array 1))
          (zero (coerce 0 (array-element-type vector)))
@@ -151,13 +163,36 @@
            n-columns
            :element-type (array-element-type vector))))
     (dotimes (i1 n-columns result)
-      (setf element zero)
+      (setq element zero)
       (dotimes (i0 m-rows)
-        (incf element (* (aref vector i0) (aref array i0 i1))))
-      ;; FIXME : Remove the IF form from the loop.
-      (if scalar
-          (setf (aref result i1) (* scalar element))
-          (setf (aref result i1) element)))))
+        (setq
+         element
+         (+ element (* (aref vector i0) (aref array i0 i1)))))
+      ;; Store the result
+      (setf (aref result i1) element))))
+
+(defun %scaled-right-product-vector (vector array scalar)
+  (let* ((m-rows (array-dimension array 0))
+         (n-columns (array-dimension array 1))
+         (zero (coerce 0 (array-element-type vector)))
+         (element)
+         (result
+          (make-array
+           n-columns
+           :element-type (array-element-type vector))))
+    (dotimes (i1 n-columns result)
+      (setq element zero)
+      (dotimes (i0 m-rows)
+        (setq
+         element
+         (+ element (* (aref vector i0) (aref array i0 i1)))))
+      ;; Store the result
+      (setf (aref result i1) (* scalar element)))))
+
+(defun right-product-vector (vector array scalar)
+  (if scalar
+      (%scaled-right-product-vector vector array scalar)
+      (%right-product-vector vector array)))
 
 ;;; Binary array operations
 
@@ -188,6 +223,15 @@
                   (aref array1 i0 i1)
                   (aref array2 i0 i1)))))))
 
+(defmethod compatible-dimensions-p
+           ((operation (eql :add)) (array1 array) (array2 array))
+  "Return true if the array dimensions are compatible for an
+addition."
+  (and
+   (= 2 (array-rank array1) (array-rank array2))
+   (= (array-dimension array1 0) (array-dimension array2 0))
+   (= (array-dimension array1 1) (array-dimension array2 1))))
+
 (defun add-array (array1 array2 scalar1 scalar2)
   (%array<-array1-op-array2
    (scaled-binary-op #'+ scalar1 scalar2)
@@ -207,3 +251,10 @@
   (%array1<-array1-op-array2
    (scaled-binary-op #'- scalar1 scalar2)
    array1 array2))
+
+(defmethod compatible-dimensions-p
+           ((operation (eql :product)) (array1 array) (array2 array))
+  "Return true if the array dimensions are compatible for product."
+  (and
+   (= 2 (array-rank array1) (array-rank array2))
+   (= (array-dimension array1 1) (array-dimension array2 0))))

@@ -49,7 +49,8 @@
            :right-permute-array :right-npermute-array
            :left-permute-array :left-npermute-array)
   ;; Binary operations
-  (:export :scaled-binary-op
+  (:export :compatible-dimensions-p
+           :scaled-binary-op
            :add-vector :nadd-vector
            :subtract-vector :nsubtract-vector
            :add-array :nadd-array

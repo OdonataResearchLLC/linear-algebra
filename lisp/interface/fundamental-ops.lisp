@@ -103,9 +103,3 @@
 (defgeneric %norm (vector-or-matrix measure)
   (:documentation
    "Internal generic function to facilitate dispatch on measure."))
-
-(defgeneric compatible-dimensions-p
-    (operation vector-or-matrix-1 vector-or-matrix-2)
-  (:documentation
-   "Return true if the vector and matrix dimensions are compatible for
-the operation."))
