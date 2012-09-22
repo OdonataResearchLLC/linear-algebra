@@ -56,4 +56,5 @@
            :add-array :nadd-array
            :subtract-array :nsubtract-array
            :inner-product-vector
-           :right-product-vector))
+           :right-product-vector
+           :left-product-vector))

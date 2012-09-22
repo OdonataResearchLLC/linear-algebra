@@ -194,6 +194,47 @@ the operation."))
       (%scaled-right-product-vector vector array scalar)
       (%right-product-vector vector array)))
 
+(defun %left-product-vector (array vector)
+  (let* ((m-rows (array-dimension array 0))
+         (n-columns (array-dimension array 1))
+         (zero (coerce 0 (array-element-type vector)))
+         (element)
+         (result
+          (make-array
+           m-rows
+           :element-type (array-element-type vector))))
+    (dotimes (i0 m-rows result)
+      (setq element zero)
+      (dotimes (i1 n-columns)
+        (setq
+         element
+         (+ element (* (aref array i0 i1) (aref vector i1)))))
+      ;; Store the result
+      (setf (aref result i0) element))))
+
+(defun %scaled-left-product-vector (array vector scalar)
+  (let* ((m-rows (array-dimension array 0))
+         (n-columns (array-dimension array 1))
+         (zero (coerce 0 (array-element-type vector)))
+         (element)
+         (result
+          (make-array
+           m-rows
+           :element-type (array-element-type vector))))
+    (dotimes (i0 m-rows result)
+      (setq element zero)
+      (dotimes (i1 n-columns)
+        (setq
+         element
+         (+ element (* (aref array i0 i1) (aref vector i1)))))
+      ;; Store the result
+      (setf (aref result i0) (* scalar element)))))
+
+(defun left-product-vector (array vector scalar)
+  (if scalar
+      (%scaled-left-product-vector array vector scalar)
+      (%left-product-vector array vector)))
+
 ;;; Binary array operations
 
 (defun %array<-array1-op-array2 (operation array1 array2)
