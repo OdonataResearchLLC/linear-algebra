@@ -99,6 +99,7 @@ the operation."))
 ;;; Binary vector operations
 
 (defun %vector<-vector1-op-vector2 (operation vector1 vector2)
+  "Store the result of the binary operation in a new vector."
   (map-into
    (make-array
     (length vector1)
@@ -107,29 +108,35 @@ the operation."))
    vector1 vector2))
 
 (defun %vector1<-vector1-op-vector2 (operation vector1 vector2)
+  "Store the result of the binary operation in vector1."
   (map-into vector1 operation vector1 vector2))
 
 (defun add-vector (vector1 vector2 scalar1 scalar2)
+  "Vector binary addition."
   (%vector<-vector1-op-vector2
    (scaled-binary-op #'+ scalar1 scalar2)
    vector1 vector2))
 
 (defun nadd-vector (vector1 vector2 scalar1 scalar2)
+  "Destructive vector binary addition."
   (%vector1<-vector1-op-vector2
    (scaled-binary-op #'+ scalar1 scalar2)
    vector1 vector2))
 
 (defun subtract-vector (vector1 vector2 scalar1 scalar2)
+  "Vector binary subtraction."
   (%vector<-vector1-op-vector2
    (scaled-binary-op #'- scalar1 scalar2)
    vector1 vector2))
 
 (defun nsubtract-vector (vector1 vector2 scalar1 scalar2)
+  "Destructive vector binary subtraction."
   (%vector1<-vector1-op-vector2
    (scaled-binary-op #'- scalar1 scalar2)
    vector1 vector2))
 
 (defun inner-product-vector (vector1 vector2 scalar conjugate)
+  "Return the vector inner product."
   (loop with op = (scaled-binary-op #'* nil conjugate)
         for element1 across vector1
         and element2 across vector2
@@ -154,6 +161,7 @@ the operation."))
    (= (array-dimension array 1) (length vector))))
 
 (defun %right-product-vector (vector array)
+  "Return the result of the array premultiplied by the vector."
   (let* ((m-rows (array-dimension array 0))
          (n-columns (array-dimension array 1))
          (zero (coerce 0 (array-element-type vector)))
@@ -172,6 +180,8 @@ the operation."))
       (setf (aref result i1) element))))
 
 (defun %scaled-right-product-vector (vector array scalar)
+  "Return the result of the array premultiplied by the vector and
+scaled."
   (let* ((m-rows (array-dimension array 0))
          (n-columns (array-dimension array 1))
          (zero (coerce 0 (array-element-type vector)))
@@ -190,11 +200,14 @@ the operation."))
       (setf (aref result i1) (* scalar element)))))
 
 (defun right-product-vector (vector array scalar)
+  "Return the result of the array premultiplied by the vector and
+scaled."
   (if scalar
       (%scaled-right-product-vector vector array scalar)
       (%right-product-vector vector array)))
 
 (defun %left-product-vector (array vector)
+  "Return the result of the array postmultiplied by the vector."
   (let* ((m-rows (array-dimension array 0))
          (n-columns (array-dimension array 1))
          (zero (coerce 0 (array-element-type vector)))
@@ -213,6 +226,8 @@ the operation."))
       (setf (aref result i0) element))))
 
 (defun %scaled-left-product-vector (array vector scalar)
+  "Return the result of the array postmultiplied by the vector and
+scaled."
   (let* ((m-rows (array-dimension array 0))
          (n-columns (array-dimension array 1))
          (zero (coerce 0 (array-element-type vector)))
@@ -231,6 +246,8 @@ the operation."))
       (setf (aref result i0) (* scalar element)))))
 
 (defun left-product-vector (array vector scalar)
+  "Return the result of the array postmultiplied by the vector and
+scaled."
   (if scalar
       (%scaled-left-product-vector array vector scalar)
       (%left-product-vector array vector)))
@@ -274,21 +291,25 @@ addition."
    (= (array-dimension array1 1) (array-dimension array2 1))))
 
 (defun add-array (array1 array2 scalar1 scalar2)
+  "Array binary addition."
   (%array<-array1-op-array2
    (scaled-binary-op #'+ scalar1 scalar2)
    array1 array2))
 
 (defun nadd-array (array1 array2 scalar1 scalar2)
+  "Destructive array binary addition."
   (%array1<-array1-op-array2
    (scaled-binary-op #'+ scalar1 scalar2)
    array1 array2))
 
 (defun subtract-array (array1 array2 scalar1 scalar2)
+  "Array binary subtraction."
   (%array<-array1-op-array2
    (scaled-binary-op #'- scalar1 scalar2)
    array1 array2))
 
 (defun nsubtract-array (array1 array2 scalar1 scalar2)
+  "Destructive array binary subtraction."
   (%array1<-array1-op-array2
    (scaled-binary-op #'- scalar1 scalar2)
    array1 array2))
