@@ -57,4 +57,5 @@
            :subtract-array :nsubtract-array
            :inner-product-vector
            :product-vector-array
-           :product-array-vector))
+           :product-array-vector
+           :product-array-array))

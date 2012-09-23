@@ -229,22 +229,6 @@ vector."
 (defmethod product ((array1 array) (array2 array) &key scalar)
   "Return the product of the arrays."
   (if (compatible-dimensions-p :product array1 array2)
-      (let* ((l-columns (array-dimension array1 1))
-             (m-rows (array-dimension array1 0))
-             (n-columns (array-dimension array2 1))
-             (zero (coerce 0 (array-element-type array1)))
-             (element)
-             (array-product
-              (make-array
-               (list m-rows n-columns)
-               :element-type (array-element-type array1))))
-        (dotimes (i0 m-rows array-product)
-          (dotimes (i2 n-columns)
-            (setf element zero)
-            (dotimes (i1 l-columns)
-              (incf element (* (aref array1 i0 i1) (aref array2 i1 i2))))
-            (if scalar
-                (setf (aref array-product i0 i2) (* scalar element))
-                (setf (aref array-product i0 i2) element)))))
+      (product-array-array array1 array2 scalar)
       (error "The array dimensions, ~A and ~A, are not compatible."
              (array-dimensions array1) (array-dimensions array2))))

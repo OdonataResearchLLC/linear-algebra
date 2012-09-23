@@ -320,3 +320,51 @@ addition."
   (and
    (= 2 (array-rank array1) (array-rank array2))
    (= (array-dimension array1 1) (array-dimension array2 0))))
+
+(defun %product-array-array (array1 array2)
+  "Return the result of the product of 2 arrays."
+  (let* ((l-columns (array-dimension array1 1))
+         (m-rows (array-dimension array1 0))
+         (n-columns (array-dimension array2 1))
+         (zero (coerce 0 (array-element-type array1)))
+         (element)
+         (result
+          (make-array
+           (list m-rows n-columns)
+           :element-type (array-element-type array1))))
+    (dotimes (i0 m-rows result)
+      (dotimes (i2 n-columns)
+        (setq element zero)
+        (dotimes (i1 l-columns)
+          (setq
+           element
+           (+ element (* (aref array1 i0 i1) (aref array2 i1 i2)))))
+        ;; Store result
+        (setf (aref result i0 i2) element)))))
+
+(defun %scaled-product-array-array (array1 array2 scalar)
+  "Return the scaled result of the product of 2 arrays."
+  (let* ((l-columns (array-dimension array1 1))
+         (m-rows (array-dimension array1 0))
+         (n-columns (array-dimension array2 1))
+         (zero (coerce 0 (array-element-type array1)))
+         (element)
+         (result
+          (make-array
+           (list m-rows n-columns)
+           :element-type (array-element-type array1))))
+    (dotimes (i0 m-rows result)
+      (dotimes (i2 n-columns)
+        (setq element zero)
+        (dotimes (i1 l-columns)
+          (setq
+           element
+           (+ element (* (aref array1 i0 i1) (aref array2 i1 i2)))))
+        ;; Store result
+        (setf (aref result i0 i2) (* scalar element))))))
+
+(defun product-array-array (array1 array2 scalar)
+  "Return the scaled result of the product of 2 arrays."
+  (if scalar
+      (%scaled-product-array-array array1 array2 scalar)
+      (%product-array-array array1 array2)))
