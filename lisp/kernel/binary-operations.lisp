@@ -160,7 +160,7 @@ the operation."))
    (= 2 (array-rank array))
    (= (array-dimension array 1) (length vector))))
 
-(defun %right-product-vector (vector array)
+(defun %product-vector-array (vector array)
   "Return the result of the array premultiplied by the vector."
   (let* ((m-rows (array-dimension array 0))
          (n-columns (array-dimension array 1))
@@ -179,7 +179,7 @@ the operation."))
       ;; Store the result
       (setf (aref result i1) element))))
 
-(defun %scaled-right-product-vector (vector array scalar)
+(defun %scaled-product-vector-array (vector array scalar)
   "Return the result of the array premultiplied by the vector and
 scaled."
   (let* ((m-rows (array-dimension array 0))
@@ -199,14 +199,14 @@ scaled."
       ;; Store the result
       (setf (aref result i1) (* scalar element)))))
 
-(defun right-product-vector (vector array scalar)
+(defun product-vector-array (vector array scalar)
   "Return the result of the array premultiplied by the vector and
 scaled."
   (if scalar
-      (%scaled-right-product-vector vector array scalar)
-      (%right-product-vector vector array)))
+      (%scaled-product-vector-array vector array scalar)
+      (%product-vector-array vector array)))
 
-(defun %left-product-vector (array vector)
+(defun %product-array-vector (array vector)
   "Return the result of the array postmultiplied by the vector."
   (let* ((m-rows (array-dimension array 0))
          (n-columns (array-dimension array 1))
@@ -225,7 +225,7 @@ scaled."
       ;; Store the result
       (setf (aref result i0) element))))
 
-(defun %scaled-left-product-vector (array vector scalar)
+(defun %scaled-product-array-vector (array vector scalar)
   "Return the result of the array postmultiplied by the vector and
 scaled."
   (let* ((m-rows (array-dimension array 0))
@@ -245,12 +245,12 @@ scaled."
       ;; Store the result
       (setf (aref result i0) (* scalar element)))))
 
-(defun left-product-vector (array vector scalar)
+(defun product-array-vector (array vector scalar)
   "Return the result of the array postmultiplied by the vector and
 scaled."
   (if scalar
-      (%scaled-left-product-vector array vector scalar)
-      (%left-product-vector array vector)))
+      (%scaled-product-array-vector array vector scalar)
+      (%product-array-vector array vector)))
 
 ;;; Binary array operations
 

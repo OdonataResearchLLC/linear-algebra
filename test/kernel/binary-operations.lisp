@@ -521,7 +521,7 @@
   ;; Vector - array
   (assert-float-equal
    #(15.0 30.0 45.0)
-   (linear-algebra-kernel::%right-product-vector
+   (linear-algebra-kernel::%product-vector-array
     #(1.0 2.0 3.0 4.0 5.0)
     #2A((1.0 2.0 3.0)
         (1.0 2.0 3.0)
@@ -533,7 +533,7 @@
   ;; Vector - array
   (assert-float-equal
    #(31.5 63.0 94.5)
-   (linear-algebra-kernel::%scaled-right-product-vector
+   (linear-algebra-kernel::%scaled-product-vector-array
     #(1.0 2.0 3.0 4.0 5.0)
     #2A((1.0 2.0 3.0)
         (1.0 2.0 3.0)
@@ -542,10 +542,10 @@
         (1.0 2.0 3.0))
     2.1)))
 
-(define-test right-product-vector
+(define-test product-vector-array
   (assert-float-equal
    #(15.0 30.0 45.0)
-   (linear-algebra-kernel:right-product-vector
+   (linear-algebra-kernel:product-vector-array
     #(1.0 2.0 3.0 4.0 5.0)
     #2A((1.0 2.0 3.0)
         (1.0 2.0 3.0)
@@ -555,7 +555,7 @@
     nil))
   (assert-float-equal
    #(31.5 63.0 94.5)
-   (linear-algebra-kernel:right-product-vector
+   (linear-algebra-kernel:product-vector-array
     #(1.0 2.0 3.0 4.0 5.0)
     #2A((1.0 2.0 3.0)
         (1.0 2.0 3.0)
@@ -564,32 +564,32 @@
         (1.0 2.0 3.0))
     2.1)))
 
-(define-test %left-product-array
+(define-test %product-array-vector
   ;; Array - vector
   (assert-float-equal
    #(15.0 30.0 45.0)
-   (linear-algebra-kernel::%left-product-vector
+   (linear-algebra-kernel::%product-array-vector
     #2A((1.0 1.0 1.0 1.0 1.0)
         (2.0 2.0 2.0 2.0 2.0)
         (3.0 3.0 3.0 3.0 3.0))
     #(1.0 2.0 3.0 4.0 5.0))))
 
-(define-test %scaled-left-product-array
+(define-test %scaled-product-array-vector
   ;; Array - vector
   (assert-float-equal
    #(31.5 63.0 94.5)
-   (linear-algebra-kernel::%scaled-left-product-vector
+   (linear-algebra-kernel::%scaled-product-array-vector
     #2A((1.0 1.0 1.0 1.0 1.0)
         (2.0 2.0 2.0 2.0 2.0)
         (3.0 3.0 3.0 3.0 3.0))
     #(1.0 2.0 3.0 4.0 5.0)
     2.1)))
 
-(define-test left-product-array
+(define-test product-array-vector
   ;; Array - vector
   (assert-float-equal
    #(15.0 30.0 45.0)
-   (linear-algebra-kernel:left-product-vector
+   (linear-algebra-kernel:product-array-vector
     #2A((1.0 1.0 1.0 1.0 1.0)
         (2.0 2.0 2.0 2.0 2.0)
         (3.0 3.0 3.0 3.0 3.0))
@@ -597,7 +597,7 @@
     nil))
   (assert-float-equal
    #(31.5 63.0 94.5)
-   (linear-algebra-kernel:left-product-vector
+   (linear-algebra-kernel:product-array-vector
     #2A((1.0 1.0 1.0 1.0 1.0)
         (2.0 2.0 2.0 2.0 2.0)
         (3.0 3.0 3.0 3.0 3.0))
