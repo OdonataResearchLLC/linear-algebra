@@ -2,7 +2,7 @@
 
  Linear Algebra in Common Lisp
 
- Copyright (c) 2011, Thomas M. Hermann
+ Copyright (c) 2011-2012, Thomas M. Hermann
  All rights reserved.
 
  Redistribution and  use  in  source  and  binary  forms, with or without
@@ -36,12 +36,14 @@
 (in-package :linear-algebra)
 
 ;;; Matrix superclass
+
 (defclass matrix-object ()
   ()
   (:documentation
    "A superclass for all matrices."))
 
 ;;; Matrix interface operations
+
 (defgeneric initialize-matrix (matrix data rows columns
                                &optional element-type)
   (:documentation
@@ -129,4 +131,3 @@
           (list row column row-end column-end)
           (error "The matrix range (~D:~D,~D:~D) is invalid."
                  row column row-end column-end)))))
-

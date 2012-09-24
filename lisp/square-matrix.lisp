@@ -2,7 +2,7 @@
 
  Linear Algebra in Common Lisp
 
- Copyright (c) 2011, Thomas M. Hermann
+ Copyright (c) 2011-2012, Thomas M. Hermann
  All rights reserved.
 
  Redistribution and  use  in  source  and  binary  forms, with or without
@@ -41,6 +41,7 @@
    "Square matrix object."))
 
 ;;; Square matrix interface operations
+
 (defun square-matrix-p (object)
   "Return true if OBJECT is a square matrix."
   (typep object 'square-matrix))
@@ -72,4 +73,3 @@
          (dotimes (i1 numcols)
            (setf (aref contents i0 i1)
                  (aref original (+ row i0) (+ column i1)))))))))
-

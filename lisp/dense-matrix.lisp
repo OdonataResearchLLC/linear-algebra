@@ -2,7 +2,7 @@
 
  Linear Algebra in Common Lisp
 
- Copyright (c) 2011, Thomas M. Hermann
+ Copyright (c) 2011-2012, Thomas M. Hermann
  All rights reserved.
 
  Redistribution and  use  in  source  and  binary  forms, with or without
@@ -44,6 +44,7 @@
    "Dense matrix object."))
 
 ;;; Dense matrix interface operations
+
 (defun dense-matrix-p (object)
   "Return true if object is a dense matrix."
   (typep object 'dense-matrix))
@@ -218,6 +219,7 @@
                   (aref contents2 m2-i0 m2-i1))))))))
 
 ;;; Dense matrix fundamental operations
+
 (defmethod sumsq ((matrix dense-matrix) &key (scale 0) (sumsq 1))
   "Return the scaling parameter and the sum of the squares of the matrix."
   (destructuring-bind (numrows numcols) (matrix-dimensions matrix)
@@ -479,4 +481,3 @@ matrix with a column vector."
            (if scalar
                (setf (aref newmat i0 i2) (* scalar val))
                (setf (aref newmat i0 i2) val))))))))
-

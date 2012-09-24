@@ -2,7 +2,7 @@
 
  Linear Algebra in Common Lisp
 
- Copyright (c) 2011, Thomas M. Hermann
+ Copyright (c) 2011-2012, Thomas M. Hermann
  All rights reserved.
 
  Redistribution and  use  in  source  and  binary  forms, with or without
@@ -97,6 +97,7 @@
    "Destructively replace the elements of vector1 with vector2."))
 
 ;;; Vector iteration operations
+
 (defgeneric map-vector (result-type function first-vector &rest more-vectors)
   (:documentation
    "Calls function on successive sets of vector objects."))
@@ -118,6 +119,7 @@ applying the function to each element of the vectors."))
         ,@body))))
 
 ;;; Vector transformations
+
 (defun givens-rotation (f g)
   "Return c,s,r defined from the Givens rotation."
   (cond
@@ -171,4 +173,3 @@ applying the function to each element of the vectors."))
 (defgeneric napply-rotation (vector1 vector2 cc ss)
   (:documentation
    "Return the plane rotations of vector1 and vector2 by cc and ss."))
-

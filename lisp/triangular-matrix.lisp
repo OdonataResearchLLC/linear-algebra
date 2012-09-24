@@ -2,7 +2,7 @@
 
  Linear Algebra in Common Lisp
 
- Copyright (c) 2011, Thomas M. Hermann
+ Copyright (c) 2011-2012, Thomas M. Hermann
  All rights reserved.
 
  Redistribution and  use  in  source  and  binary  forms, with or without
@@ -46,6 +46,7 @@
    "Lower triangular matrix object."))
 
 ;;; Triangular matrix interface operations
+
 (defun upper-triangular-matrix-p (object)
   "Return true if object is an upper triangular matrix."
   (typep object 'upper-triangular-matrix))
@@ -549,4 +550,3 @@ matrix2."
                                                              numrows numcols)
             (error "Range(~D:~D,~D:~D) results in a non lower triangular matrix."
                    row1 (+ row1 numrows -1) column1 (+ column1 numcols -1)))))))
-

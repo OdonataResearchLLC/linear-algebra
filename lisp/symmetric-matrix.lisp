@@ -2,7 +2,7 @@
 
  Linear Algebra in Common Lisp
 
- Copyright (c) 2011, Thomas M. Hermann
+ Copyright (c) 2011-2012, Thomas M. Hermann
  All rights reserved.
 
  Redistribution and  use  in  source  and  binary  forms, with or without
@@ -41,6 +41,7 @@
    "Symmetric matrix object."))
 
 ;;; Symmetric matrix interface opterations
+
 (defun symmetric-matrix-p (object)
   "Return true if object is a symmetric-matrix, NIL otherwise."
   (typep object 'symmetric-matrix))
@@ -276,4 +277,3 @@ matrix2."
                                                     numrows numcols)
             (error "Range(~D:~D,~D:~D) results in an asymmetric matrix."
                    row1 (+ row1 numrows -1) column1 (+ column1 numcols -1)))))))
-

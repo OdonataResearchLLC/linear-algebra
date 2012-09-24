@@ -2,7 +2,7 @@
 
  Linear Algebra in Common Lisp
 
- Copyright (c) 2011, Thomas M. Hermann
+ Copyright (c) 2011-2012, Thomas M. Hermann
  All rights reserved.
 
  Redistribution and  use  in  source  and  binary  forms, with or without
@@ -36,6 +36,7 @@
 (in-package :linear-algebra)
 
 ;;; Data vector classes
+
 (defclass data-vector ()
   ((contents
     :type (array * (*))
@@ -55,6 +56,7 @@
    "A column vector."))
 
 ;;; Data vector interface operations
+
 (defmethod initialize-vector ((vector data-vector) (data number)
                               (size integer) &optional
                               (element-type 'number))
@@ -243,6 +245,7 @@ applying the function to each element of the vectors."
               (* cc (vref vector2 pos))))))
 
 ;;; Data vector fundamental operations
+
 (defmethod sumsq ((vector data-vector) &key (scale 0) (sumsq 1))
   "Return the scaling parameter and the sum of the squares of vector."
   (let ((abs-val nil))
@@ -508,4 +511,3 @@ applying the function to each element of the vectors."
         sum (funcall op element1 element2) into result
         finally
         (return (if scalarp (* scalar result) result))))
-
