@@ -40,24 +40,28 @@
 list."
   (let ((abs-val))
     (dolist (elm data (values scale sumsq))
-      (when (plusp (setf abs-val (abs elm)))
+      (when (plusp (setq abs-val (abs elm)))
         (if (< scale abs-val)
-            (setf
-             sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
-             scale abs-val)
-            (incf sumsq (expt (/ elm scale) 2)))))))
+            (progn
+              (setq sumsq (1+ (* sumsq (expt (/ scale abs-val) 2))))
+              (setq scale abs-val))
+            (setq
+             sumsq
+             (+ sumsq (expt (/ elm scale) 2))))))))
 
 (defmethod sump ((data list) (p real) &key (scale 0) (sump 1))
   "Return the scaling parameter and the sum of the powers of p of the
 data."
   (let ((abs-val nil))
     (dolist (elm data (values scale sump))
-      (when (plusp (setf abs-val (abs elm)))
+      (when (plusp (setq abs-val (abs elm)))
         (if (< scale abs-val)
-            (setf
-             sump  (1+ (* sump (expt (/ scale abs-val) p)))
-             scale abs-val)
-            (incf sump (expt (/ elm scale) p)))))))
+            (progn
+              (setq sump (1+ (* sump (expt (/ scale abs-val) p))))
+              (setq scale abs-val))
+            (setq
+             sump
+             (+ sump (expt (/ elm scale) p))))))))
 
 (defmethod %norm ((data list) (measure (eql 1)))
   "Return the Taxicab norm of the list."
