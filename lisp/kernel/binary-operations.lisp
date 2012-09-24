@@ -180,14 +180,14 @@ the operation."))
           (make-array
            n-columns
            :element-type (array-element-type vector))))
-    (dotimes (i1 n-columns result)
+    (dotimes (column n-columns result)
       (setq element zero)
-      (dotimes (i0 m-rows)
+      (dotimes (row m-rows)
         (setq
          element
-         (+ element (* (aref vector i0) (aref array i0 i1)))))
+         (+ element (* (aref vector row) (aref array row column)))))
       ;; Store the result
-      (setf (aref result i1) element))))
+      (setf (aref result column) element))))
 
 (defun %scaled-product-vector-array (vector array scalar)
   "Return the result of the array premultiplied by the vector and
@@ -200,14 +200,14 @@ scaled."
           (make-array
            n-columns
            :element-type (array-element-type vector))))
-    (dotimes (i1 n-columns result)
+    (dotimes (column n-columns result)
       (setq element zero)
-      (dotimes (i0 m-rows)
+      (dotimes (row m-rows)
         (setq
          element
-         (+ element (* (aref vector i0) (aref array i0 i1)))))
+         (+ element (* (aref vector row) (aref array row column)))))
       ;; Store the result
-      (setf (aref result i1) (* scalar element)))))
+      (setf (aref result column) (* scalar element)))))
 
 (defun product-vector-array (vector array scalar)
   "Return the result of the array premultiplied by the vector and
@@ -226,14 +226,15 @@ scaled."
           (make-array
            m-rows
            :element-type (array-element-type vector))))
-    (dotimes (i0 m-rows result)
+    (dotimes (row m-rows result)
       (setq element zero)
-      (dotimes (i1 n-columns)
+      (dotimes (column n-columns)
         (setq
          element
-         (+ element (* (aref array i0 i1) (aref vector i1)))))
+         (+ element
+            (* (aref array row column) (aref vector column)))))
       ;; Store the result
-      (setf (aref result i0) element))))
+      (setf (aref result row) element))))
 
 (defun %scaled-product-array-vector (array vector scalar)
   "Return the result of the array postmultiplied by the vector and
@@ -246,14 +247,15 @@ scaled."
           (make-array
            m-rows
            :element-type (array-element-type vector))))
-    (dotimes (i0 m-rows result)
+    (dotimes (row m-rows result)
       (setq element zero)
-      (dotimes (i1 n-columns)
+      (dotimes (column n-columns)
         (setq
          element
-         (+ element (* (aref array i0 i1) (aref vector i1)))))
+         (+ element
+            (* (aref array row column) (aref vector column)))))
       ;; Store the result
-      (setf (aref result i0) (* scalar element)))))
+      (setf (aref result row) (* scalar element)))))
 
 (defun product-array-vector (array vector scalar)
   "Return the result of the array postmultiplied by the vector and
@@ -272,24 +274,24 @@ scaled."
           (array-dimensions array1)
           :element-type
           (common-array-element-type array1 array2))))
-    (dotimes (i0 m-rows result)
-      (dotimes (i1 n-columns)
+    (dotimes (row m-rows result)
+      (dotimes (column n-columns)
         (setf
-         (aref result i0 i1)
+         (aref result row column)
          (funcall operation
-                  (aref array1 i0 i1)
-                  (aref array2 i0 i1)))))))
+                  (aref array1 row column)
+                  (aref array2 row column)))))))
 
 (defun %array1<-array1-op-array2 (operation array1 array2)
   (let ((m-rows (array-dimension array1 0))
         (n-columns (array-dimension array1 1)))
-    (dotimes (i0 m-rows array1)
-      (dotimes (i1 n-columns)
+    (dotimes (row m-rows array1)
+      (dotimes (column n-columns)
         (setf
-         (aref array1 i0 i1)
+         (aref array1 row column)
          (funcall operation
-                  (aref array1 i0 i1)
-                  (aref array2 i0 i1)))))))
+                  (aref array1 row column)
+                  (aref array2 row column)))))))
 
 (defmethod compatible-dimensions-p
            ((operation (eql :add)) (array1 array) (array2 array))
@@ -342,15 +344,16 @@ addition."
           (make-array
            (list m-rows n-columns)
            :element-type (array-element-type array1))))
-    (dotimes (i0 m-rows result)
-      (dotimes (i2 n-columns)
+    (dotimes (row m-rows result)
+      (dotimes (column n-columns)
         (setq element zero)
-        (dotimes (i1 l-columns)
-          (setq
-           element
-           (+ element (* (aref array1 i0 i1) (aref array2 i1 i2)))))
+        (dotimes (index l-columns)
+          (setq element
+                (+ element
+                   (* (aref array1 row index)
+                      (aref array2 index column)))))
         ;; Store result
-        (setf (aref result i0 i2) element)))))
+        (setf (aref result row column) element)))))
 
 (defun %scaled-product-array-array (array1 array2 scalar)
   "Return the scaled result of the product of 2 arrays."
@@ -363,15 +366,16 @@ addition."
           (make-array
            (list m-rows n-columns)
            :element-type (array-element-type array1))))
-    (dotimes (i0 m-rows result)
-      (dotimes (i2 n-columns)
+    (dotimes (row m-rows result)
+      (dotimes (column n-columns)
         (setq element zero)
-        (dotimes (i1 l-columns)
-          (setq
-           element
-           (+ element (* (aref array1 i0 i1) (aref array2 i1 i2)))))
+        (dotimes (index l-columns)
+          (setq element
+                (+ element
+                   (* (aref array1 row index)
+                      (aref array2 index column)))))
         ;; Store result
-        (setf (aref result i0 i2) (* scalar element))))))
+        (setf (aref result row column) (* scalar element))))))
 
 (defun product-array-array (array1 array2 scalar)
   "Return the scaled result of the product of 2 arrays."

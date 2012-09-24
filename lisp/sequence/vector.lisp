@@ -38,32 +38,39 @@
 (defmethod sumsq ((data vector) &key (scale 0) (sumsq 1))
   "Return the scaling parameter and the sum of the squares of the
 vector."
-  (let ((size (length data))
-        (abs-val))
-    (dotimes (index size (values scale sumsq))
-      (when (plusp (setq abs-val (abs (svref data index))))
+  (let ((abs-val))
+    (dotimes (index (length data) (values scale sumsq))
+      (when (plusp (setq abs-val (abs (aref data index))))
         (if (< scale abs-val)
             (progn
               (setq sumsq (1+ (* sumsq (expt (/ scale abs-val) 2))))
               (setq scale abs-val))
             (setq
              sumsq
-             (+ sumsq (expt (/ (svref data index) scale) 2))))))))
+             (+ sumsq (expt (/ (aref data index) scale) 2))))))))
 
 (defmethod sump ((data vector) (p real) &key (scale 0) (sump 1))
   "Return the scaling parameter and the sum of the powers of p of the
 vector."
-  (let ((size (length data))
-        (abs-val))
-    (dotimes (index size (values scale sump))
-      (when (plusp (setq abs-val (abs (svref data index))))
+  (let ((abs-val))
+    (dotimes (index (length data) (values scale sump))
+      (when (plusp (setq abs-val (abs (aref data index))))
         (if (< scale abs-val) 
             (progn
               (setq sump (1+ (* sump (expt (/ scale abs-val) p))))
               (setq scale abs-val))
             (setq
              sump
-             (+ sump (expt (/ (svref data index) scale) p))))))))
+             (+ sump (expt (/ (aref data index) scale) p))))))))
+
+(defun %abs-vector (vector)
+  "Return a vector containing absolute value of each element."
+  (let ((result
+         (make-array
+          (length vector)
+          :element-type (array-element-type vector))))
+    (dotimes (index (length vector) result)
+      (setf (aref result index) (abs (aref vector index))))))
 
 (defmethod %norm ((data vector) (measure (eql 1)))
   "Return the Taxicab norm of the list."
@@ -71,27 +78,12 @@ vector."
 
 (defmethod %norm ((data vector) (measure (eql 2)))
   "Return the Euclidean norm of the vector."
-  (multiple-value-bind (scale sumsq)
-      (sumsq
-       (let ((result
-              (make-array
-               (length data)
-               :element-type (array-element-type data))))
-         (dotimes (index (length data) result)
-           (setf (aref result index) (abs (aref data index))))))
+  (multiple-value-bind (scale sumsq) (sumsq (%abs-vector data))
     (* scale (sqrt sumsq))))
 
 (defmethod %norm ((data vector) (measure integer))
   "Return the p-norm of the vector."
-  (multiple-value-bind (scale sump)
-      (sump
-       (let ((result
-              (make-array
-               (length data)
-               :element-type (array-element-type data))))
-         (dotimes (index (length data) result)
-           (setf (aref result index) (abs (aref data index)))))
-       measure)
+  (multiple-value-bind (scale sump) (sump (%abs-vector data) measure)
     (* scale (expt sump (/ measure)))))
 
 (defmethod %norm ((data vector) (measure (eql :infinity)))

@@ -41,33 +41,33 @@ array."
   (let ((m-rows (array-dimension data 0))
         (n-columns (array-dimension data 1))
         (abs-val 0))
-    (dotimes (i0 m-rows (values scale sumsq))
-      (dotimes (i1 n-columns)
-        (when (plusp (setq abs-val (abs (aref data i0 i1))))
+    (dotimes (row m-rows (values scale sumsq))
+      (dotimes (column n-columns)
+        (when (plusp (setq abs-val (abs (aref data row column))))
           (if (< scale abs-val)
               (progn
                 (setq sumsq (1+ (* sumsq (expt (/ scale abs-val) 2))))
                 (setq scale abs-val))
-              (setq
-               sumsq
-               (+ sumsq (expt (/ abs-val scale) 2)))))))))
+              (setq sumsq (+ sumsq (expt (/ abs-val scale) 2)))))))))
 
 (defmethod sump ((data array) (p number) &key (scale 0) (sump 1))
-  "Return the scaling parameter and the sum of the P powers of the matrix."
+  "Return the scaling parameter and the sum of the P powers of the
+matrix."
   (unless (plusp p) (error "The power(~A) must be positive." p))
   (let ((m-rows (array-dimension data 0))
         (n-columns (array-dimension data 1))
         (abs-val 0))
-    (dotimes (i0 m-rows (values scale sump))
-      (dotimes (i1 n-columns)
-        (when (plusp (setq abs-val (abs (aref data i0 i1))))
+    (dotimes (row m-rows (values scale sump))
+      (dotimes (column n-columns)
+        (when (plusp (setq abs-val (abs (aref data row column))))
           (if (< scale abs-val)
               (progn
                 (setq sump (1+ (* sump (expt (/ scale abs-val) p))))
                 (setq scale abs-val))
               (setq
                sump
-               (+ sump (expt (/ (aref data i0 i1) scale) p)))))))))
+               (+ sump
+                  (expt (/ (aref data row column) scale) p)))))))))
 
 (defmethod %norm ((data array) (measure (eql 1)))
   "Return the 1 norm of the array."
@@ -75,10 +75,10 @@ array."
         (n-columns (array-dimension data 1))
         (norm 0)
         (sum 0))
-    (dotimes (i1 n-columns norm)
+    (dotimes (column n-columns norm)
       (setq sum 0)
-      (dotimes (i0 m-rows)
-        (setq sum (+ sum (abs (aref data i0 i1)))))
+      (dotimes (row m-rows)
+        (setq sum (+ sum (abs (aref data row column)))))
       (setq norm (max sum norm)))))
 
 (defmethod %norm ((data array) (measure (eql :max)))
@@ -86,9 +86,9 @@ array."
   (let ((m-rows (array-dimension data 0))
         (n-columns (array-dimension data 1))
         (norm 0))
-    (dotimes (i0 m-rows norm)
-      (dotimes (i1 n-columns)
-        (setq norm (max norm (abs (aref data i0 i1))))))))
+    (dotimes (row m-rows norm)
+      (dotimes (column n-columns)
+        (setq norm (max norm (abs (aref data row column))))))))
 
 (defmethod %norm ((data array) (measure (eql :frobenius)))
   "Return the Frobenius norm of the array."
@@ -101,10 +101,10 @@ array."
         (n-columns (array-dimension data 1))
         (norm 0)
         (sum 0))
-    (dotimes (i0 m-rows norm)
+    (dotimes (row m-rows norm)
       (setq sum 0)
-      (dotimes (i1 n-columns)
-        (setq sum (+ sum (abs (aref data i0 i1)))))
+      (dotimes (column n-columns)
+        (setq sum (+ sum (abs (aref data row column)))))
       (setq norm (max sum norm)))))
 
 (defmethod norm ((data array) &key (measure 1))
@@ -120,26 +120,29 @@ array."
           (make-array
            (list n-columns m-rows)
            :element-type (array-element-type data))))
-    (dotimes (i0 m-rows result)
-      (dotimes (i1 n-columns)
+    (dotimes (row m-rows result)
+      (dotimes (column n-columns)
         (setf
-         (aref result i1 i0)
-         (funcall op (aref data i0 i1)))))))
+         (aref result column row)
+         (funcall op (aref data row column)))))))
 
 (defmethod ntranspose ((data array) &key conjugate)
   "Replace the contents of the array with the transpose."
   (let ((m-rows (array-dimension data 0))
-        (n-columns (array-dimension data 1)))
+        (n-columns (array-dimension data 1))
+        (op (if conjugate #'conjugate #'identity)))
     (if (= m-rows n-columns)
-        (let ((op (if conjugate #'conjugate #'identity)))
-          (dotimes (i0 m-rows data)
-            ;; FIXME : Conjugate on the diagonal may not be correct.
-            (setf (aref data i0 i0) (funcall op (aref data i0 i0)))
-            (do ((i1 (1+ i0) (1+ i1)))
-                ((>= i1 n-columns))
-              (psetf
-               (aref data i0 i1) (funcall op (aref data i1 i0))
-               (aref data i1 i0) (funcall op (aref data i0 i1))))))
+        (dotimes (row m-rows data)
+          ;; FIXME : Conjugate on the diagonal may not be correct.
+          (setf (aref data row row)
+                (funcall op (aref data row row)))
+          (do ((column (1+ row) (1+ column)))
+              ((>= column n-columns))
+            (psetf
+             (aref data row column)
+             (funcall op (aref data column row))
+             (aref data column row)
+             (funcall op (aref data row column)))))
         (error "Rows(~D) and columns(~D) unequal."
                m-rows n-columns))))
 
@@ -177,21 +180,21 @@ array."
           (make-array
            (list m-rows n-columns)
            :element-type (array-element-type data))))
-    (dotimes (i0 m-rows result)
-      (dotimes (i1 n-columns)
+    (dotimes (row m-rows result)
+      (dotimes (column n-columns)
         (setf
-         (aref result i0 i1)
-         (* scalar (aref data i0 i1)))))))
+         (aref result row column)
+         (* scalar (aref data row column)))))))
 
 (defmethod nscale ((scalar number) (data array))
   "Scale each element of the array."
   (let ((m-rows (array-dimension data 0))
         (n-columns (array-dimension data 1)))
-    (dotimes (i0 m-rows data)
-      (dotimes (i1 n-columns)
+    (dotimes (row m-rows data)
+      (dotimes (column n-columns)
         (setf
-         (aref data i0 i1)
-         (* scalar (aref data i0 i1)))))))
+         (aref data row column)
+         (* scalar (aref data row column)))))))
 
 (defmethod add ((array1 array) (array2 array) &key scalar1 scalar2)
   "Return the addition of the 2 arrays."
