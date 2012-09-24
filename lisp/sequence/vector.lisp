@@ -41,12 +41,14 @@ vector."
   (let ((size (length data))
         (abs-val))
     (dotimes (index size (values scale sumsq))
-      (when (plusp (setf abs-val (abs (svref data index))))
+      (when (plusp (setq abs-val (abs (svref data index))))
         (if (< scale abs-val)
-            (setf
-             sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
-             scale abs-val)
-            (incf sumsq (expt (/ (svref data index) scale) 2)))))))
+            (progn
+              (setq sumsq (1+ (* sumsq (expt (/ scale abs-val) 2))))
+              (setq scale abs-val))
+            (setq
+             sumsq
+             (+ sumsq (expt (/ (svref data index) scale) 2))))))))
 
 (defmethod sump ((data vector) (p real) &key (scale 0) (sump 1))
   "Return the scaling parameter and the sum of the powers of p of the
@@ -54,12 +56,14 @@ vector."
   (let ((size (length data))
         (abs-val))
     (dotimes (index size (values scale sump))
-      (when (plusp (setf abs-val (abs (svref data index))))
-        (if (< scale abs-val)
-            (setf
-             sump (1+ (* sump (expt (/ scale abs-val) p)))
-             scale abs-val)
-            (incf sump (expt (/ (svref data index) scale) p)))))))
+      (when (plusp (setq abs-val (abs (svref data index))))
+        (if (< scale abs-val) 
+            (progn
+              (setq sump (1+ (* sump (expt (/ scale abs-val) p))))
+              (setq scale abs-val))
+            (setq
+             sump
+             (+ sump (expt (/ (svref data index) scale) p))))))))
 
 (defmethod %norm ((data vector) (measure (eql 1)))
   "Return the Taxicab norm of the list."
@@ -68,13 +72,26 @@ vector."
 (defmethod %norm ((data vector) (measure (eql 2)))
   "Return the Euclidean norm of the vector."
   (multiple-value-bind (scale sumsq)
-      (sumsq (loop for val across data collect (abs val)))
+      (sumsq
+       (let ((result
+              (make-array
+               (length data)
+               :element-type (array-element-type data))))
+         (dotimes (index (length data) result)
+           (setf (aref result index) (abs (aref data index))))))
     (* scale (sqrt sumsq))))
 
 (defmethod %norm ((data vector) (measure integer))
   "Return the p-norm of the vector."
   (multiple-value-bind (scale sump)
-      (sump (loop for val across data collect (abs val)) measure)
+      (sump
+       (let ((result
+              (make-array
+               (length data)
+               :element-type (array-element-type data))))
+         (dotimes (index (length data) result)
+           (setf (aref result index) (abs (aref data index)))))
+       measure)
     (* scale (expt sump (/ measure)))))
 
 (defmethod %norm ((data vector) (measure (eql :infinity)))
@@ -86,17 +103,21 @@ vector."
 
 (defmethod transpose ((data vector) &key conjugate)
   "Return a row vector."
-  (map-into
-   (make-array
-    (length data)
-    :element-type (array-element-type data))
-   (if conjugate #'conjugate #'identity)
-   data))
+  (let ((result
+         (make-array
+          (length data)
+          :element-type (array-element-type data))))
+    (if conjugate
+        (dotimes (index (length data) result)
+          (setf (aref result index) (aref data index)))
+        (dotimes (index (length data) result)
+          (setf (aref result index) (conjugate (aref data index)))))))
 
 (defmethod ntranspose ((data vector) &key conjugate)
   "Return a row vector destructively."
   (if conjugate
-      (map-into data #'conjugate data)
+      (dotimes (index (length data) data)
+        (setf (aref data index) (conjugate (aref data index))))
       data))
 
 (defmethod permute ((data vector) (matrix permutation-matrix))
@@ -133,16 +154,17 @@ vector."
 
 (defmethod scale ((scalar number) (data vector))
   "Return the vector scaled by scalar."
-  (map-into
-   (make-array (length data) :element-type
-               (upgraded-array-element-type
-                (type-of data)))
-   (lambda (item) (* scalar item))
-   data))
+  (let ((result
+         (make-array
+          (length data)
+          :element-type (array-element-type data))))
+    (dotimes (index (length data) result)
+      (setf (aref result index) (* scalar (aref data index))))))
 
 (defmethod nscale ((scalar number) (data vector))
   "Return the vector destructively scaled by scalar."
-  (map-into data (lambda (x) (* scalar x)) data))
+  (dotimes (index (length data) data)
+    (setf (aref data index) (* scalar (aref data index)))))
 
 (defmethod add ((vector1 vector) (vector2 vector)
                 &key scalar1 scalar2)

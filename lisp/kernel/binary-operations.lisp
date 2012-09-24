@@ -100,16 +100,26 @@ the operation."))
 
 (defun %vector<-vector1-op-vector2 (operation vector1 vector2)
   "Store the result of the binary operation in a new vector."
-  (map-into
-   (make-array
-    (length vector1)
-    :element-type (common-array-element-type vector1 vector2))
-   operation
-   vector1 vector2))
+  (let ((result
+         (make-array
+          (length vector1)
+          :element-type
+          (common-array-element-type vector1 vector2))))
+    (dotimes (index (length vector1) result)
+      (setf
+       (aref result index)
+       (funcall operation
+                (aref vector1 index)
+                (aref vector2 index))))))
 
 (defun %vector1<-vector1-op-vector2 (operation vector1 vector2)
   "Store the result of the binary operation in vector1."
-  (map-into vector1 operation vector1 vector2))
+  (dotimes (index (length vector1) vector1)
+    (setf
+     (aref vector1 index)
+     (funcall operation
+              (aref vector1 index)
+              (aref vector2 index)))))
 
 (defun add-vector (vector1 vector2 scalar1 scalar2)
   "Vector binary addition."

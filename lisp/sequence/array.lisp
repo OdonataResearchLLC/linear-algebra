@@ -38,49 +38,57 @@
 (defmethod sumsq ((data array) &key (scale 0) (sumsq 1))
   "Return the scaling parameter and the sum of the squares of the
 array."
-  (destructuring-bind (numrows numcols) (array-dimensions data)
-    (let ((abs-val 0))
-      (dotimes (i0 numrows (values scale sumsq))
-        (dotimes (i1 numcols)
-          (when (plusp (setf abs-val (abs (aref data i0 i1))))
-            (if (< scale abs-val)
-                (setf
-                 sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
-                 scale abs-val)
-                (incf sumsq (expt (/ abs-val scale) 2)))))))))
+  (let ((m-rows (array-dimension data 0))
+        (n-columns (array-dimension data 1))
+        (abs-val 0))
+    (dotimes (i0 m-rows (values scale sumsq))
+      (dotimes (i1 n-columns)
+        (when (plusp (setq abs-val (abs (aref data i0 i1))))
+          (if (< scale abs-val)
+              (progn
+                (setq sumsq (1+ (* sumsq (expt (/ scale abs-val) 2))))
+                (setq scale abs-val))
+              (setq
+               sumsq
+               (+ sumsq (expt (/ abs-val scale) 2)))))))))
 
 (defmethod sump ((data array) (p number) &key (scale 0) (sump 1))
   "Return the scaling parameter and the sum of the P powers of the matrix."
   (unless (plusp p) (error "The power(~A) must be positive." p))
-  (destructuring-bind (numrows numcols) (array-dimensions data)
-    (let ((abs-val 0))
-      (dotimes (i0 numrows (values scale sump))
-        (dotimes (i1 numcols)
-          (when (plusp (setf abs-val (abs (aref data i0 i1))))
-            (if (< scale abs-val)
-                (setf
-                 sump (1+ (* sump (expt (/ scale abs-val) p)))
-                 scale abs-val)
-                (incf sump (expt (/ (aref data i0 i1) scale) p)))))))))
+  (let ((m-rows (array-dimension data 0))
+        (n-columns (array-dimension data 1))
+        (abs-val 0))
+    (dotimes (i0 m-rows (values scale sump))
+      (dotimes (i1 n-columns)
+        (when (plusp (setq abs-val (abs (aref data i0 i1))))
+          (if (< scale abs-val)
+              (progn
+                (setq sump (1+ (* sump (expt (/ scale abs-val) p))))
+                (setq scale abs-val))
+              (setq
+               sump
+               (+ sump (expt (/ (aref data i0 i1) scale) p)))))))))
 
 (defmethod %norm ((data array) (measure (eql 1)))
   "Return the 1 norm of the array."
-  (destructuring-bind (numrows numcols) (array-dimensions data)
-    (let ((norm 0)
-          (sum 0))
-      (dotimes (i1 numcols norm)
-        (setf sum 0)
-        (dotimes (i0 numrows)
-          (incf sum (abs (aref data i0 i1))))
-        (setf norm (max sum norm))))))
+  (let ((m-rows (array-dimension data 0))
+        (n-columns (array-dimension data 1))
+        (norm 0)
+        (sum 0))
+    (dotimes (i1 n-columns norm)
+      (setq sum 0)
+      (dotimes (i0 m-rows)
+        (setq sum (+ sum (abs (aref data i0 i1)))))
+      (setq norm (max sum norm)))))
 
 (defmethod %norm ((data array) (measure (eql :max)))
   "Return the max norm of the array."
-  (destructuring-bind (numrows numcols) (array-dimensions data)
-    (let ((norm 0))
-      (dotimes (i0 numrows norm)
-        (dotimes (i1 numcols)
-          (setf norm (max norm (abs (aref data i0 i1)))))))))
+  (let ((m-rows (array-dimension data 0))
+        (n-columns (array-dimension data 1))
+        (norm 0))
+    (dotimes (i0 m-rows norm)
+      (dotimes (i1 n-columns)
+        (setq norm (max norm (abs (aref data i0 i1))))))))
 
 (defmethod %norm ((data array) (measure (eql :frobenius)))
   "Return the Frobenius norm of the array."
@@ -89,14 +97,15 @@ array."
 
 (defmethod %norm ((data array) (measure (eql :infinity)))
   "Return the infinity norm of the array."
-  (destructuring-bind (numrows numcols) (array-dimensions data)
-    (let ((norm 0)
-          (sum 0))
-      (dotimes (i0 numrows norm)
-        (setf sum 0)
-        (dotimes (i1 numcols)
-          (incf sum (abs (aref data i0 i1))))
-        (setf norm (max sum norm))))))
+  (let ((m-rows (array-dimension data 0))
+        (n-columns (array-dimension data 1))
+        (norm 0)
+        (sum 0))
+    (dotimes (i0 m-rows norm)
+      (setq sum 0)
+      (dotimes (i1 n-columns)
+        (setq sum (+ sum (abs (aref data i0 i1)))))
+      (setq norm (max sum norm)))))
 
 (defmethod norm ((data array) &key (measure 1))
   "Return the norm of the array."
@@ -104,18 +113,18 @@ array."
 
 (defmethod transpose ((data array) &key conjugate)
   "Return the transpose of the array."
-  (destructuring-bind (numrows numcols)
-      (array-dimensions data)
-    (let ((op (if conjugate #'conjugate #'identity))
-          (result
-           (make-array
-            (list numcols numrows)
-            :element-type (array-element-type data))))
-      (dotimes (i0 numrows result)
-        (dotimes (i1 numcols)
-          (setf
-           (aref result i1 i0)
-           (funcall op (aref data i0 i1))))))))
+  (let* ((op (if conjugate #'conjugate #'identity))
+         (m-rows (array-dimension data 0))
+         (n-columns (array-dimension data 1))
+         (result
+          (make-array
+           (list n-columns m-rows)
+           :element-type (array-element-type data))))
+    (dotimes (i0 m-rows result)
+      (dotimes (i1 n-columns)
+        (setf
+         (aref result i1 i0)
+         (funcall op (aref data i0 i1)))))))
 
 (defmethod ntranspose ((data array) &key conjugate)
   "Replace the contents of the array with the transpose."
@@ -162,22 +171,24 @@ array."
 
 (defmethod scale ((scalar number) (data array))
   "Scale each element of the array."
-  (destructuring-bind (numrows numcols) (array-dimensions data)
-    (let ((result
-           (make-array
-            (list numrows numcols)
-            :element-type (array-element-type data))))
-      (dotimes (i0 numrows result)
-        (dotimes (i1 numcols)
-          (setf
-           (aref result i0 i1)
-           (* scalar (aref data i0 i1))))))))
+  (let* ((m-rows (array-dimension data 0))
+         (n-columns (array-dimension data 1))
+         (result
+          (make-array
+           (list m-rows n-columns)
+           :element-type (array-element-type data))))
+    (dotimes (i0 m-rows result)
+      (dotimes (i1 n-columns)
+        (setf
+         (aref result i0 i1)
+         (* scalar (aref data i0 i1)))))))
 
 (defmethod nscale ((scalar number) (data array))
   "Scale each element of the array."
-  (destructuring-bind (numrows numcols) (array-dimensions data)
-    (dotimes (i0 numrows data)
-      (dotimes (i1 numcols)
+  (let ((m-rows (array-dimension data 0))
+        (n-columns (array-dimension data 1)))
+    (dotimes (i0 m-rows data)
+      (dotimes (i1 n-columns)
         (setf
          (aref data i0 i1)
          (* scalar (aref data i0 i1)))))))
