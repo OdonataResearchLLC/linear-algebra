@@ -264,29 +264,27 @@ applying the function to each element of the vectors."
 
 (defmethod transpose ((vector column-vector) &key conjugate)
   "Return a row vector."
-  (%map-data-vector 'row-vector
-                    (if conjugate #'conjugate #'identity)
-                    vector))
+  (make-instance
+   'row-vector
+   :contents
+   (transpose (contents vector) :conjugate conjugate)))
 
 (defmethod transpose ((vector row-vector) &key conjugate)
   "Return a column vector."
-  (%map-data-vector 'column-vector
-                    (if conjugate #'conjugate #'identity)
-                    vector))
+  (make-instance
+   'column-vector
+   :contents
+   (transpose (contents vector) :conjugate conjugate)))
 
 (defmethod ntranspose ((vector column-vector) &key conjugate)
   "Return a row vector destructively."
-  (if conjugate
-      (%map-into-data-vector
-       (change-class vector 'row-vector) #'conjugate vector)
-      (change-class vector 'row-vector)))
+  (ntranspose (contents vector) :conjugate conjugate)
+  (change-class vector 'row-vector))
 
 (defmethod ntranspose ((vector row-vector) &key conjugate)
   "Return a column vector destructively."
-  (if conjugate
-      (%map-into-data-vector
-       (change-class vector 'column-vector) #'conjugate vector)
-      (change-class vector 'column-vector)))
+  (ntranspose (contents vector) :conjugate conjugate)
+  (change-class vector 'column-vector))
 
 (defmethod permute :before ((vector row-vector) (matrix permutation-matrix))
   "Verify that the dimensions are compatible."

@@ -758,7 +758,8 @@
      4.0 (linear-algebra:norm zdata :measure :infinity))))
 
 ;;; Data vector transpose
-(define-test data-vector-transpose
+
+(define-test transpose-data-vector
   (let ((col-data (linear-algebra:column-vector
                    1.0 2.0 3.0 4.0 5.0))
         (row-data (linear-algebra:row-vector
@@ -774,7 +775,7 @@
     (assert-float-equal
      row-data (linear-algebra:transpose row-data))))
 
-(define-test data-vector-ntranspose
+(define-test ntranspose-data-vector
   (let ((col-data (linear-algebra:column-vector
                    1.0 2.0 3.0 4.0 5.0))
         (row-data (linear-algebra:row-vector
