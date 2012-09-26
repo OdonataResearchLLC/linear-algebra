@@ -43,6 +43,9 @@
            :common-array-element-type
            :complex-equal
            :number-equal)
+  ;; Unary operations
+  (:export :sumsq-vector :sump-vector
+           :sumsq-array :sump-array)
   ;; Permutation
   (:export :right-permute-vector :right-npermute-vector
            :left-permute-vector :left-npermute-vector

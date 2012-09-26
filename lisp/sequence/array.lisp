@@ -38,36 +38,12 @@
 (defmethod sumsq ((data array) &key (scale 0) (sumsq 1))
   "Return the scaling parameter and the sum of the squares of the
 array."
-  (let ((m-rows (array-dimension data 0))
-        (n-columns (array-dimension data 1))
-        (abs-val 0))
-    (dotimes (row m-rows (values scale sumsq))
-      (dotimes (column n-columns)
-        (when (plusp (setq abs-val (abs (aref data row column))))
-          (if (< scale abs-val)
-              (progn
-                (setq sumsq (1+ (* sumsq (expt (/ scale abs-val) 2))))
-                (setq scale abs-val))
-              (setq sumsq (+ sumsq (expt (/ abs-val scale) 2)))))))))
+  (sumsq-array data scale sumsq))
 
 (defmethod sump ((data array) (p number) &key (scale 0) (sump 1))
   "Return the scaling parameter and the sum of the P powers of the
 matrix."
-  (unless (plusp p) (error "The power(~A) must be positive." p))
-  (let ((m-rows (array-dimension data 0))
-        (n-columns (array-dimension data 1))
-        (abs-val 0))
-    (dotimes (row m-rows (values scale sump))
-      (dotimes (column n-columns)
-        (when (plusp (setq abs-val (abs (aref data row column))))
-          (if (< scale abs-val)
-              (progn
-                (setq sump (1+ (* sump (expt (/ scale abs-val) p))))
-                (setq scale abs-val))
-              (setq
-               sump
-               (+ sump
-                  (expt (/ (aref data row column) scale) p)))))))))
+  (sump-array data p scale sump))
 
 (defmethod %norm ((data array) (measure (eql 1)))
   "Return the 1 norm of the array."

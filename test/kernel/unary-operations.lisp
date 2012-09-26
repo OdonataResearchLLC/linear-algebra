@@ -41,13 +41,63 @@
   ;; Real
   (multiple-value-bind (scale sumsq)
       (linear-algebra-kernel:sumsq-vector
-       #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
+       #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5) 0 1)
     (assert-rational-equal 6 scale)
     (assert-rational-equal 73/18 sumsq))
   ;; Complex
   (multiple-value-bind (scale sumsq)
       (linear-algebra-kernel:sumsq-vector
        #(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
-         #C(-2 3) #C(-3 1) #C(-1 0)))
+         #C(-2 3) #C(-3 1) #C(-1 0)) 0 1)
     (assert-float-equal 4.0 scale)
     (assert-float-equal #C (2.75 -1.125) sumsq)))
+
+(define-test unary-sumsq-array
+  (multiple-value-bind (scale sumsq)
+      (linear-algebra-kernel:sumsq-array
+       #2A((1.1 1.2 1.3 1.4 1.5)
+           (2.1 2.2 2.3 2.4 2.5)
+           (3.1 3.2 3.3 3.4 3.5)
+           (4.1 4.2 4.3 4.4 4.5))
+       0 1)
+    (assert-float-equal 4.5 scale)
+    (assert-float-equal 8.997532 sumsq)))
+
+(define-test unary-sump-vector
+  ;; Real
+  (multiple-value-bind (scale sump)
+      (linear-algebra-kernel:sump-vector
+       #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5) 2 0 1)
+    (assert-rational-equal 6 scale)
+    (assert-rational-equal 73/18 sump))
+  (multiple-value-bind (scale sump)
+      (linear-algebra-kernel:sump-vector
+       #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5) 3 0 1)
+    (assert-rational-equal 6 scale)
+    (assert-rational-equal 1 sump))
+  ;; Complex
+  (multiple-value-bind (scale sump)
+      (linear-algebra-kernel:sump-vector
+       #(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
+         #C(-2 3) #C(-3 1) #C(-1 0))
+       2 0 1)
+    (assert-float-equal 4.0 scale)
+    (assert-float-equal #C(2.75 -1.125) sump))
+  (multiple-value-bind (scale sump)
+      (linear-algebra-kernel:sump-vector
+       #(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
+         #C(-2 3) #C(-3 1) #C(-1 0))
+       3 0 1)
+    (assert-float-equal 4.0 scale)
+    (assert-float-equal #C(2.6639833 0.54687494) sump)))
+
+(define-test unary-sump-array
+  (multiple-value-bind (scale sump)
+      (linear-algebra-kernel:sump-array
+       #2A((1.1 1.2 1.3 1.4 1.5)
+           (2.1 2.2 2.3 2.4 2.5)
+           (3.1 3.2 3.3 3.4 3.5)
+           (4.1 4.2 4.3 4.4 4.5))
+       3.5 0 1)
+    (assert-float-equal 4.5 scale)
+    (assert-float-equal 6.540154 sump)))

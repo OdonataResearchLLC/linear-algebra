@@ -682,7 +682,7 @@
       (assert-float-equal 4.0 scale)
       (assert-float-equal #C(2.75 -1.125) sumsq))))
 
-(define-test data-vector-sump
+(define-test sump-data-vector
   ;; Real
   (let ((col-data (linear-algebra:column-vector
                    -6 -5 -4 -3 -2 -1 0 1 2 3 4 5))

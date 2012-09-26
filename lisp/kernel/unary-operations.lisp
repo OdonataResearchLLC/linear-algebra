@@ -37,7 +37,7 @@
 
 ;;; Unary operations
 
-(defun sumsq-vector (vector &key (scale 0) (sumsq 1))
+(defun sumsq-vector (vector scale sumsq)
   "Return the scaling parameter and the sum of the squares of the
 vector."
   (let ((abs-val))
@@ -50,3 +50,51 @@ vector."
             (setq
              sumsq
              (+ sumsq (expt (/ (aref vector index) scale) 2))))))))
+
+(defun sumsq-array (array scale sumsq)
+    "Return the scaling parameter and the sum of the squares of the
+array."
+  (let ((m-rows (array-dimension array 0))
+        (n-columns (array-dimension array 1))
+        (abs-val 0))
+    (dotimes (row m-rows (values scale sumsq))
+      (dotimes (column n-columns)
+        (when (plusp (setq abs-val (abs (aref array row column))))
+          (if (< scale abs-val)
+              (progn
+                (setq sumsq (1+ (* sumsq (expt (/ scale abs-val) 2))))
+                (setq scale abs-val))
+              (setq sumsq (+ sumsq (expt (/ abs-val scale) 2)))))))))
+
+(defun sump-vector (vector p scale sump)
+  "Return the scaling parameter and the sum of the powers of p of the
+vector."
+  (let ((abs-val))
+    (dotimes (index (length vector) (values scale sump))
+      (when (plusp (setq abs-val (abs (aref vector index))))
+        (if (< scale abs-val)
+            (progn
+              (setq sump (1+ (* sump (expt (/ scale abs-val) p))))
+              (setq scale abs-val))
+            (setq
+             sump
+             (+ sump (expt (/ (aref vector index) scale) p))))))))
+
+(defun sump-array (array p scale sump)
+  "Return the scaling parameter and the sum of the P powers of the
+matrix."
+  (unless (plusp p) (error "The power(~A) must be positive." p))
+  (let ((m-rows (array-dimension array 0))
+        (n-columns (array-dimension array 1))
+        (abs-val 0))
+    (dotimes (row m-rows (values scale sump))
+      (dotimes (column n-columns)
+        (when (plusp (setq abs-val (abs (aref array row column))))
+          (if (< scale abs-val)
+              (progn
+                (setq sump (1+ (* sump (expt (/ scale abs-val) p))))
+                (setq scale abs-val))
+              (setq
+               sump
+               (+ sump
+                  (expt (/ (aref array row column) scale) p)))))))))

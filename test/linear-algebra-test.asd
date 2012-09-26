@@ -50,6 +50,7 @@
     :components
     ((:file "utility")
      (:file "permute")
+     (:file "unary-operations")
      (:file "binary-operations")))
    ;; Linear algebra interface
    (:module interface

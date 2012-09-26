@@ -252,17 +252,11 @@ applying the function to each element of the vectors."
 
 (defmethod sumsq ((vector data-vector) &key (scale 0) (sumsq 1))
   "Return the scaling parameter and the sum of the squares of vector."
-  (sumsq-vector (contents vector) :scale scale :sumsq sumsq))
+  (sumsq-vector (contents vector) scale sumsq))
 
 (defmethod sump ((vector data-vector) (p number) &key (scale 0) (sump 1))
   "Return the scaling parameter and the sum of the P powers of vector."
-  (let ((abs-val nil))
-    (dovector (elm vector (values scale sump))
-      (when (< 0 (setf abs-val (abs elm)))
-        (if (< scale abs-val)
-            (setf sump (1+ (* sump (expt (/ scale abs-val) p)))
-                  scale abs-val)
-            (setf sump (+ sump (expt (/ elm scale) p))))))))
+  (sump-vector (contents vector) p scale sump))
 
 (defun %data-vector-1-norm (vector)
   "Return the Taxicab norm of the data vector."
