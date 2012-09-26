@@ -865,7 +865,8 @@
      'error (linear-algebra:npermute pmat cerr))))
 
 ;;; Data vector scale
-(define-test data-vector-scale
+
+(define-test scale-data-vector
   (assert-float-equal
    #(2.0 4.0 6.0 8.0 10.0)
    (linear-algebra:scale
@@ -886,7 +887,7 @@
     (linear-algebra:column-vector
      #C(1.0 1.0) #C(2.0 2.0) #C(3.0 3.0) #C(4.0 4.0) #C(5.0 5.0)))))
 
-(define-test data-vector-nscale
+(define-test nscale-data-vector
   (assert-float-equal
    #(2.0 4.0 6.0 8.0 10.0)
    (linear-algebra:nscale

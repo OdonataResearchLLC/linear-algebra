@@ -334,15 +334,16 @@ applying the function to each element of the vectors."
 
 (defmethod scale ((scalar number) (vector data-vector))
   "Return the vector scaled by scalar."
-  (%map-data-vector (class-of vector)
-                    (lambda (x) (* scalar x))
-                    vector))
+  (make-instance
+   (class-of vector)
+   :contents
+   (scale scalar (contents vector))))
 
 (defmethod nscale ((scalar number) (vector data-vector))
   "Return the vector destructively scaled by scalar."
-  (%map-into-data-vector vector
-                         (lambda (x) (* scalar x))
-                         vector))
+  (nscale scalar (contents vector))
+  ;; Return the vector
+  vector)
 
 (defmethod add :before ((vector1 data-vector) (vector2 data-vector)
                         &key scalar1 scalar2)
