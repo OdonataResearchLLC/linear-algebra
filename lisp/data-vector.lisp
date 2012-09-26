@@ -252,13 +252,7 @@ applying the function to each element of the vectors."
 
 (defmethod sumsq ((vector data-vector) &key (scale 0) (sumsq 1))
   "Return the scaling parameter and the sum of the squares of vector."
-  (let ((abs-val nil))
-    (dovector (elm vector (values scale sumsq))
-      (when (< 0 (setf abs-val (abs elm)))
-        (if (< scale abs-val)
-            (setf sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
-                  scale abs-val)
-            (setf sumsq (+ sumsq (expt (/ elm scale) 2))))))))
+  (sumsq-vector (contents vector) :scale scale :sumsq sumsq))
 
 (defmethod sump ((vector data-vector) (p number) &key (scale 0) (sump 1))
   "Return the scaling parameter and the sum of the P powers of vector."

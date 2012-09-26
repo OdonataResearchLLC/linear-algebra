@@ -38,16 +38,7 @@
 (defmethod sumsq ((data vector) &key (scale 0) (sumsq 1))
   "Return the scaling parameter and the sum of the squares of the
 vector."
-  (let ((abs-val))
-    (dotimes (index (length data) (values scale sumsq))
-      (when (plusp (setq abs-val (abs (aref data index))))
-        (if (< scale abs-val)
-            (progn
-              (setq sumsq (1+ (* sumsq (expt (/ scale abs-val) 2))))
-              (setq scale abs-val))
-            (setq
-             sumsq
-             (+ sumsq (expt (/ (aref data index) scale) 2))))))))
+  (sumsq-vector data :scale scale :sumsq sumsq))
 
 (defmethod sump ((data vector) (p real) &key (scale 0) (sump 1))
   "Return the scaling parameter and the sum of the powers of p of the
