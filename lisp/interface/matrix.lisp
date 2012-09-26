@@ -44,14 +44,13 @@
 
 ;;; Matrix interface operations
 
-(defgeneric initialize-matrix (matrix data rows columns
-                               &optional element-type)
+(defgeneric initialize-matrix (matrix data rows columns element-type)
   (:documentation
    "Initialize the matrix with data."))
 
 (defun make-matrix (rows columns &key
                     (matrix-type 'dense-matrix)
-                    (element-type t)
+                    (element-type 'number)
                     (initial-element nil initial-element-p)
                     (initial-contents nil initial-contents-p))
   "Return a new matrix instance."
@@ -105,7 +104,8 @@
   (:documentation
    "Return a copy of the matrix."))
 
-(defgeneric submatrix (matrix row column &key row-end column-end)
+(defgeneric submatrix (matrix start-row start-column
+                       &key end-row end-column)
   (:documentation
    "Return a submatrix of the matrix."))
 
@@ -115,19 +115,22 @@
    "Set the submatrix of the matrix."))
 
 (defgeneric replace-matrix (matrix1 matrix2 &key
-                            row1 row1-end column1 column1-end
-                            row2 row2-end column2 column2-end)
+                            start-row1 end-row1
+                            start-column1 end-column1
+                            start-row2 end-row2
+                            start-column2 end-column2)
   (:documentation
    "Destructively replace elements of matrix1 with matrix2."))
 
-(defun matrix-validated-range (matrix row column &optional row-end column-end)
+(defun matrix-validated-range (matrix start-row start-column
+                               &optional end-row end-column)
   "Returns a validated range of rows and columns for the matrix."
-  (destructuring-bind (row-dimension column-dimension)
-      (matrix-dimensions matrix)
-    (let ((row-end    (or row-end row-dimension))
-          (column-end (or column-end column-dimension)))
-      (if (and (<= 0 row row-end row-dimension)
-               (<= 0 column column-end column-dimension))
-          (list row column row-end column-end)
-          (error "The matrix range (~D:~D,~D:~D) is invalid."
-                 row column row-end column-end)))))
+  (let* ((row-dimension (matrix-row-dimension matrix))
+         (column-dimension (matrix-column-dimension matrix))
+         (end-row    (or end-row row-dimension))
+         (end-column (or end-column column-dimension)))
+    (if (and (<= 0 start-row end-row row-dimension)
+             (<= 0 start-column end-column column-dimension))
+        (values start-row start-column end-row end-column)
+        (error "The matrix range (~D:~D,~D:~D) is invalid."
+               start-row start-column end-row end-column))))
