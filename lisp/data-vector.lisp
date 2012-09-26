@@ -449,13 +449,7 @@ applying the function to each element of the vectors."
     (error "VECTOR1 and VECTOR2 are not of equal length.")))
 
 (defmethod product ((vector1 row-vector) (vector2 column-vector)
-                    &key (scalar nil scalarp) conjugate)
+                    &key scalar conjugate)
   "Return the dot product of vector1 and vector2."
-  (loop with op = (if conjugate
-                      (lambda (x y) (* (conjugate x) y))
-                      #'*)
-        for element1 across (contents vector1)
-        and element2 across (contents vector2)
-        sum (funcall op element1 element2) into result
-        finally
-        (return (if scalarp (* scalar result) result))))
+  (inner-product-vector (contents vector1) (contents vector2)
+                        scalar conjugate))

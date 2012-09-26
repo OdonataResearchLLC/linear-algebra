@@ -1201,7 +1201,8 @@
     (linear-algebra:column-vector 1.1 2.2 3.3 4.4))))
 
 ;;; Vector data dot product
-(define-test data-vector-dot-product
+
+(define-test product-data-vector
   ;; Real vectors
   (assert-rational-equal
    55 (linear-algebra:product
