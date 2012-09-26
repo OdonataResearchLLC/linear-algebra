@@ -728,84 +728,30 @@
       (assert-float-equal 4.0 scale)
       (assert-float-equal #C(2.6639833 0.54687494) sump))))
 
-;;; Taxicab norm
-(define-test %data-vector-1-norm
-  (assert-rational-equal
-   36 (linear-algebra::%data-vector-1-norm
-       (linear-algebra:column-vector
-        -6 -5 -4 -3 -2 -1 0 1 2 3 4 5)))
-  (assert-float-equal
-   19.535658
-   (linear-algebra::%data-vector-1-norm
-    (linear-algebra:column-vector
-     #C(1 0) #C(3 1) #C(2 3) #C(0 4)
-     #C(-2 3) #C(-3 1) #C(-1 0)))))
-
-;;; Euclidean norm
-(define-test %data-vector-2-norm
-  (assert-float-equal
-   12.083046
-   (linear-algebra::%data-vector-2-norm
-    (linear-algebra:column-vector
-     -6 -5 -4 -3 -2 -1 0 1 2 3 4 5)))
-  (assert-float-equal
-   8.0
-   (linear-algebra::%data-vector-2-norm
-    (linear-algebra:column-vector
-     #C(1 0) #C(3 1) #C(2 3) #C(0 4)
-     #C(-2 3) #C(-3 1) #C(-1 0)))))
-
-;;; P-norm
-(define-test %data-vector-p-norm
-  (let ((data (linear-algebra:column-vector
-               -6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
-        (zdata (linear-algebra:column-vector
-                #C(1 0) #C(3 1) #C(2 3) #C(0 4)
-                #C(-2 3) #C(-3 1) #C(-1 0))))
-    (assert-rational-equal
-     36 (linear-algebra::%data-vector-p-norm data 1))
-    (assert-float-equal
-     19.535656 (linear-algebra::%data-vector-p-norm zdata 1))
-    (assert-float-equal
-     12.083046 (linear-algebra::%data-vector-p-norm data 2))
-    (assert-float-equal
-     8.0 (linear-algebra::%data-vector-p-norm zdata 2))
-    (assert-float-equal
-     8.732892 (linear-algebra::%data-vector-p-norm data 3))
-    (assert-float-equal
-     6.064035 (linear-algebra::%data-vector-p-norm zdata 3))))
-
-;;; Data vector Infinity norm
-(define-test %data-vector-infinity-norm
-  (assert-rational-equal
-   6 (linear-algebra::%data-vector-infinity-norm
-      (linear-algebra:column-vector
-       -6 -5 -4 -3 -2 -1 0 1 2 3 4 5)))
-  (assert-float-equal
-   4.0 (linear-algebra::%data-vector-infinity-norm
-        (linear-algebra:column-vector
-         #C(1 0) #C(3 1) #C(2 3) #C(0 4)
-         #C(-2 3) #C(-3 1) #C(-1 0)))))
-
 ;;; Data vector norm
-(define-test data-vector-norm
+
+(define-test norm-data-vector
   (let ((data (linear-algebra:column-vector
                -6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
         (zdata (linear-algebra:column-vector
                 #C(1 0) #C(3 1) #C(2 3) #C(0 4)
                 #C(-2 3) #C(-3 1) #C(-1 0))))
+    ;; Taxicab norm
     (assert-rational-equal
      36 (linear-algebra:norm data))
     (assert-float-equal
      19.535658 (linear-algebra:norm zdata))
+    ;; Euclidean norm
     (assert-float-equal
      12.083046 (linear-algebra:norm data :measure 2))
     (assert-float-equal
      8.0 (linear-algebra:norm zdata :measure 2))
+    ;; P-norm
     (assert-float-equal
      8.732892 (linear-algebra:norm data :measure 3))
     (assert-float-equal
      6.064035 (linear-algebra:norm zdata :measure 3))
+    ;; Data vector Infinity norm
     (assert-rational-equal
      6 (linear-algebra:norm data :measure :infinity))
     (assert-float-equal

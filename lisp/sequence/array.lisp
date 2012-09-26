@@ -45,47 +45,12 @@ array."
 matrix."
   (sump-array data p scale sump))
 
-(defmethod %norm ((data array) (measure (eql 1)))
-  "Return the 1 norm of the array."
-  (let ((m-rows (array-dimension data 0))
-        (n-columns (array-dimension data 1))
-        (norm 0)
-        (sum 0))
-    (dotimes (column n-columns norm)
-      (setq sum 0)
-      (dotimes (row m-rows)
-        (setq sum (+ sum (abs (aref data row column)))))
-      (setq norm (max sum norm)))))
-
-(defmethod %norm ((data array) (measure (eql :max)))
-  "Return the max norm of the array."
-  (let ((m-rows (array-dimension data 0))
-        (n-columns (array-dimension data 1))
-        (norm 0))
-    (dotimes (row m-rows norm)
-      (dotimes (column n-columns)
-        (setq norm (max norm (abs (aref data row column))))))))
-
-(defmethod %norm ((data array) (measure (eql :frobenius)))
-  "Return the Frobenius norm of the array."
-  (multiple-value-bind (scale sumsq) (sumsq data)
-    (* scale (sqrt sumsq))))
-
-(defmethod %norm ((data array) (measure (eql :infinity)))
-  "Return the infinity norm of the array."
-  (let ((m-rows (array-dimension data 0))
-        (n-columns (array-dimension data 1))
-        (norm 0)
-        (sum 0))
-    (dotimes (row m-rows norm)
-      (setq sum 0)
-      (dotimes (column n-columns)
-        (setq sum (+ sum (abs (aref data row column)))))
-      (setq norm (max sum norm)))))
-
 (defmethod norm ((data array) &key (measure 1))
   "Return the norm of the array."
-  (%norm data measure))
+  (if (= 2 (array-rank data))
+      (norm-array data measure)
+      (error "Array rank(~D) must be 2."
+             (array-rank data))))
 
 (defmethod transpose ((data array) &key conjugate)
   "Return the transpose of the array."

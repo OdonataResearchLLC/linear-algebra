@@ -101,3 +101,72 @@
        3.5 0 1)
     (assert-float-equal 4.5 scale)
     (assert-float-equal 6.540154 sump)))
+
+;;; Taxicab norm
+
+(define-test unary-norm-1-vector
+  (assert-rational-equal
+   36 (linear-algebra-kernel:norm-vector
+       #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5) 1))
+  (assert-float-equal
+   19.535658
+   (linear-algebra-kernel:norm-vector
+    #(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
+      #C(-2 3) #C(-3 1) #C(-1 0))
+    1)))
+
+;;; Euclidean norm
+
+(define-test unary-norm-2-vector
+  (assert-float-equal
+   12.083046
+   (linear-algebra-kernel:norm-vector
+    #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5)
+    2))
+  (assert-float-equal
+   8.0
+   (linear-algebra-kernel:norm-vector
+    #(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
+      #C(-2 3) #C(-3 1) #C(-1 0))
+    2)))
+
+;;; P-norm
+
+(define-test unary-norm-p-vector
+  (let ((data #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
+        (zdata #(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
+                 #C(-2 3) #C(-3 1) #C(-1 0))))
+    ;; norm
+    (assert-float-equal
+     8.732892 (linear-algebra-kernel:norm-vector data 3))
+    (assert-float-equal
+     6.064035 (linear-algebra-kernel:norm-vector zdata 3))))
+
+;;; Infinity norm
+
+(define-test unary-norm-infinity-vector
+  (assert-rational-equal
+   6 (linear-algebra-kernel:norm-vector
+      #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5)
+      :infinity))
+  (assert-float-equal
+   4.0 (linear-algebra-kernel:norm-vector
+        #(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
+          #C(-2 3) #C(-3 1) #C(-1 0))
+        :infinity)))
+
+(define-test unary-norm-array
+  (let ((array
+         #2A((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)
+             (5.1 5.2 5.3 5.4))))
+    (assert-float-equal
+     17.0 (linear-algebra-kernel:norm-array array 1))
+    (assert-float-equal
+     5.4 (linear-algebra-kernel:norm-array array :max))
+    (assert-float-equal
+     15.858751 (linear-algebra-kernel:norm-array array :frobenius))
+    (assert-float-equal
+     21.0 (linear-algebra-kernel:norm-array array :infinity))))

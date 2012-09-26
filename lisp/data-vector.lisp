@@ -258,38 +258,9 @@ applying the function to each element of the vectors."
   "Return the scaling parameter and the sum of the P powers of vector."
   (sump-vector (contents vector) p scale sump))
 
-(defun %data-vector-1-norm (vector)
-  "Return the Taxicab norm of the data vector."
-  (loop for element across (contents vector)
-        sum (abs element)))
-
-(defun %data-vector-2-norm (vector)
-  "Return the Euclidean norm of the vector."
-  (multiple-value-bind (scale sumsq)
-      (sumsq (%map-data-vector 'column-vector #'abs vector))
-    (* scale (sqrt sumsq))))
-
-(defun %data-vector-p-norm (vector p)
-  "Return the p-norm of the vector."
-  (multiple-value-bind (scale sump)
-      (sump (%map-data-vector 'column-vector #'abs vector) p)
-    (* scale (expt sump (/ p)))))
-
-(defun %data-vector-infinity-norm (vector)
-  "Return the infinity, or maximum, norm of vector."
-  (loop for element across (contents vector)
-        maximize (abs element)))
-
 (defmethod norm ((vector data-vector) &key (measure 1))
   "Return the p-norm of the vector."
-  (case measure
-    (1         (%data-vector-1-norm vector))
-    (2         (%data-vector-2-norm vector))
-    (:infinity (%data-vector-infinity-norm vector))
-    (otherwise
-     (if (and (numberp measure) (> measure 2))
-         (%data-vector-p-norm vector measure)
-         (error "Unrecognized norm, ~A." measure)))))
+  (norm-vector (contents vector) measure))
 
 (defmethod transpose ((vector column-vector) &key conjugate)
   "Return a row vector."

@@ -45,7 +45,9 @@
            :number-equal)
   ;; Unary operations
   (:export :sumsq-vector :sump-vector
-           :sumsq-array :sump-array)
+           :sumsq-array :sump-array
+           :norm-vector
+           :norm-array)
   ;; Permutation
   (:export :right-permute-vector :right-npermute-vector
            :left-permute-vector :left-npermute-vector

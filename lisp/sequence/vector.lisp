@@ -45,35 +45,8 @@ vector."
 vector."
   (sump-vector data p scale sump))
 
-(defun %abs-vector (vector)
-  "Return a vector containing absolute value of each element."
-  (let ((result
-         (make-array
-          (length vector)
-          :element-type (array-element-type vector))))
-    (dotimes (index (length vector) result)
-      (setf (aref result index) (abs (aref vector index))))))
-
-(defmethod %norm ((data vector) (measure (eql 1)))
-  "Return the Taxicab norm of the list."
-  (loop for element across data sum (abs element)))
-
-(defmethod %norm ((data vector) (measure (eql 2)))
-  "Return the Euclidean norm of the vector."
-  (multiple-value-bind (scale sumsq) (sumsq (%abs-vector data))
-    (* scale (sqrt sumsq))))
-
-(defmethod %norm ((data vector) (measure integer))
-  "Return the p-norm of the vector."
-  (multiple-value-bind (scale sump) (sump (%abs-vector data) measure)
-    (* scale (expt sump (/ measure)))))
-
-(defmethod %norm ((data vector) (measure (eql :infinity)))
-  "Return the infinity, or maximum, norm of vector."
-  (loop for element across data maximize (abs element)))
-
 (defmethod norm ((data vector) &key (measure 1))
-  (%norm data measure))
+  (norm-vector data measure))
 
 (defmethod transpose ((data vector) &key conjugate)
   "Return a row vector."

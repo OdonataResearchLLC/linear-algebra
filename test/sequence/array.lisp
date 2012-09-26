@@ -56,27 +56,7 @@
     (assert-float-equal 4.5 scale)
     (assert-float-equal 6.540154 sump)))
 
-(define-test norm-1-array
-  (let ((array
-         #2A((1.1 1.2 1.3 1.4)
-             (2.1 2.2 2.3 2.4)
-             (3.1 3.2 3.3 3.4)
-             (4.1 4.2 4.3 4.4)
-             (5.1 5.2 5.3 5.4))))
-    (assert-float-equal 17.0 (linear-algebra::%norm array 1))
-    (assert-float-equal 17.0 (linear-algebra:norm array))))
-
-(define-test norm-max-array
-  (let ((array
-         #2A((1.1 1.2 1.3 1.4)
-             (2.1 2.2 2.3 2.4)
-             (3.1 3.2 3.3 3.4)
-             (4.1 4.2 4.3 4.4)
-             (5.1 5.2 5.3 5.4))))
-    (assert-float-equal 5.4 (linear-algebra::%norm array :max))
-    (assert-float-equal 5.4 (linear-algebra:norm array :measure :max))))
-
-(define-test norm-frobenius-array
+(define-test norm-array
   (let ((array
          #2A((1.1 1.2 1.3 1.4)
              (2.1 2.2 2.3 2.4)
@@ -84,19 +64,11 @@
              (4.1 4.2 4.3 4.4)
              (5.1 5.2 5.3 5.4))))
     (assert-float-equal
-     15.858751 (linear-algebra::%norm array :frobenius))
+     17.0 (linear-algebra:norm array))
     (assert-float-equal
-     15.858751 (linear-algebra:norm array :measure :frobenius))))
-
-(define-test norm-infinity-array
-  (let ((array
-         #2A((1.1 1.2 1.3 1.4)
-             (2.1 2.2 2.3 2.4)
-             (3.1 3.2 3.3 3.4)
-             (4.1 4.2 4.3 4.4)
-             (5.1 5.2 5.3 5.4))))
+     5.4 (linear-algebra:norm array :measure :max))
     (assert-float-equal
-     21.0 (linear-algebra::%norm array :infinity))
+     15.858751 (linear-algebra:norm array :measure :frobenius))
     (assert-float-equal
      21.0 (linear-algebra:norm array :measure :infinity))))
 

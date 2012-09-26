@@ -97,9 +97,3 @@
                      &key scalar)
   (:documentation
    "Return the vector-vector, matrix-vector or matrix-matrix product."))
-
-;;; Internal Interface
-
-(defgeneric %norm (vector-or-matrix measure)
-  (:documentation
-   "Internal generic function to facilitate dispatch on measure."))
