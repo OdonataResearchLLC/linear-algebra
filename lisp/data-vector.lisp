@@ -57,9 +57,10 @@
 
 ;;; Data vector interface operations
 
-(defmethod initialize-vector ((vector data-vector) (data number)
-                              (size integer) &optional
-                              (element-type 'number))
+(defmethod initialize-vector ((vector data-vector)
+                              (data number)
+                              (size integer)
+                              element-type)
   "Initialize a data vector with a value."
   (setf (contents vector)
         (make-array size
@@ -68,9 +69,10 @@
   ;; Return the data vector
   vector)
 
-(defmethod initialize-vector ((vector data-vector) (data sequence)
-                              (size integer) &optional
-                              (element-type 'number))
+(defmethod initialize-vector ((vector data-vector)
+                              (data sequence)
+                              (size integer)
+                              element-type)
   "Initialize a data vector with a sequence."
   (setf (contents vector)
         (make-array size
@@ -152,13 +154,14 @@
 (defun %map-data-vector (result-type function first-vector
                          &rest more-vectors)
   "Non-validating version of map-vector."
-  (make-instance result-type
-                 :contents
-                 (apply #'map
-                        (class-of (contents first-vector))
-                        function
-                        (contents first-vector)
-                        (mapcar #'contents more-vectors))))
+  (make-instance
+   result-type
+   :contents
+   (apply #'map
+          (class-of (contents first-vector))
+          function
+          (contents first-vector)
+          (mapcar #'contents more-vectors))))
 
 (defmethod map-vector :before (result-type (function function)
                                (first-vector data-vector)
@@ -206,6 +209,7 @@ applying the function to each element of the vectors."
          vectors))
 
 ;;; Data vector transformations
+
 (defmethod apply-rotation :before ((vector1 data-vector) (vector2 data-vector) cc ss)
   "Verify the input to apply-rotation."
   (declare (ignore cc ss))

@@ -57,17 +57,19 @@
           'linear-algebra:row-vector))
   ;; Specify the element type.
   (assert-true
-   (subtypep (array-element-type
-              (linear-algebra::contents
-               (linear-algebra:make-vector
-               10 :element-type 'single-float)))
-             'single-float))
+   (subtypep
+    (array-element-type
+     (linear-algebra::contents
+      (linear-algebra:make-vector
+       10 :element-type 'single-float)))
+    (upgraded-array-element-type 'single-float)))
   (assert-true
-   (subtypep (array-element-type
-              (linear-algebra::contents
-               (linear-algebra:make-vector
-               10 :element-type '(complex single-float))))
-             '(complex single-float)))
+   (subtypep
+    (array-element-type
+     (linear-algebra::contents
+      (linear-algebra:make-vector
+       10 :element-type '(complex single-float))))
+    (upgraded-array-element-type '(complex single-float))))
   ;; Specify the initial element.
   (assert-float-equal
    (vector 1.0 1.0 1.0 1.0 1.0)

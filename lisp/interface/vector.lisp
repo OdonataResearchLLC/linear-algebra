@@ -37,12 +37,12 @@
 
 ;;; Vector interface operations
 
-(defgeneric initialize-vector (vector data size &optional element-type)
+(defgeneric initialize-vector (vector data size element-type)
   (:documentation
    "Initialize the vector with data."))
 
 (defun make-vector (size &key
-                    (element-type t)
+                    (element-type 'number)
                     (vector-type 'column-vector)
                     (initial-element nil initial-element-p)
                     (initial-contents nil initial-contents-p))
