@@ -296,13 +296,7 @@ applying the function to each element of the vectors."
   (make-instance
    'row-vector
    :contents
-   (loop with permuted =
-         (make-array (vector-length vector)
-                     :element-type (vector-element-type vector))
-         for column across (contents matrix)
-         and row = 0 then (1+ row)
-         do (setf (aref permuted column) (vref vector row))
-         finally (return permuted))))
+   (right-permute-vector (contents vector) (contents matrix))))
 
 (defmethod permute :before ((matrix permutation-matrix) (vector column-vector))
   "Verify that the dimensions are compatible."
@@ -314,13 +308,7 @@ applying the function to each element of the vectors."
   (make-instance
    'row-vector
    :contents
-   (loop with permuted =
-         (make-array (vector-length vector)
-                     :element-type (vector-element-type vector))
-         for column across (contents matrix)
-         and row = 0 then (1+ row)
-         do (setf (aref permuted row) (vref vector column))
-         finally (return permuted))))
+   (left-permute-vector (contents matrix) (contents vector))))
 
 (defmethod npermute :before ((vector row-vector) (matrix permutation-matrix))
   "Verify that the dimensions are compatible."
@@ -329,17 +317,9 @@ applying the function to each element of the vectors."
 
 (defmethod npermute ((vector row-vector) (matrix permutation-matrix))
   "Destructively permute the row vector."
-  (multiple-value-bind (row0 skip)
-      (%init-ntranspose (contents matrix))
-    (loop with mat = (contents matrix)
-          with vec = (contents vector)
-          repeat (- (length mat) skip)
-          for column-swap = (aref mat row0) then column-next
-          and value-swap  = (aref vec row0) then value-next
-          as column-next = (aref mat column-swap)
-          as value-next  = (aref vec column-swap)
-          do (setf (aref vec column-swap) value-swap)
-          finally (return vector))))
+  (right-npermute-vector (contents vector) (contents matrix))
+  ;; Return permutation
+  vector)
 
 (defmethod npermute :before ((matrix permutation-matrix) (vector column-vector))
   "Verify that the dimensions are compatible."
@@ -348,15 +328,9 @@ applying the function to each element of the vectors."
 
 (defmethod npermute ((matrix permutation-matrix) (vector column-vector))
   "Destructively permute the column vector."
-  (multiple-value-bind (row0 skip)
-      (%init-ntranspose (contents matrix))
-    (loop with mat = (contents matrix)
-          with vec = (contents vector)
-          repeat (- (length mat) skip 1)
-          for row = row0 then column
-          as column = (aref mat row)
-          do (rotatef (aref vec row) (aref vec column))
-          finally (return vector))))
+  (left-npermute-vector (contents matrix) (contents vector))
+  ;; Return permutation
+  vector)
 
 (defmethod scale ((scalar number) (vector data-vector))
   "Return the vector scaled by scalar."

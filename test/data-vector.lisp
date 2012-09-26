@@ -798,7 +798,8 @@
      (linear-algebra:transpose row-data))))
 
 ;;; Data vector permutation
-(define-test data-vector-permute
+
+(define-test permute-data-vector
   (let ((rvec (linear-algebra:row-vector
                1.1 2.2 3.3 4.4 5.5))
         (cvec (linear-algebra:column-vector
@@ -827,7 +828,7 @@
     (assert-error
      'error (linear-algebra:permute pmat cerr))))
 
-(define-test data-vector-npermute
+(define-test npermute-data-vector
   (let ((rvec (linear-algebra:row-vector
                1.1 2.2 3.3 4.4 5.5))
         (cvec (linear-algebra:column-vector
@@ -836,7 +837,7 @@
                1.1 2.2 3.3 4.4 5.5 6.6))
         (cerr (linear-algebra:column-vector
                1.1 2.2 3.3 4.4 5.5 6.6))
-        (pmat (linear-algebra:make-matrix
+        (rmat (linear-algebra:make-matrix
                5 5 :matrix-type
                'linear-algebra:permutation-matrix
                :initial-contents
@@ -844,11 +845,20 @@
                  (0 0 1 0 0)
                  (1 0 0 0 0)
                  (0 1 0 0 0)
-                 (0 0 0 1 0)))))
-    (assert-eq rvec (linear-algebra:npermute rvec pmat))
+                 (0 0 0 1 0))))
+        (cmat (linear-algebra:make-matrix
+               5 5 :matrix-type
+               'linear-algebra:permutation-matrix
+               :initial-contents
+               '((0 0 1 0 0)
+                 (0 0 0 1 0)
+                 (1 0 0 0 0)
+                 (0 0 0 0 1)
+                 (0 1 0 0 0)))))
+    (assert-eq rvec (linear-algebra:npermute rvec rmat))
     (assert-float-equal #(3.3 4.4 2.2 5.5 1.1) rvec)
-    (assert-eq cvec (linear-algebra:npermute pmat cvec))
-    (assert-float-equal #(5.5 3.3 1.1 2.2 4.4) cvec)
+    (assert-eq cvec (linear-algebra:npermute cmat cvec))
+    (assert-float-equal #(3.3 5.5 1.1 2.2 4.4) cvec)
     (assert-error
      'error (linear-algebra:npermute rerr pmat))
     (assert-error
