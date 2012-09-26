@@ -909,6 +909,7 @@
      #C(1.0 1.0) #C(2.0 2.0) #C(3.0 3.0) #C(4.0 4.0) #C(5.0 5.0)))))
 
 ;;; Vector addition
+
 (define-test add-data-vector
   ;; Real
   (let ((vec1 (linear-algebra:column-vector 1.1 2.2 3.3 4.4))
@@ -981,6 +982,7 @@
     (linear-algebra:column-vector 1.1 2.2 3.3 4.4))))
 
 ;;; Destructive vector addition
+
 (define-test nadd-data-vector
   ;; Real
   (let ((vec1 (linear-algebra:column-vector 1.1 2.2 3.3 4.4))
@@ -1053,6 +1055,7 @@
     (linear-algebra:column-vector 1.1 2.2 3.3 4.4))))
 
 ;;; Vector subtraction
+
 (define-test subtract-data-vector
   ;; Real
   (let ((vec1 (linear-algebra:column-vector 1.1 2.2 3.3 4.4))
@@ -1125,6 +1128,7 @@
     (linear-algebra:column-vector 1.1 2.2 3.3 4.4))))
 
 ;;; Destructive vector subtraction
+
 (define-test nsubtract-data-vector
   ;; Real
   (let ((vec1 (linear-algebra:column-vector 1.1 2.2 3.3 4.4))

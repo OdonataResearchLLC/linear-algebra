@@ -355,16 +355,20 @@ applying the function to each element of the vectors."
 (defmethod add ((vector1 column-vector) (vector2 column-vector)
                 &key scalar1 scalar2)
   "Return the addition of scalar1*vector1 with scalar2*vector2."
-  (%map-data-vector (common-class-of vector1 vector2 'column-vector)
-                    (scaled-binary-op #'+ scalar1 scalar2)
-                    vector1 vector2))
+  (make-instance
+   (common-class-of vector1 vector2 'column-vector)
+   :contents
+   (add-vector (contents vector1) (contents vector2)
+               scalar1 scalar2)))
 
 (defmethod add ((vector1 row-vector) (vector2 row-vector)
                 &key scalar1 scalar2)
   "Return the addition of scalar1*vector1 with scalar2*vector2."
-  (%map-data-vector (common-class-of vector1 vector2 'row-vector)
-                    (scaled-binary-op #'+ scalar1 scalar2)
-                    vector1 vector2))
+  (make-instance
+   (common-class-of vector1 vector2 'row-vector)
+   :contents
+   (add-vector (contents vector1) (contents vector2)
+               scalar1 scalar2)))
 
 (defmethod nadd :before ((vector1 data-vector) (vector2 data-vector)
                          &key scalar1 scalar2)
@@ -376,16 +380,18 @@ applying the function to each element of the vectors."
 (defmethod nadd ((vector1 column-vector) (vector2 column-vector)
                  &key scalar1 scalar2)
   "Return the addition of scalar2*vector2 to scalar1*vector1."
-  (%map-into-data-vector vector1
-                         (scaled-binary-op #'+ scalar1 scalar2)
-                         vector1 vector2))
+  (nadd-vector (contents vector1) (contents vector2)
+               scalar1 scalar2)
+  ;; Return vector1
+  vector1)
 
 (defmethod nadd ((vector1 row-vector) (vector2 row-vector)
                  &key scalar1 scalar2)
   "Return the addition of scalar2*vector2 to scalar1*vector1."
-  (%map-into-data-vector vector1
-                         (scaled-binary-op #'+ scalar1 scalar2)
-                         vector1 vector2))
+  (nadd-vector (contents vector1) (contents vector2)
+               scalar1 scalar2)
+  ;; Return vector1
+  vector1)
 
 (defmethod subtract :before ((vector1 data-vector) (vector2 data-vector)
                              &key scalar1 scalar2)
@@ -397,16 +403,20 @@ applying the function to each element of the vectors."
 (defmethod subtract ((vector1 column-vector) (vector2 column-vector)
                      &key scalar1 scalar2)
   "Return the subraction of scalar2*vector2 from scalar1*vector1."
-  (%map-data-vector (common-class-of vector1 vector2 'column-vector)
-                    (scaled-binary-op #'- scalar1 scalar2)
-                    vector1 vector2))
+  (make-instance
+   (common-class-of vector1 vector2 'column-vector)
+   :contents
+   (subtract-vector (contents vector1) (contents vector2)
+                    scalar1 scalar2)))
 
 (defmethod subtract ((vector1 row-vector) (vector2 row-vector)
                      &key scalar1 scalar2)
   "Return the subraction of scalar2*vector2 from scalar1*vector1."
-  (%map-data-vector (common-class-of vector1 vector2 'row-vector)
-                    (scaled-binary-op #'- scalar1 scalar2)
-                    vector1 vector2))
+  (make-instance
+   (common-class-of vector1 vector2 'row-vector)
+   :contents
+   (subtract-vector (contents vector1) (contents vector2)
+                    scalar1 scalar2)))
 
 (defmethod nsubtract :before ((vector1 data-vector) (vector2 data-vector)
                               &key scalar1 scalar2)
@@ -418,16 +428,18 @@ applying the function to each element of the vectors."
 (defmethod nsubtract ((vector1 column-vector) (vector2 column-vector)
                       &key scalar1 scalar2)
   "Return the subraction of scalar2*vector2 from scalar1*vector1."
-  (%map-into-data-vector vector1
-                         (scaled-binary-op #'- scalar1 scalar2)
-                         vector1 vector2))
+  (nsubtract-vector (contents vector1) (contents vector2)
+                    scalar1 scalar2)
+  ;; Return vector1
+  vector1)
 
 (defmethod nsubtract ((vector1 row-vector) (vector2 row-vector)
                       &key scalar1 scalar2)
   "Return the subraction of scalar2*vector2 from scalar1*vector1."
-  (%map-into-data-vector vector1
-                         (scaled-binary-op #'- scalar1 scalar2)
-                         vector1 vector2))
+  (nsubtract-vector (contents vector1) (contents vector2)
+                    scalar1 scalar2)
+  ;; Return vector1
+  vector1)
 
 (defmethod product :before ((vector1 row-vector) (vector2 column-vector)
                             &key scalar conjugate)
