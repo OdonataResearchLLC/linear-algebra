@@ -97,3 +97,10 @@
                      &key scalar)
   (:documentation
    "Return the vector-vector, matrix-vector or matrix-matrix product."))
+
+;;; Checks
+
+(defmethod sump :before (v-or-m (p number) &key scale sump)
+  "The power must be positive."
+  (declare (ignore scale sump))
+  (unless (plusp p) (error "power(~A) must be positive." p)))

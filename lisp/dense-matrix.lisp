@@ -244,79 +244,15 @@
 
 (defmethod sumsq ((matrix dense-matrix) &key (scale 0) (sumsq 1))
   "Return the scaling parameter and the sum of the squares of the matrix."
-  (destructuring-bind (numrows numcols) (matrix-dimensions matrix)
-    (let ((mat (contents matrix))
-          (abs-val 0))
-      (dotimes (i0 numrows (values scale sumsq))
-        (dotimes (i1 numcols)
-          (when (< 0 (setf abs-val (abs (aref mat i0 i1))))
-            (if (< scale abs-val)
-                (setf sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
-                      scale abs-val)
-                (incf sumsq (expt (/ abs-val scale) 2)))))))))
+  (sumsq-array (contents matrix) scale sumsq))
 
 (defmethod sump ((matrix dense-matrix) (p number) &key (scale 0) (sump 1))
   "Return the scaling parameter and the sum of the P powers of the matrix."
-  (unless (plusp p) (error "The power(~A) must be positive." p))
-  (destructuring-bind (numrows numcols) (matrix-dimensions matrix)
-    (let ((mat (contents matrix))
-          (abs-val 0))
-      (dotimes (i0 numrows (values scale sump))
-        (dotimes (i1 numcols)
-          (when (< 0 (setf abs-val (abs (aref mat i0 i1))))
-            (if (< scale abs-val)
-                (setf sump (1+ (* sump (expt (/ scale abs-val) p)))
-                      scale abs-val)
-                (incf sump (expt (/ (aref mat i0 i1) scale) p)))))))))
-
-(defun %dense-matrix-1-norm (matrix)
-  "Return the 1 norm of the matrix."
-  (destructuring-bind (numrows numcols) (matrix-dimensions matrix)
-    (let ((mat (contents matrix))
-          (zero (coerce 0 (matrix-element-type matrix)))
-          (norm 0)
-          (sum 0))
-      (dotimes (i1 numcols norm)
-        (setf sum zero)
-        (dotimes (i0 numrows)
-          (incf sum (abs (aref mat i0 i1))))
-        (setf norm (max sum norm))))))
-
-(defun %dense-matrix-max-norm (matrix)
-  "Return the max norm of the matrix."
-  (destructuring-bind (numrows numcols) (matrix-dimensions matrix)
-    (let ((mat (contents matrix))
-          (norm 0))
-      (dotimes (i0 numrows norm)
-        (dotimes (i1 numcols)
-          (setf norm (max norm (abs (aref mat i0 i1)))))))))
-
-(defun %dense-matrix-frobenius-norm (matrix)
-  "Return the Frobenius norm of the matrix."
-  (multiple-value-bind (scale sumsq) (sumsq matrix)
-    (* scale (sqrt sumsq))))
-
-(defun %dense-matrix-infinity-norm (matrix)
-  "Return the infinity norm of the matrix."
-  (destructuring-bind (numrows numcols) (matrix-dimensions matrix)
-    (let ((mat (contents matrix))
-          (zero (coerce 0 (matrix-element-type matrix)))
-          (norm 0)
-          (sum 0))
-      (dotimes (i0 numrows norm)
-        (setf sum zero)
-        (dotimes (i1 numcols)
-          (incf sum (abs (aref mat i0 i1))))
-        (setf norm (max sum norm))))))
+  (sump-array (contents matrix) p scale sump))
 
 (defmethod norm ((matrix dense-matrix) &key (measure 1))
   "Return the norm of the matrix."
-  (case measure
-    (1          (%dense-matrix-1-norm matrix))
-    (:max       (%dense-matrix-max-norm matrix))
-    (:frobenius (%dense-matrix-frobenius-norm matrix))
-    (:infinity  (%dense-matrix-infinity-norm matrix))
-    (otherwise  (error "Unrecognized norm, ~A." measure))))
+  (norm-array (contents matrix) measure))
 
 (defmethod transpose ((matrix dense-matrix) &key conjugate)
   "Return the transpose of the matrix."

@@ -588,7 +588,7 @@
 
 ;;; Test dense matrix utility operations
 
-(define-test dense-matrix-sumsq
+(define-test sumsq-dense-matrix
   (multiple-value-bind (scale sumsq)
       (linear-algebra:sumsq
        (linear-algebra:make-matrix
@@ -600,7 +600,7 @@
     (assert-float-equal 4.5 scale)
     (assert-float-equal 8.997532 sumsq)))
 
-(define-test dense-matrix-sump
+(define-test sump-dense-matrix
   (multiple-value-bind (scale sump)
       (linear-algebra:sump
        (linear-algebra:make-matrix
@@ -614,51 +614,8 @@
     (assert-float-equal 6.540154 sump)))
 
 ;;; Test dense matrix fundamental operations
-(define-test %dense-matrix-1-norm
-  (assert-float-equal
-   17.0 (linear-algebra::%dense-matrix-1-norm
-         (linear-algebra:make-matrix
-          5 4 :initial-contents
-          #2A((1.1 1.2 1.3 1.4)
-              (2.1 2.2 2.3 2.4)
-              (3.1 3.2 3.3 3.4)
-              (4.1 4.2 4.3 4.4)
-              (5.1 5.2 5.3 5.4))))))
 
-(define-test %dense-matrix-max-norm
-  (assert-float-equal
-   5.4 (linear-algebra::%dense-matrix-max-norm
-        (linear-algebra:make-matrix
-         5 4 :initial-contents
-         #2A((1.1 1.2 1.3 1.4)
-             (2.1 2.2 2.3 2.4)
-             (3.1 3.2 3.3 3.4)
-             (4.1 4.2 4.3 4.4)
-             (5.1 5.2 5.3 5.4))))))
-
-(define-test %dense-matrix-frobenius-norm
-  (assert-float-equal
-   15.858751 (linear-algebra::%dense-matrix-frobenius-norm
-              (linear-algebra:make-matrix
-               5 4 :initial-contents
-               #2A((1.1 1.2 1.3 1.4)
-                   (2.1 2.2 2.3 2.4)
-                   (3.1 3.2 3.3 3.4)
-                   (4.1 4.2 4.3 4.4)
-                   (5.1 5.2 5.3 5.4))))))
-
-(define-test %dense-matrix-infinity-norm
-  (assert-float-equal
-   21.0 (linear-algebra::%dense-matrix-infinity-norm
-         (linear-algebra:make-matrix
-          5 4 :initial-contents
-          #2A((1.1 1.2 1.3 1.4)
-              (2.1 2.2 2.3 2.4)
-              (3.1 3.2 3.3 3.4)
-              (4.1 4.2 4.3 4.4)
-              (5.1 5.2 5.3 5.4))))))
-
-(define-test dense-matrix-norm
+(define-test norm-dense-matrix
   (let ((matrix (linear-algebra:make-matrix
                  5 4 :initial-contents
                  #2A((1.1 1.2 1.3 1.4)
