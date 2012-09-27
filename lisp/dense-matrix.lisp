@@ -51,7 +51,7 @@
 
 (defmethod initialize-matrix ((matrix dense-matrix) (data number)
                               (rows integer) (columns integer)
-                              &optional (element-type t))
+                              element-type)
   "Initialize the dense matrix with an initial element."
   (setf (contents matrix)
         (make-array (list rows columns)
@@ -62,7 +62,7 @@
 
 (defmethod initialize-matrix ((matrix dense-matrix) (data list)
                               (rows integer) (columns integer)
-                              &optional (element-type t))
+                              element-type)
   "Initialize the dense matrix with a nested sequence."
   (setf (contents matrix)
         (make-array (list rows columns)
@@ -73,7 +73,7 @@
 
 (defmethod initialize-matrix ((matrix dense-matrix) (data vector)
                               (rows integer) (columns integer)
-                              &optional (element-type t))
+                              element-type)
   "Initialize the dense matrix with a nested sequence."
   (setf (contents matrix)
         (make-array (list rows columns)
@@ -84,15 +84,17 @@
 
 (defmethod initialize-matrix :before ((matrix dense-matrix) (data array)
                                       (rows integer) (columns integer)
-                                      &optional (element-type t))
+                                      element-type)
   "Verify that the size of the data is valid."
   (when (vectorp data) (return-from initialize-matrix))
   (unless (= 2 (array-rank data))
-    (error "Rank of array data is invalid."))
+    (error "data rank(~D) must equal 2." (array-rank data)))
   (unless (= rows (array-dimension data 0))
-    (error "Invalid number of rows of data."))
+    (error "data rows(~D) does not equal matrix rows(~D)."
+           (array-dimension data 0) rows))
   (unless (= columns (array-dimension data 1))
-    (error "Invalid number of columns of data."))
+    (error "data columns(~D) does not equal matrix columns(~D)."
+           (array-dimension data 1) columns))
   (unless (subtypep (array-element-type data)
                     (upgraded-array-element-type element-type))
     (error "Data type, ~A, is not of type ~A."
@@ -100,15 +102,15 @@
 
 (defmethod initialize-matrix ((matrix dense-matrix) (data array)
                               (rows integer) (columns integer)
-                              &optional (element-type t))
+                              element-type)
   "Initialize the dense matrix with a 2D array."
   (let ((contents
          (setf (contents matrix)
                (make-array (list rows columns)
                            :element-type element-type))))
-    (dotimes (i0 rows matrix)
-      (dotimes (i1 columns)
-        (setf (aref contents i0 i1) (aref data i0 i1))))))
+    (dotimes (row rows matrix)
+      (dotimes (column columns)
+        (setf (aref contents row column) (aref data row column))))))
 
 (defmethod matrix-in-bounds-p ((matrix dense-matrix)
                                (row integer) (column integer))
@@ -142,81 +144,101 @@
 
 (defmethod copy-matrix ((matrix dense-matrix))
   "Return a copy of the dense matrix."
-  (let ((rows     (matrix-row-dimension matrix))
-        (columns  (matrix-column-dimension matrix))
+  (let ((m-rows (matrix-row-dimension matrix))
+        (n-columns (matrix-column-dimension matrix))
         (original (contents matrix))
-        (contents (make-array (matrix-dimensions matrix)
-                              :element-type
-                              (matrix-element-type matrix))))
+        (contents
+         (make-array
+          (matrix-dimensions matrix)
+          :element-type (matrix-element-type matrix))))
     (make-instance
      (class-of matrix)
      :contents
-     (dotimes (i0 rows contents)
-       (dotimes (i1 columns)
-         (setf (aref contents i0 i1) (aref original i0 i1)))))))
+     (dotimes (row m-rows contents)
+       (dotimes (column n-columns)
+         (setf
+          (aref contents row column)
+          (aref original row column)))))))
 
 (defmethod submatrix ((matrix dense-matrix)
-                      (row integer) (column integer)
-                      &key row-end column-end)
+                      (start-row integer)
+                      (start-column integer)
+                      &key end-row end-column)
   "Return a dense matrix created from the submatrix of a matrix."
-  (destructuring-bind (row column row-end column-end)
-      (matrix-validated-range matrix row column row-end column-end)
-    (let* ((numrows (- row-end row))
-           (numcols (- column-end column))
+  (multiple-value-bind (start-row start-column end-row end-column)
+      (matrix-validated-range
+       matrix start-row start-column end-row end-column)
+    (let* ((m-rows (- end-row start-row))
+           (n-columns (- end-column start-column))
            (original (contents matrix))
-           (contents (make-array (list numrows numcols)
-                                 :element-type
-                                 (matrix-element-type matrix))))
+           (contents
+            (make-array
+             (list m-rows n-columns)
+             :element-type (matrix-element-type matrix))))
       (make-instance
        'dense-matrix
        :contents
-       (dotimes (i0 numrows contents)
-         (dotimes (i1 numcols)
-           (setf (aref contents i0 i1)
-                 (aref original (+ row i0) (+ column i1)))))))))
+       (dotimes (row m-rows contents)
+         (dotimes (column n-columns)
+           (setf
+            (aref contents row column)
+            (aref original
+                  (+ start-row row)
+                  (+ start-column column)))))))))
 
-(defmethod (setf submatrix) ((data dense-matrix) (matrix dense-matrix)
-                             (row integer) (column integer)
-                             &key row-end column-end)
+(defmethod (setf submatrix) ((data dense-matrix)
+                             (matrix dense-matrix)
+                             (start-row integer)
+                             (start-column integer)
+                             &key end-row end-column)
   "Set the submatrix of matrix."
-  (destructuring-bind (row column row-end column-end)
-      (matrix-validated-range matrix row column row-end column-end)
-    (let ((numrows (min (- row-end row)
-                        (matrix-row-dimension data)))
-          (numcols (min (- column-end column)
-                        (matrix-column-dimension data)))
+  (multiple-value-bind (start-row start-column end-row end-column)
+      (matrix-validated-range
+       matrix start-row start-column end-row end-column)
+    (let ((m-rows (min (- end-row start-row)
+                       (matrix-row-dimension data)))
+          (n-columns (min (- end-column start-column)
+                          (matrix-column-dimension data)))
           (mat (contents matrix))
           (dat (contents data)))
-      (do ((di0 0   (1+ di0))
-           (mi0 row (1+ mi0)))
-          ((>= di0 numrows) data)       ; Return the data
-        (do ((di1 0      (1+ di1))
-             (mi1 column (1+ mi1)))
-            ((>= di1 numcols))
-          (setf (aref mat mi0 mi1) (aref dat di0 di1)))))))
+      (do ((row0 0   (1+ row0))
+           (row1 start-row (1+ row1)))
+          ((>= row0 m-rows) data)       ; Return the data
+        (do ((column0 0      (1+ column0))
+             (column1 start-column (1+ column1)))
+            ((>= column0 n-columns))
+          (setf (aref mat row1 column1) (aref dat row0 column0)))))))
 
-(defmethod replace-matrix ((matrix1 dense-matrix) (matrix2 dense-matrix)
-                           &key (row1 0) row1-end (column1 0) column1-end
-                           (row2 0) row2-end (column2 0) column2-end)
+(defmethod replace-matrix ((matrix1 dense-matrix)
+                           (matrix2 dense-matrix)
+                           &key
+                           (start-row1 0) end-row1
+                           (start-column1 0) end-column1
+                           (start-row2 0) end-row2
+                           (start-column2 0) end-column2)
   "Replace the elements of matrix1 with matrix2."
-  (destructuring-bind (row1 column1 row1-end column1-end)
-      (matrix-validated-range matrix1 row1 column1 row1-end column1-end)
-    (destructuring-bind (row2 column2 row2-end column2-end)
-        (matrix-validated-range matrix2 row2 column2 row2-end column2-end)
-      (let ((numrows (min (- row1-end row1) (- row2-end row2)))
-            (numcols (min (- column1-end column1) (- column2-end column2)))
+  (multiple-value-bind (start-row1 start-column1 end-row1 end-column1)
+      (matrix-validated-range
+       matrix1 start-row1 start-column1 end-row1 end-column1)
+    (multiple-value-bind (start-row2 start-column2 end-row2 end-column2)
+        (matrix-validated-range
+         matrix2 start-row2 start-column2 end-row2 end-column2)
+      (let ((m-rows (min (- end-row1 start-row1)
+                         (- end-row2 start-row2)))
+            (n-columns (min (- end-column1 start-column1)
+                            (- end-column2 start-column2)))
             (contents1 (contents matrix1))
             (contents2 (contents matrix2)))
-        (do ((i0    0    (1+ i0))
-             (m1-i0 row1 (1+ m1-i0))
-             (m2-i0 row2 (1+ m2-i0)))
-            ((>= i0 numrows) matrix1)   ; Return MATRIX1
-          (do ((i1    0       (1+ i1))
-               (m1-i1 column1 (1+ m1-i1))
-               (m2-i1 column2 (1+ m2-i1)))
-              ((>= i1 numcols))
-            (setf (aref contents1 m1-i0 m1-i1)
-                  (aref contents2 m2-i0 m2-i1))))))))
+        (do ((row 0 (1+ row))
+             (row1 start-row1 (1+ row1))
+             (row2 start-row2 (1+ row2)))
+            ((>= row m-rows) matrix1)   ; Return MATRIX1
+          (do ((column 0 (1+ column))
+               (column1 start-column1 (1+ column1))
+               (column2 start-column2 (1+ column2)))
+              ((>= column n-columns))
+            (setf (aref contents1 row1 column1)
+                  (aref contents2 row2 column2))))))))
 
 ;;; Dense matrix fundamental operations
 

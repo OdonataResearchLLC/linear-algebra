@@ -109,8 +109,8 @@
   (:documentation
    "Return a submatrix of the matrix."))
 
-(defgeneric (setf submatrix) (submatrix matrix row column
-                              &key row-end column-end)
+(defgeneric (setf submatrix) (submatrix matrix start-row start-column
+                              &key end-row end-column)
   (:documentation
    "Set the submatrix of the matrix."))
 
