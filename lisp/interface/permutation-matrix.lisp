@@ -47,19 +47,25 @@
   "Return true if object is a permutation-matrix."
   (typep object 'permutation-matrix))
 
-(defmethod initialize-matrix :before ((matrix permutation-matrix) data
-                                      (rows integer) (columns integer)
-                                      &optional element-type)
-  "Verify that the element-type was not set and that rows equals columns."
+(defmethod initialize-matrix :before ((matrix permutation-matrix)
+                                      data
+                                      (rows integer)
+                                      (columns integer)
+                                      element-type)
+  "Verify that the element-type was not set and that rows equals
+columns."
   (declare (ignore matrix data))
-  (unless (eq t element-type)
-    (error "Cannot specify the element type of a permutation matrix."))
+  (unless (eq 'number element-type)
+    (error
+     "Cannot specify the element type of a permutation matrix."))
   (unless (= rows columns)
     (error "Number of rows must equal the number of columns.")))
 
-(defmethod initialize-matrix ((matrix permutation-matrix) (data (eql 0))
-                              (rows integer) (columns integer)
-                              &optional element-type)
+(defmethod initialize-matrix ((matrix permutation-matrix)
+                              (data (eql 0))
+                              (rows integer)
+                              (columns integer)
+                              element-type)
   (declare (ignore element-type))
   (loop with contents =
         (setf (contents matrix)
@@ -88,23 +94,29 @@
         matrix)
       (error "Invalid number of rows of data.")))
 
-(defmethod initialize-matrix ((matrix permutation-matrix) (data list)
-                              (rows integer) (columns integer)
-                              &optional element-type)
+(defmethod initialize-matrix ((matrix permutation-matrix)
+                              (data list)
+                              (rows integer)
+                              (columns integer)
+                              element-type)
   "Initialize the permutation matrix with a list."
   (declare (ignore columns element-type))
   (%initialize-permutation-matrix-with-seq matrix data rows))
 
-(defmethod initialize-matrix ((matrix permutation-matrix) (data vector)
-                              (rows integer) (columns integer)
-                              &optional element-type)
+(defmethod initialize-matrix ((matrix permutation-matrix)
+                              (data vector)
+                              (rows integer)
+                              (columns integer)
+                              element-type)
   "Initialize the permutation matrix with a list."
   (declare (ignore columns element-type))
   (%initialize-permutation-matrix-with-seq matrix data rows))
 
-(defmethod initialize-matrix ((matrix permutation-matrix) (data array)
-                              (rows fixnum) (columns fixnum)
-                              &optional element-type)
+(defmethod initialize-matrix ((matrix permutation-matrix)
+                              (data array)
+                              (rows fixnum)
+                              (columns fixnum)
+                              element-type)
   "Initialize the permutation matrix with a 2D array."
   (declare (ignore element-type))
   (cond
@@ -175,24 +187,30 @@
    :contents (copy-seq (contents matrix))))
 
 (defmethod submatrix ((matrix permutation-matrix)
-                      (row integer) (column integer)
-                      &key row-end column-end)
-  (destructuring-bind (row column row-end column-end)
-      (matrix-validated-range matrix row column row-end column-end)
-    (let* ((numrows (- row-end row))
-           (numcols (- column-end column))
+                      (start-row integer)
+                      (start-column integer)
+                      &key end-row end-column)
+  (multiple-value-bind (start-row start-column end-row end-column)
+      (matrix-validated-range
+       matrix start-row start-column end-row end-column)
+    (let* ((m-rows (- end-row start-row))
+           (n-columns (- end-column start-column))
            (permute  (contents matrix))
-           (contents (make-array (list numrows numcols)
-                                 :element-type 'fixnum
-                                 :initial-element 0)))
+           (contents
+            (make-array
+             (list m-rows n-columns)
+             :element-type 'fixnum
+             :initial-element 0)))
       (make-instance
-       (if (= numrows numcols) 'square-matrix 'dense-matrix)
+       (if (= m-rows n-columns) 'square-matrix 'dense-matrix)
        :contents
-       (do ((i0 0   (1+ i0))
-            (i1 row (1+ i1)))
-           ((>= i0 numrows) contents)
-         (when (< (1- column) (aref permute i1) column-end)
-           (setf (aref contents i0 (- (aref permute i1) column)) 1)))))))
+       (do ((i0 0 (1+ i0))
+            (i1 start-row (1+ i1)))
+           ((>= i0 m-rows) contents)
+         (when (< (1- start-column) (aref permute i1) end-column)
+           (setf
+            (aref contents i0 (- (aref permute i1) start-column))
+            1)))))))
 
 (defmethod transpose ((matrix permutation-matrix) &key conjugate)
   "Transpose the permutation matrix."

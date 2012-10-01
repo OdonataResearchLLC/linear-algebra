@@ -37,92 +37,101 @@
 
 (define-test make-permutation-matrix
   ;; A default permutation matrix
-  (let ((matrix (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type 'linear-algebra:permutation-matrix)))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          5 5
+          :matrix-type 'linear-algebra:permutation-matrix)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:permutation-matrix))
     (assert-rational-equal
      #(0 1 2 3 4)
      (linear-algebra::contents matrix)))
   ;; Specify the permutation matrix contents - Nested list
-  (let ((matrix (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type 'linear-algebra:permutation-matrix
-                 :initial-contents
-                 '((0 0 0 0 1)
-                   (1 0 0 0 0)
-                   (0 1 0 0 0)
-                   (0 0 0 1 0)
-                   (0 0 1 0 0)))))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          5 5
+          :matrix-type 'linear-algebra:permutation-matrix
+          :initial-contents
+          '((0 0 0 0 1)
+            (1 0 0 0 0)
+            (0 1 0 0 0)
+            (0 0 0 1 0)
+            (0 0 1 0 0)))))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:permutation-matrix))
     (assert-rational-equal
      #(4 0 1 3 2)
      (linear-algebra::contents matrix)))
   ;; Specify the permutation matrix contents - Nested vector
-  (let ((matrix (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type 'linear-algebra:permutation-matrix
-                 :initial-contents
-                 #(#(0 0 0 0 1)
-                   #(1 0 0 0 0)
-                   #(0 1 0 0 0)
-                   #(0 0 0 1 0)
-                   #(0 0 1 0 0)))))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          5 5
+          :matrix-type 'linear-algebra:permutation-matrix
+          :initial-contents
+          #(#(0 0 0 0 1)
+            #(1 0 0 0 0)
+            #(0 1 0 0 0)
+            #(0 0 0 1 0)
+            #(0 0 1 0 0)))))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:permutation-matrix))
     (assert-rational-equal
      #(4 0 1 3 2)
      (linear-algebra::contents matrix)))
   ;; Specify the permutation matrix contents - 2D array
-  (let ((matrix (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type 'linear-algebra:permutation-matrix
-                 :initial-contents
-                 #2A((0 0 0 0 1)
-                     (1 0 0 0 0)
-                     (0 1 0 0 0)
-                     (0 0 0 1 0)
-                     (0 0 1 0 0)))))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          5 5
+          :matrix-type 'linear-algebra:permutation-matrix
+          :initial-contents
+          #2A((0 0 0 0 1)
+              (1 0 0 0 0)
+              (0 1 0 0 0)
+              (0 0 0 1 0)
+              (0 0 1 0 0)))))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:permutation-matrix))
     (assert-rational-equal
      #(4 0 1 3 2)
      (linear-algebra::contents matrix)))
   ;; Erroneous 2D array input data
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 4 4
-                 :matrix-type 'linear-algebra:permutation-matrix
-                 :initial-contents
-                 #3A(((1.1 1.2) (2.1 2.2))
-                     ((3.1 3.2) (4.1 4.2))
-                     ((5.1 5.2) (6.1 6.2)))))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 3 4
-                 :matrix-type 'linear-algebra:permutation-matrix
-                 :initial-contents
-                 (random-permutation-array 4)))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 4 3
-                 :matrix-type 'linear-algebra:permutation-matrix
-                 :initial-contents
-                 (random-permutation-array 4)))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 3 3 :element-type 'single-float
-                 :matrix-type 'linear-algebra:permutation-matrix))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 3 3
-                 :matrix-type 'linear-algebra:permutation-matrix
-                 :initial-contents
-                 #2A((0 1 0)
-                     (1 0 0)
-                     (1 0 1)))))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    4 4
+    :matrix-type 'linear-algebra:permutation-matrix
+    :initial-contents
+    #3A(((1.1 1.2) (2.1 2.2))
+        ((3.1 3.2) (4.1 4.2))
+        ((5.1 5.2) (6.1 6.2)))))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    3 4
+    :matrix-type 'linear-algebra:permutation-matrix
+    :initial-contents
+    (random-permutation-array 4)))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    4 3
+    :matrix-type 'linear-algebra:permutation-matrix
+    :initial-contents
+    (random-permutation-array 4)))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    3 3 :element-type 'single-float
+    :matrix-type 'linear-algebra:permutation-matrix))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    3 3
+    :matrix-type 'linear-algebra:permutation-matrix
+    :initial-contents
+    #2A((0 1 0)
+        (1 0 0)
+        (1 0 1)))))
 
 ;;; Test the permutation matrix predicate
  (define-test permutation-matrix-predicate
