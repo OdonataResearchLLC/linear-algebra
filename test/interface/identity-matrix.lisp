@@ -37,18 +37,21 @@
 
 (define-test make-identity-matrix
   ;; A default identity matrix
-  (let ((matrix (linear-algebra:make-matrix
-                 10 10
-                 :matrix-type 'linear-algebra:identity-matrix)))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          10 10
+          :matrix-type 'linear-algebra:identity-matrix)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:identity-matrix))
     (assert-true (zerop (aref (linear-algebra::contents matrix) 0)))
-    (assert-rational-equal 1 (aref (linear-algebra::contents matrix) 1)))
+    (assert-rational-equal
+     1 (aref (linear-algebra::contents matrix) 1)))
   ;; Specify the identity matrix element type
-  (let ((matrix (linear-algebra:make-matrix
-                 10 10
-                 :matrix-type 'linear-algebra:identity-matrix
-                 :element-type 'single-float)))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          10 10
+          :matrix-type 'linear-algebra:identity-matrix
+          :element-type 'single-float)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:identity-matrix))
     (assert-eq (array-element-type
@@ -56,7 +59,8 @@
                (array-element-type
                 (make-array '(10 10) :element-type 'single-float)))
     (assert-true (zerop (aref (linear-algebra::contents matrix) 0)))
-    (assert-float-equal 1.0 (aref (linear-algebra::contents matrix) 1)))
+    (assert-float-equal
+     1.0 (aref (linear-algebra::contents matrix) 1)))
   ;; Specify the identity matrix initial element
   (assert-error
    'error
@@ -95,15 +99,16 @@
         (0.0 1.0 0.0)
         (0.0 0.0 1.0))))
   ;; Specify initial element and initial contents
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 3 3 :initial-element 1.0
-                 :matrix-type
-                 'linear-algebra:identity-matrix
-                 :initial-contents
-                 '((1.0 0.0 0.0)
-                   (0.0 1.0 0.0)
-                   (0.0 0.0 1.0)))))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    3 3 :initial-element 1.0
+    :matrix-type
+    'linear-algebra:identity-matrix
+    :initial-contents
+    '((1.0 0.0 0.0)
+      (0.0 1.0 0.0)
+      (0.0 0.0 1.0)))))
 
 ;;; Test the identity matrix predicate
  (define-test identity-matrix-predicate
@@ -213,52 +218,52 @@
                    'linear-algebra::size))
     ;; End row and column
     (assert-true
-     (typep (linear-algebra:submatrix matrix 2 2
-                                      :row-end 8
-                                      :column-end 8)
+     (typep (linear-algebra:submatrix
+             matrix 2 2 :end-row 8 :end-column 8)
             'linear-algebra:identity-matrix))
     (assert-rational-equal
-     6 (slot-value (linear-algebra:submatrix matrix 2 2
-                                             :row-end 8
-                                             :column-end 8)
+     6 (slot-value (linear-algebra:submatrix
+                    matrix 2 2 :end-row 8 :end-column 8)
                    'linear-algebra::size))
     ;; Dense matrix
     (assert-true
-     (typep (linear-algebra:submatrix matrix 2 2
-                                      :row-end 4
-                                      :column-end 6)
+     (typep (linear-algebra:submatrix
+             matrix 2 2 :end-row 4 :end-column 6)
             'linear-algebra:dense-matrix))
     (assert-float-equal
      #2A((1.0 0.0 0.0 0.0)
          (0.0 1.0 0.0 0.0))
-     (linear-algebra:submatrix matrix 2 2
-                               :row-end 4
-                               :column-end 6))
+     (linear-algebra:submatrix
+      matrix 2 2 :end-row 4 :end-column 6))
     ;; Square matrix
     (assert-true
-     (typep (linear-algebra:submatrix matrix 0 2
-                                      :row-end 3
-                                      :column-end 5)
+     (typep (linear-algebra:submatrix
+             matrix 0 2 :end-row 3 :end-column 5)
             'linear-algebra:square-matrix))
     (assert-float-equal
      #2A((0.0 0.0 0.0)
          (0.0 0.0 0.0)
          (1.0 0.0 0.0))
-     (linear-algebra:submatrix matrix 0 2
-                               :row-end 3
-                               :column-end 5))
+     (linear-algebra:submatrix
+      matrix 0 2 :end-row 3 :end-column 5))
     ;; Start row exceeds dimensions
-    (assert-error 'error (linear-algebra:submatrix matrix 11 5))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 11 5))
     ;; Start column exceeds dimensions
-    (assert-error 'error (linear-algebra:submatrix matrix 5 11))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 5 11))
     ;; End row exceeds dimensions
-    (assert-error 'error (linear-algebra:submatrix matrix 5 5 :row-end 11))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 5 5 :end-row 11))
     ;; End column exceeds dimensions
-    (assert-error 'error (linear-algebra:submatrix matrix 5 5 :column-end 11))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 5 5 :end-column 11))
     ;; Start row exceeds end row
-    (assert-error 'error (linear-algebra:submatrix matrix 7 7 :row-end 6))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 7 7 :end-row 6))
     ;; Start column exceeds end column
-    (assert-error 'error (linear-algebra:submatrix matrix 7 7 :column-end 6))))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 7 7 :end-column 6))))
 
 (define-test setf-identity-submatrix
   (assert-error
@@ -283,4 +288,3 @@
 (define-test identity-matrix-validated-range
   (test-matrix-validated-range
    'linear-algebra:identity-matrix 10 10))
-

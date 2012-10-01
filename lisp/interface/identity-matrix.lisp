@@ -53,9 +53,11 @@
   "Return true if object is an identity-matrix."
   (typep object 'identity-matrix))
 
-(defmethod initialize-matrix ((matrix identity-matrix) (data number)
-                              (rows integer) (columns integer)
-                              &optional (element-type t))
+(defmethod initialize-matrix ((matrix identity-matrix)
+                              (data number)
+                              (rows integer)
+                              (columns integer)
+                              element-type)
   "Initialize the identity matrix.."
   (cond
     ((not (zerop data))
@@ -63,8 +65,9 @@
     ((not (= rows columns))
      (error "Rows and columns are not equal."))
     (t
-     (setf (slot-value matrix 'size) rows)
-     (setf (slot-value matrix 'contents)
+     (setf
+      (slot-value matrix 'size) rows
+      (slot-value matrix 'contents)
            (make-array 2 :element-type element-type
                        :initial-contents
                        (list (coerce 0 element-type)
@@ -99,51 +102,68 @@
     (make-instance
      'identity-matrix
      :size (size matrix)
-     :contents (make-array 2 :element-type element-type
-                           :initial-contents
-                           (list (coerce 0 element-type)
-                                 (coerce 1 element-type))))))
+     :contents
+     (make-array
+      2 :element-type element-type
+      :initial-contents
+      (list (coerce 0 element-type)
+            (coerce 1 element-type))))))
 
 (defmethod submatrix ((matrix identity-matrix)
-                      (row integer) (column integer)
-                      &key row-end column-end)
+                      (start-row integer)
+                      (start-column integer)
+                      &key end-row end-column)
   "Return a matrix created from the submatrix of matrix."
-  (destructuring-bind (row column row-end column-end)
-      (matrix-validated-range matrix row column row-end column-end)
-    (let ((numrows (- row-end row))
-          (numcols (- column-end column))
+  (multiple-value-bind (start-row start-column end-row end-column)
+      (matrix-validated-range
+       matrix start-row start-column end-row end-column)
+    (let ((m-rows (- end-row start-row))
+          (n-columns (- end-column start-column))
           (element-type (matrix-element-type matrix)))
       (cond
         ;; On the diagonal
-        ((and (= row column) (= numrows numcols))
+        ((and (= start-row start-column) (= m-rows n-columns))
          (make-instance
-          'identity-matrix
-          :size numrows
-          :contents (make-array 2 :element-type element-type
-                                :initial-contents
-                                (list (coerce 0 element-type)
-                                      (coerce 1 element-type)))))
+          'identity-matrix :size m-rows
+          :contents
+          (make-array
+           2 :element-type element-type
+           :initial-contents
+           (list (coerce 0 element-type)
+                 (coerce 1 element-type)))))
         ;; Intersects the diagonal
-        ((and (<= row column-end) (<= column row-end))
+        ((and (<= start-row end-column) (<= start-column end-row))
          (multiple-value-bind (r0 c0 size)
              (cond
-               ((< row column)
-                (values (- column row) 0 (min numcols (- row-end column))))
-               ((< column row)
-                (values 0 (- row column) (min numrows (- column-end row))))
-               (t (values 0 0 (min numrows numcols))))
+               ((< start-row start-column)
+                (values
+                 (- start-column start-row)
+                 0
+                 (min n-columns (- end-row start-column))))
+               ((< start-column start-row)
+                (values
+                 0
+                 (- start-row start-column)
+                 (min m-rows (- end-column start-row))))
+               (t (values 0 0 (min m-rows n-columns))))
            (let ((one (coerce 1 element-type))
-                 (contents (make-array (list numrows numcols)
-                                       :element-type element-type
-                                       :initial-element (coerce 0 element-type))))
+                 (contents
+                  (make-array
+                   (list m-rows n-columns)
+                   :element-type element-type
+                   :initial-element (coerce 0 element-type))))
              (make-instance
-              (if (= numrows numcols) 'square-matrix 'dense-matrix)
+              (if (= m-rows n-columns) 'square-matrix 'dense-matrix)
               :contents
-              (dotimes (i0 size contents)
-                (setf (aref contents (+ r0 i0) (+ c0 i0)) one))))))
+              (dotimes (index size contents)
+                (setf
+                 (aref contents (+ r0 index) (+ c0 index)) one))))))
         ;; A zero matrix
-        (t (make-instance
-            (if (= numrows numcols) 'square-matrix 'dense-matrix)
-            :contents (make-array (list numrows numcols)
-                                  :element-type element-type
-                                  :initial-element (coerce 0 element-type))))))))
+        (t
+         (make-instance
+          (if (= m-rows n-columns) 'square-matrix 'dense-matrix)
+          :contents
+          (make-array
+           (list m-rows n-columns)
+           :element-type element-type
+           :initial-element (coerce 0 element-type))))))))
