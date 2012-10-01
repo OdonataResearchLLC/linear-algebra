@@ -263,4 +263,3 @@ point."
   (float-equal (linear-algebra::contents result1)
                (linear-algebra::contents result2)
                epsilon))
-

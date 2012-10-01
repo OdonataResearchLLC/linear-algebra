@@ -39,103 +39,119 @@
 
 (define-test make-dense-matrix
   ;; A default dense matrix
-  (let ((matrix (linear-algebra:make-matrix
-                 10 15
-                 :matrix-type 'linear-algebra:dense-matrix)))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          10 15
+          :matrix-type 'linear-algebra:dense-matrix)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:dense-matrix))
     (assert-rational-equal
      (make-array '(10 15) :initial-element 0)
      matrix))
   ;; Specify the dense matrix element type
-  (let ((matrix (linear-algebra:make-matrix
-                 10 15
-                 :matrix-type 'linear-algebra:dense-matrix
-                 :element-type 'single-float)))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          10 15
+          :matrix-type 'linear-algebra:dense-matrix
+          :element-type 'single-float)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:dense-matrix))
-    (assert-eq (array-element-type
-                (linear-algebra::contents matrix))
-               (array-element-type
-                (make-array '(10 15) :element-type 'single-float)))
+    (assert-eq
+     (array-element-type
+      (linear-algebra::contents matrix))
+     (array-element-type
+      (make-array '(10 15) :element-type 'single-float)))
     (assert-float-equal
      (make-array '(10 15) :initial-element 0.0
                  :element-type 'single-float)
      matrix))
   ;; Specify the dense matrix initial element
-  (let ((matrix (linear-algebra:make-matrix
-                 10 15
-                 :matrix-type 'linear-algebra:dense-matrix
-                 :initial-element 1.0)))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          10 15
+          :matrix-type 'linear-algebra:dense-matrix
+          :initial-element 1.0)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:dense-matrix))
     (assert-float-equal
      (make-array '(10 15) :initial-element 1.0)
      matrix))
   ;; Specify the dense matrix contents - Nested list
-  (let* ((data '((1.1 1.2 1.3 1.4)
-                 (2.1 2.2 2.3 2.4)
-                 (3.1 3.2 3.3 3.4))) 
-         (matrix (linear-algebra:make-matrix
-                  3 4
-                  :matrix-type 'linear-algebra:dense-matrix
-                  :initial-contents data)))
+  (let* ((data
+          '((1.1 1.2 1.3 1.4)
+            (2.1 2.2 2.3 2.4)
+            (3.1 3.2 3.3 3.4))) 
+         (matrix
+          (linear-algebra:make-matrix
+           3 4
+           :matrix-type 'linear-algebra:dense-matrix
+           :initial-contents data)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:dense-matrix))
     (assert-float-equal
      (make-array '(3 4) :initial-contents data)
      matrix))
   ;; Specify the dense matrix contents - Nested vector
-  (let* ((data #(#(1.1 1.2 1.3 1.4)
-                 #(2.1 2.2 2.3 2.4)
-                 #(3.1 3.2 3.3 3.4)))
-         (matrix (linear-algebra:make-matrix
-                  3 4
-                  :matrix-type 'linear-algebra:dense-matrix
-                  :initial-contents data)))
+  (let* ((data
+          #(#(1.1 1.2 1.3 1.4)
+            #(2.1 2.2 2.3 2.4)
+            #(3.1 3.2 3.3 3.4)))
+         (matrix
+          (linear-algebra:make-matrix
+           3 4
+           :matrix-type 'linear-algebra:dense-matrix
+           :initial-contents data)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:dense-matrix))
     (assert-float-equal
      (make-array '(3 4) :initial-contents data)
      matrix))
   ;; Specify the dense matrix contents - 2D array
-  (let* ((data (make-array '(3 4) :initial-contents
-                           '((1.1 1.2 1.3 1.4)
-                             (2.1 2.2 2.3 2.4)
-                             (3.1 3.2 3.3 3.4))))
-         (matrix (linear-algebra:make-matrix
-                  3 4
-                  :matrix-type 'linear-algebra:dense-matrix
-                  :initial-contents data)))
+  (let* ((data
+          (make-array
+           '(3 4) :initial-contents
+           '((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4))))
+         (matrix
+          (linear-algebra:make-matrix
+           3 4
+           :matrix-type 'linear-algebra:dense-matrix
+           :initial-contents data)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:dense-matrix))
     (assert-float-equal data matrix))
   ;; Erroneous 2D array input data
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 3 4 :initial-contents
-                 #3A(((1.1 1.2) (2.1 2.2))
-                     ((3.1 3.2) (4.1 4.2))
-                     ((5.1 5.2) (6.1 6.2)))))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 2 3 :initial-contents
-                 (coordinate-array 0 0 3 4)))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 3 2 :initial-contents
-                 (coordinate-array 0 0 3 4)))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 2 3 :element-type 'single-float
-                 :initial-contents
-                 #2A((1 2 3) (4 5 6))))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    3 4 :initial-contents
+    #3A(((1.1 1.2) (2.1 2.2))
+        ((3.1 3.2) (4.1 4.2))
+        ((5.1 5.2) (6.1 6.2)))))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    2 3 :initial-contents
+    (coordinate-array 0 0 3 4)))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    3 2 :initial-contents
+    (coordinate-array 0 0 3 4)))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    2 3 :element-type 'single-float
+    :initial-contents
+    #2A((1 2 3) (4 5 6))))
   ;; Specify initial element and initial contents
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 3 4 :initial-element 1.1
-                 :initial-contents
-                 (coordinate-array 0 0 3 4))))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    3 4 :initial-element 1.1
+    :initial-contents
+    (coordinate-array 0 0 3 4))))
 
 ;;; Test the dense matrix predicate
 
@@ -216,13 +232,14 @@
          (rend (1- rows)) (cend (1- columns))
          (rowi (random-interior-index rows))
          (coli (random-interior-index columns))
-         (matrix (linear-algebra:make-matrix
-                  rows columns
-                  :matrix-type 'linear-algebra:dense-matrix
-                  :initial-contents
-                  '((1.1 1.2 1.3 1.4 1.5)
-                    (2.1 2.2 2.3 2.4 2.5)
-                    (3.1 3.2 3.3 3.4 3.5)))))
+         (matrix
+          (linear-algebra:make-matrix
+           rows columns
+           :matrix-type 'linear-algebra:dense-matrix
+           :initial-contents
+           '((1.1 1.2 1.3 1.4 1.5)
+             (2.1 2.2 2.3 2.4 2.5)
+             (3.1 3.2 3.3 3.4 3.5)))))
     (destructuring-bind (val1 val2 val3 val4 val5)
         (make-random-list 5 1.0)
       (setf (linear-algebra:mref matrix 0 0)    val1)
@@ -239,13 +256,14 @@
 ;;; Copy the dense matrix
 
 (define-test copy-dense-matrix
-  (let ((matrix (linear-algebra:make-matrix
-                 3 5
-                 :matrix-type 'linear-algebra:dense-matrix
-                 :initial-contents
-                 '((1.1 1.2 1.3 1.4 1.5)
-                   (2.1 2.2 2.3 2.4 2.5)
-                   (3.1 3.2 3.3 3.4 3.5)))))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          3 5
+          :matrix-type 'linear-algebra:dense-matrix
+          :initial-contents
+          '((1.1 1.2 1.3 1.4 1.5)
+            (2.1 2.2 2.3 2.4 2.5)
+            (3.1 3.2 3.3 3.4 3.5)))))
     (assert-true
      (linear-algebra:dense-matrix-p
       (linear-algebra:copy-matrix matrix)))
@@ -261,12 +279,13 @@
 ;;; Test the submatrix of a dense matrix
 
 (define-test dense-submatrix
-  (let ((matrix (linear-algebra:make-matrix
-                 7 10
-                 :matrix-type
-                 'linear-algebra:dense-matrix
-                 :initial-contents
-                 (coordinate-array 0 0 7))))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          7 10
+          :matrix-type
+          'linear-algebra:dense-matrix
+          :initial-contents
+          (coordinate-array 0 0 7))))
     ;; The entire matrix
     (assert-float-equal
      (coordinate-array 0 0 7)
@@ -280,29 +299,36 @@
      (coordinate-array 3 4 5 5)
      (linear-algebra:submatrix matrix 3 4 :end-row 5 :end-column 5))
     ;; Start row exceeds dimensions
-    (assert-error 'error (linear-algebra:submatrix matrix 8 5))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 8 5))
     ;; Start column exceeds dimensions
-    (assert-error 'error (linear-algebra:submatrix matrix 5 11))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 5 11))
     ;; End row exceeds dimensions
-    (assert-error 'error (linear-algebra:submatrix matrix 5 5 :end-row 8))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 5 5 :end-row 8))
     ;; End column exceeds dimensions
-    (assert-error 'error (linear-algebra:submatrix matrix 5 5 :end-column 11))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 5 5 :end-column 11))
     ;; Start row exceeds end row
-    (assert-error 'error (linear-algebra:submatrix matrix 7 7 :end-row 6))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 7 7 :end-row 6))
     ;; Start column exceeds end column
-    (assert-error 'error (linear-algebra:submatrix matrix 7 7 :end-column 6))))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 7 7 :end-column 6))))
 
 ;;; Set the submatrix of a dense matrix
 
 (define-test setf-dense-submatrix
   ;; Upper left submatrix
-  (let ((array-ul (make-array
-                   '(5 5) :initial-contents
-                   '((1 1 0 0 0)
-                     (1 1 0 0 0)
-                     (0 0 0 0 0)
-                     (0 0 0 0 0)
-                     (0 0 0 0 0)))))
+  (let ((array-ul
+         (make-array
+          '(5 5) :initial-contents
+          '((1 1 0 0 0)
+            (1 1 0 0 0)
+            (0 0 0 0 0)
+            (0 0 0 0 0)
+            (0 0 0 0 0)))))
     (assert-rational-equal
      array-ul
      (setf-submatrix
@@ -313,7 +339,8 @@
      array-ul
      (setf-submatrix
       5 5 'linear-algebra:dense-matrix
-      (linear-algebra:submatrix matrix 0 0 :end-row 2 :end-column 2)
+      (linear-algebra:submatrix
+       matrix 0 0 :end-row 2 :end-column 2)
       (linear-algebra:submatrix (unit-matrix 5 5) 0 0)))
     (assert-rational-equal
      array-ul
@@ -330,13 +357,14 @@
       (linear-algebra:submatrix
        (unit-matrix 5 5) 2 2 :end-row 4 :end-column 4))))
   ;; Upper right submatrix
-  (let ((array-ur (make-array
-                   '(5 5) :initial-contents
-                   '((0 0 0 1 1)
-                     (0 0 0 1 1)
-                     (0 0 0 0 0)
-                     (0 0 0 0 0)
-                     (0 0 0 0 0)))))
+  (let ((array-ur
+         (make-array
+          '(5 5) :initial-contents
+          '((0 0 0 1 1)
+            (0 0 0 1 1)
+            (0 0 0 0 0)
+            (0 0 0 0 0)
+            (0 0 0 0 0)))))
     (assert-rational-equal
      array-ur
      (setf-submatrix
