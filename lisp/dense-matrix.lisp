@@ -303,6 +303,60 @@
                (funcall op (aref contents row column))))))
         (error "Rows and columns unequal."))))
 
+(defmethod permute ((matrix dense-matrix)
+                    (permutation permutation-matrix))
+  (if (every
+       #'= (matrix-dimensions matrix) (matrix-dimensions permutation))
+      (make-instance
+       (class-of matrix)
+       :contents
+       (right-permute-array (contents matrix) (contents permutation)))
+      (error
+       "Dense matrix~A and permutation matrix~A sizes incompatible."
+       (matrix-dimensions matrix)
+       (matrix-dimensions permutation))))
+
+(defmethod permute ((permutation permutation-matrix)
+                    (matrix dense-matrix))
+  (if (every
+       #'= (matrix-dimensions permutation) (matrix-dimensions matrix))
+      (make-instance
+       (class-of matrix)
+       :contents
+       (left-permute-array (contents permutation) (contents matrix)))
+      (error
+       "Permutation matrix~A and dense matrix~A sizes incompatible."
+       (matrix-dimensions matrix)
+       (matrix-dimensions permutation))))
+
+(defmethod npermute ((matrix dense-matrix)
+                     (permutation permutation-matrix))
+  "Destructively permute the array."
+  (if (every
+       #'= (matrix-dimensions matrix) (matrix-dimensions permutation))
+      (progn
+        (right-npermute-array
+         (contents matrix) (contents permutation))
+        matrix)
+      (error
+       "Dense matrix~A and permutation matrix~A sizes incompatible."
+       (matrix-dimensions matrix)
+       (matrix-dimensions permutation))))
+
+(defmethod npermute ((permutation permutation-matrix)
+                     (matrix dense-matrix))
+  "Destructively permute the array."
+  (if (every
+       #'= (matrix-dimensions matrix) (matrix-dimensions permutation))
+      (progn
+        (left-npermute-array
+         (contents (ntranspose permutation)) (contents matrix))
+        matrix)
+      (error
+       "Permutation matrix~A and dense matrix~A sizes incompatible."
+       (matrix-dimensions permutation)
+       (matrix-dimensions matrix))))
+
 (defmethod scale ((scalar number) (matrix dense-matrix))
   "Scale each element of the dense matrix."
   (make-instance

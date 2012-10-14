@@ -38,6 +38,7 @@
 ;;; Test dense matrix data operations
 
 (define-test make-dense-matrix
+  (:tag :dense-matrix)
   ;; A default dense matrix
   (let ((matrix
          (linear-algebra:make-matrix
@@ -156,6 +157,7 @@
 ;;; Test the dense matrix predicate
 
 (define-test dense-matrix-predicate
+  (:tag :dense-matrix)
   (assert-true
    (linear-algebra:dense-matrix-p
     (linear-algebra:make-matrix
@@ -166,31 +168,37 @@
 ;;; Test the dense matrix bounds
 
 (define-test dense-matrix-in-bounds-p
+  (:tag :dense-matrix)
   (test-matrix-in-bounds-p 'linear-algebra:dense-matrix))
 
 ;;; Test the dense matrix element type
 
 (define-test dense-matrix-element-type
+  (:tag :dense-matrix)
   (test-matrix-element-type 'linear-algebra:dense-matrix))
 
 ;;; Test the dense matrix dimensions
 
 (define-test dense-matrix-dimensions
+  (:tag :dense-matrix)
   (test-matrix-dimensions 'linear-algebra:dense-matrix 5 7))
 
 ;;; Test the dense matrix row dimension
 
 (define-test dense-matrix-row-dimension
+  (:tag :dense-matrix)
   (test-matrix-row-dimension 'linear-algebra:dense-matrix 5 7))
 
 ;;; Test the dense matrix column dimension
 
 (define-test dense-matrix-column-dimension
+  (:tag :dense-matrix)
   (test-matrix-column-dimension 'linear-algebra:dense-matrix 5 7))
 
 ;;; Reference dense matrix elements
 
 (define-test dense-matrix-mref
+  (:tag :dense-matrix)
   (let* ((initial-contents
           '((1.1 1.2 1.3 1.4 1.5)
             (2.1 2.2 2.3 2.4 2.5)
@@ -228,6 +236,7 @@
 ;;; Set dense matrix elements
 
 (define-test dense-matrix-setf-mref
+  (:tag :dense-matrix)
   (let* ((rows 3) (columns 5)
          (rend (1- rows)) (cend (1- columns))
          (rowi (random-interior-index rows))
@@ -256,6 +265,7 @@
 ;;; Copy the dense matrix
 
 (define-test copy-dense-matrix
+  (:tag :dense-matrix)
   (let ((matrix
          (linear-algebra:make-matrix
           3 5
@@ -279,6 +289,7 @@
 ;;; Test the submatrix of a dense matrix
 
 (define-test dense-submatrix
+  (:tag :dense-matrix)
   (let ((matrix
          (linear-algebra:make-matrix
           7 10
@@ -320,6 +331,7 @@
 ;;; Set the submatrix of a dense matrix
 
 (define-test setf-dense-submatrix
+  (:tag :dense-matrix)
   ;; Upper left submatrix
   (let ((array-ul
          (make-array
@@ -499,6 +511,7 @@
 ;;; Replace all or part of a dense matrix
 
 (define-test dense-matrix-replace
+  (:tag :dense-matrix)
   ;; Replace the entire matrix
   (assert-rational-equal
    (unit-matrix 5 5)
@@ -611,12 +624,14 @@
 ;;; Validate a range for a dense matrix.
 
 (define-test dense-matrix-validated-range
+  (:tag :dense-matrix)
   (test-matrix-validated-range
    'linear-algebra:dense-matrix 10 10))
 
 ;;; Test dense matrix utility operations
 
 (define-test sumsq-dense-matrix
+  (:tag :dense-matrix :sumsq)
   (multiple-value-bind (scale sumsq)
       (linear-algebra:sumsq
        (linear-algebra:make-matrix
@@ -629,6 +644,7 @@
     (assert-float-equal 8.997532 sumsq)))
 
 (define-test sump-dense-matrix
+  (:tag :dense-matrix :sump)
   (multiple-value-bind (scale sump)
       (linear-algebra:sump
        (linear-algebra:make-matrix
@@ -644,6 +660,7 @@
 ;;; Test dense matrix fundamental operations
 
 (define-test norm-dense-matrix
+  (:tag :dense-matrix :norm)
   (let ((matrix (linear-algebra:make-matrix
                  5 4 :initial-contents
                  #2A((1.1 1.2 1.3 1.4)
@@ -666,6 +683,7 @@
      (linear-algebra:norm matrix :measure :unknown))))
 
 (define-test dense-matrix-transpose
+  (:tag :dense-matrix :transpose)
   (let ((matrix (linear-algebra:make-matrix
                  5 4 :initial-contents
                  #2A((1.1 1.2 1.3 1.4)
@@ -714,6 +732,7 @@
       transpose (linear-algebra:transpose matrix :conjugate t)))))
 
 (define-test dense-matrix-ntranspose
+  (:tag :dense-matrix :ntranspose)
   (assert-error 'error
                 (linear-algebra:ntranspose
                  (linear-algebra:make-matrix
@@ -752,7 +771,102 @@
     (assert-eq matrix (linear-algebra:ntranspose matrix :conjugate t))
     (assert-float-equal transpose matrix)))
 
+(define-test permute-dense-matrix
+  (:tag :dense-matrix :permute)
+  (let ((matrix
+         (linear-algebra:make-matrix
+          5 5 :initial-contents
+          #2A((1.0 1.1 1.2 1.3 1.4)
+              (2.0 2.1 2.2 2.3 2.4)
+              (3.0 3.1 3.2 3.3 3.4)
+              (4.0 4.1 4.2 4.3 4.4)
+              (5.0 5.1 5.2 5.3 5.4))))
+        (pmat
+         (linear-algebra:make-matrix
+          5 5
+          :matrix-type 'linear-algebra:permutation-matrix
+          :initial-contents
+          '((0 0 1 0 0)
+            (0 0 0 0 1)
+            (1 0 0 0 0)
+            (0 1 0 0 0)
+            (0 0 0 1 0)))))
+    (assert-float-equal
+     #2A((1.2 1.3 1.0 1.4 1.1)
+         (2.2 2.3 2.0 2.4 2.1)
+         (3.2 3.3 3.0 3.4 3.1)
+         (4.2 4.3 4.0 4.4 4.1)
+         (5.2 5.3 5.0 5.4 5.1))
+     (linear-algebra:permute matrix pmat))
+    (assert-float-equal
+     #2A((3.0 3.1 3.2 3.3 3.4)
+         (5.0 5.1 5.2 5.3 5.4)
+         (1.0 1.1 1.2 1.3 1.4)
+         (2.0 2.1 2.2 2.3 2.4)
+         (4.0 4.1 4.2 4.3 4.4))
+     (linear-algebra:permute pmat matrix))))
+
+(define-test npermute-dense-matrix
+  (:tag :dense-matrix :npermute)
+  (let ((matrix
+         (linear-algebra:make-matrix
+          5 5 :initial-contents
+          (make-array
+           '(5 5) :initial-contents
+           '((1.0 1.1 1.2 1.3 1.4)
+             (2.0 2.1 2.2 2.3 2.4)
+             (3.0 3.1 3.2 3.3 3.4)
+             (4.0 4.1 4.2 4.3 4.4)
+             (5.0 5.1 5.2 5.3 5.4)))))
+        (pmat
+         (linear-algebra:make-matrix
+          5 5
+          :matrix-type 'linear-algebra:permutation-matrix
+          :initial-contents
+          '((0 0 1 0 0)
+            (0 0 0 0 1)
+            (1 0 0 0 0)
+            (0 1 0 0 0)
+            (0 0 0 1 0)))))
+    (assert-eq matrix (linear-algebra:npermute matrix pmat))
+    (assert-float-equal
+     #2A((1.2 1.3 1.0 1.4 1.1)
+         (2.2 2.3 2.0 2.4 2.1)
+         (3.2 3.3 3.0 3.4 3.1)
+         (4.2 4.3 4.0 4.4 4.1)
+         (5.2 5.3 5.0 5.4 5.1))
+     matrix))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          5 5 :initial-contents
+          (make-array
+           '(5 5) :initial-contents
+           '((1.0 1.1 1.2 1.3 1.4)
+             (2.0 2.1 2.2 2.3 2.4)
+             (3.0 3.1 3.2 3.3 3.4)
+             (4.0 4.1 4.2 4.3 4.4)
+             (5.0 5.1 5.2 5.3 5.4)))))
+        (pmat
+         (linear-algebra:make-matrix
+          5 5
+          :matrix-type 'linear-algebra:permutation-matrix
+          :initial-contents
+          '((0 0 1 0 0)
+            (0 0 0 0 1)
+            (1 0 0 0 0)
+            (0 1 0 0 0)
+            (0 0 0 1 0)))))
+    (assert-eq matrix (linear-algebra:npermute pmat matrix))
+    (assert-float-equal
+     #2A((3.0 3.1 3.2 3.3 3.4)
+         (5.0 5.1 5.2 5.3 5.4)
+         (1.0 1.1 1.2 1.3 1.4)
+         (2.0 2.1 2.2 2.3 2.4)
+         (4.0 4.1 4.2 4.3 4.4))
+     matrix)))
+
 (define-test dense-matrix-scale
+  (:tag :dense-matrix :scale)
   (assert-float-equal #2A(( 3.3  3.6  3.9  4.2)
                           ( 6.3  6.6  6.9  7.2)
                           ( 9.3  9.6  9.9 10.2)
@@ -768,6 +882,7 @@
                                 (5.1 5.2 5.3 5.4))))))
 
 (define-test dense-matrix-nscale
+  (:tag :dense-matrix :nscale)
   (let ((matrix (linear-algebra:make-matrix
                  5 4 :initial-contents
                  #2A((1.1 1.2 1.3 1.4)
@@ -785,6 +900,7 @@
      matrix)))
 
 (define-test dense-matrix-product
+  (:tag :dense-matrix :product)
   ;; Row vector - dense matrix
   (assert-true
    (typep (linear-algebra:product
