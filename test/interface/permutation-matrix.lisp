@@ -262,21 +262,27 @@
     ;; End row and column
     (assert-rational-equal
      #2A((0 1) (1 0) (0 0))
-     (linear-algebra:submatrix matrix 1 2 :row-end 4 :column-end 4)
+     (linear-algebra:submatrix
+      matrix 1 2 :end-row 4 :end-column 4)
      (linear-algebra::contents
-      (linear-algebra:submatrix matrix 1 2 :row-end 4 :column-end 4)))
+      (linear-algebra:submatrix
+       matrix 1 2 :end-row 4 :end-column 4)))
     ;; Start row exceeds dimensions
     (assert-error 'error (linear-algebra:submatrix matrix 6 5))
     ;; Start column exceeds dimensions
     (assert-error 'error (linear-algebra:submatrix matrix 5 6))
     ;; End row exceeds dimensions
-    (assert-error 'error (linear-algebra:submatrix matrix 5 5 :row-end 6))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 5 5 :end-row 6))
     ;; End column exceeds dimensions
-    (assert-error 'error (linear-algebra:submatrix matrix 5 5 :column-end 6))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 5 5 :end-column 6))
     ;; Start row exceeds end row
-    (assert-error 'error (linear-algebra:submatrix matrix 5 5 :row-end 3))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 5 5 :end-row 3))
     ;; Start column exceeds end column
-    (assert-error 'error (linear-algebra:submatrix matrix 5 5 :column-end 3))))
+    (assert-error
+     'error (linear-algebra:submatrix matrix 5 5 :end-column 3))))
 
 (define-test permutation-matrix-transpose
   (let ((matrix (linear-algebra:make-matrix
