@@ -72,5 +72,4 @@
    (:file "dense-matrix" :depends-on ("interface"))
    (:file "square-matrix" :depends-on ("interface"))
    (:file "hermitian-matrix" :depends-on ("interface"))
-   (:file "symmetric-matrix" :depends-on ("interface"))
-   (:file "triangular-matrix" :depends-on ("interface"))))
+   (:file "symmetric-matrix" :depends-on ("interface"))))

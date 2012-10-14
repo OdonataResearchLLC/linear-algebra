@@ -75,5 +75,4 @@
    (:file "dense-matrix" :depends-on ("data-vector"))
    (:file "square-matrix" :depends-on ("dense-matrix"))
    (:file "hermitian-matrix" :depends-on ("square-matrix"))
-   (:file "symmetric-matrix" :depends-on ("square-matrix"))
-   (:file "triangular-matrix" :depends-on ("square-matrix"))))
+   (:file "symmetric-matrix" :depends-on ("square-matrix"))))
