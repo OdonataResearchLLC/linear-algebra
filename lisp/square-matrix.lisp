@@ -46,30 +46,35 @@
   "Return true if OBJECT is a square matrix."
   (typep object 'square-matrix))
 
-(defmethod initialize-matrix :before ((matrix square-matrix) data
-                                      (rows integer) (columns integer)
-                                      &optional element-type)
+(defmethod initialize-matrix :before
+  ((matrix square-matrix) data (rows integer) (columns integer)
+   element-type)
   "Verify that the number of rows and colums are equal."
   (declare (ignore matrix data element-type))
   (unless (= rows columns)
     (error "Number of rows must equal the number of columns.")))
 
 (defmethod submatrix ((matrix square-matrix)
-                      (row integer) (column integer)
-                      &key row-end column-end)
+                      (start-row integer) (start-column integer)
+                      &key end-row end-column)
   "Return a matrix created from the submatrix of matrix."
-  (destructuring-bind (row column row-end column-end)
-      (matrix-validated-range matrix row column row-end column-end)
-    (let* ((numrows (- row-end row))
-           (numcols (- column-end column))
+  (multiple-value-bind (start-row start-column end-row end-column)
+      (matrix-validated-range
+       matrix start-row start-column end-row end-column)
+    (let* ((m-rows (- end-row start-row))
+           (n-columns (- end-column start-column))
            (original (contents matrix))
-           (contents (make-array (list numrows numcols)
-                                 :element-type
-                                 (matrix-element-type matrix))))
+           (contents
+            (make-array
+             (list m-rows n-columns)
+             :element-type (matrix-element-type matrix))))
       (make-instance
-       (if (= numrows numcols) 'square-matrix 'dense-matrix)
+       (if (= m-rows n-columns) 'square-matrix 'dense-matrix)
        :contents
-       (dotimes (i0 numrows contents)
-         (dotimes (i1 numcols)
-           (setf (aref contents i0 i1)
-                 (aref original (+ row i0) (+ column i1)))))))))
+       (dotimes (row m-rows contents)
+         (dotimes (column n-columns)
+           (setf
+            (aref contents row column)
+            (aref original
+                  (+ start-row row)
+                  (+ start-column column)))))))))
