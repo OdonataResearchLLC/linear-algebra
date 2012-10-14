@@ -2,7 +2,7 @@
 
  Linear Algebra in Common Lisp Unit Tests
 
- Copyright (c) 2011, Thomas M. Hermann
+ Copyright (c) 2011-2012, Thomas M. Hermann
  All rights reserved.
 
  Redistribution and  use  in  source  and  binary  forms, with or without
@@ -317,7 +317,7 @@
     (assert-float-equal
      (symmetric-array 3 5)
      (linear-algebra:submatrix
-      matrix 3 3 :row-end 5 :column-end 5))
+      matrix 3 3 :end-row 5 :end-column 5))
     ;; Submatrix is a general matrix
     (assert-true
      (typep (linear-algebra:submatrix matrix 1 2)
@@ -326,17 +326,17 @@
      (linear-algebra:submatrix submat 1 2)
      (linear-algebra:submatrix matrix 1 2))
     (assert-true
-     (typep (linear-algebra:submatrix matrix 1 1 :row-end 5)
+     (typep (linear-algebra:submatrix matrix 1 1 :end-row 5)
             'linear-algebra:dense-matrix))
     (assert-float-equal
-     (linear-algebra:submatrix submat 1 1 :row-end 5)
-     (linear-algebra:submatrix matrix 1 1 :row-end 5))
+     (linear-algebra:submatrix submat 1 1 :end-row 5)
+     (linear-algebra:submatrix matrix 1 1 :end-row 5))
     (assert-true
-     (typep (linear-algebra:submatrix matrix 1 1 :column-end 8)
+     (typep (linear-algebra:submatrix matrix 1 1 :end-column 8)
             'linear-algebra:dense-matrix))
     (assert-float-equal
-     (linear-algebra:submatrix submat 1 1 :column-end 8)
-     (linear-algebra:submatrix matrix 1 1 :column-end 8))
+     (linear-algebra:submatrix submat 1 1 :end-column 8)
+     (linear-algebra:submatrix matrix 1 1 :end-column 8))
     ;; Start row exceeds dimensions
     (assert-error
      'error (linear-algebra:submatrix matrix 11 5))
@@ -345,16 +345,16 @@
      'error (linear-algebra:submatrix matrix 5 11))
     ;; End row exceeds dimensions
     (assert-error
-     'error (linear-algebra:submatrix matrix 5 5 :row-end 11))
+     'error (linear-algebra:submatrix matrix 5 5 :end-row 11))
     ;; End column exceeds dimensions
     (assert-error
-     'error (linear-algebra:submatrix matrix 5 5 :column-end 11))
+     'error (linear-algebra:submatrix matrix 5 5 :end-column 11))
     ;; Start row exceeds end row
     (assert-error
-     'error (linear-algebra:submatrix matrix 7 7 :row-end 6))
+     'error (linear-algebra:submatrix matrix 7 7 :end-row 6))
     ;; Start column exceeds end column
     (assert-error
-     'error (linear-algebra:submatrix matrix 7 7 :column-end 6))))
+     'error (linear-algebra:submatrix matrix 7 7 :end-column 6))))
 
 ;;; Set the submatrix of a symmetric matrix
 (define-test setf-symmetric-submatrix
@@ -376,7 +376,7 @@
      array-ul
      (setf-submatrix
       5 5 'linear-algebra:symmetric-matrix
-      (linear-algebra:submatrix matrix 0 0 :row-end 3 :column-end 3)
+      (linear-algebra:submatrix matrix 0 0 :end-row 3 :end-column 3)
       (symmetric-matrix))))
   ;; Lower right submatrix
   (assert-float-equal
@@ -409,7 +409,7 @@
      array-mid
      (setf-submatrix
       5 5 'linear-algebra:symmetric-matrix
-      (linear-algebra:submatrix matrix 1 1 :row-end 4 :column-end 4)
+      (linear-algebra:submatrix matrix 1 1 :end-row 4 :end-column 4)
       (symmetric-matrix 1))))
   ;; Off diagonal submatrix
   (let ((array-off (make-array
@@ -429,7 +429,7 @@
      array-off
      (setf-submatrix
       5 5 'linear-algebra:symmetric-matrix
-      (linear-algebra:submatrix matrix 0 2 :row-end 3)
+      (linear-algebra:submatrix matrix 0 2 :end-row 3)
       (symmetric-matrix))))
   (let ((array-off (make-array
                     '(5 5) :initial-contents
@@ -444,12 +444,12 @@
       5 5 'linear-algebra:symmetric-matrix
       (linear-algebra:submatrix matrix 1 2)
       (linear-algebra:submatrix (symmetric-matrix 0 3)
-                                0 0 :row-end 2)))
+                                0 0 :end-row 2)))
     (assert-float-equal
      array-off
      (setf-submatrix
       5 5 'linear-algebra:symmetric-matrix
-      (linear-algebra:submatrix matrix 1 2 :row-end 3)
+      (linear-algebra:submatrix matrix 1 2 :end-row 3)
       (symmetric-matrix))))
   ;; Asymmetric subsets
   (assert-error
@@ -485,25 +485,25 @@
      (linear-algebra:replace-matrix
       (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
       (symmetric-matrix)
-      :row1-end 3 :column1-end 3))
+      :end-row1 3 :end-column1 3))
     (assert-float-equal
      array-ul
      (linear-algebra:replace-matrix
       (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
       (symmetric-matrix)
-      :row2-end 3 :column1-end 3))
+      :end-row2 3 :end-column1 3))
     (assert-float-equal
      array-ul
      (linear-algebra:replace-matrix
       (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
       (symmetric-matrix)
-      :row1-end 3 :column2-end 3))
+      :end-row1 3 :end-column2 3))
     (assert-float-equal
      array-ul
      (linear-algebra:replace-matrix
       (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
       (symmetric-matrix)
-      :row2-end 3 :column2-end 3)))
+      :end-row2 3 :end-column2 3)))
   ;; Lower right submatrix
   (assert-float-equal
    (make-array
@@ -516,7 +516,7 @@
    (linear-algebra:replace-matrix
     (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
     (symmetric-matrix)
-    :row1 2 :column1 2))
+    :start-row1 2 :start-column1 2))
   ;; Middle submatrix
   (let ((array-mid (make-array
                     '(5 5) :initial-contents
@@ -530,35 +530,35 @@
      (linear-algebra:replace-matrix
       (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
       (symmetric-matrix 0 3)
-      :row1 1 :column1 1))
+      :start-row1 1 :start-column1 1))
     (assert-float-equal
      array-mid
      (linear-algebra:replace-matrix
       (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
       (symmetric-matrix)
-      :row1 1 :column1 1
-      :row1-end 4 :column1-end 4))
+      :start-row1 1 :start-column1 1
+      :end-row1 4 :end-column1 4))
     (assert-float-equal
      array-mid
      (linear-algebra:replace-matrix
       (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
       (symmetric-matrix)
-      :row1 1 :column1 1
-      :row2-end 3 :column1-end 4))
+      :start-row1 1 :start-column1 1
+      :end-row2 3 :end-column1 4))
     (assert-float-equal
      array-mid
      (linear-algebra:replace-matrix
       (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
       (symmetric-matrix)
-      :row1 1 :column1 1
-      :row1-end 4 :column2-end 3))
+      :start-row1 1 :start-column1 1
+      :end-row1 4 :end-column2 3))
     (assert-float-equal
      array-mid
      (linear-algebra:replace-matrix
       (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
       (symmetric-matrix)
-      :row1 1 :column1 1
-      :row2-end 3 :column2-end 3)))
+      :start-row1 1 :start-column1 1
+      :end-row2 3 :end-column2 3)))
   ;; Off diagonal submatrix
   (let ((array-off (make-array
                     '(5 5) :initial-contents
@@ -572,21 +572,21 @@
      (linear-algebra:replace-matrix
       (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
       (symmetric-matrix 0 3)
-      :row1 0 :column1 2))
+      :start-row1 0 :start-column1 2))
     (assert-float-equal
      array-off
      (linear-algebra:replace-matrix
       (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
       (symmetric-matrix)
-      :row1 0 :column1 2
-      :row1-end 3))
+      :start-row1 0 :start-column1 2
+      :end-row1 3))
     (assert-float-equal
      array-off
      (linear-algebra:replace-matrix
       (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
       (symmetric-matrix)
-      :row1 0 :column1 2
-      :row2-end 3)))
+      :start-row1 0 :start-column1 2
+      :end-row2 3)))
   (let ((array-off (make-array
                     '(5 5) :initial-contents
                     '((0.0 0.0 0.0 0.0 0.0)
@@ -599,20 +599,20 @@
      (linear-algebra:replace-matrix
       (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
       (symmetric-matrix 0 3)
-      :row1 1 :column1 2 :row2-end 2))
+      :start-row1 1 :start-column1 2 :end-row2 2))
     (assert-float-equal
      array-off
      (linear-algebra:replace-matrix
       (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
       (symmetric-matrix)
-      :row1 1 :column1 2 :row1-end 3)))
+      :start-row1 1 :start-column1 2 :end-row1 3)))
   ;; Asymmetric subsets
   (assert-error
    'error
    (linear-algebra:replace-matrix
     (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
     (unit-matrix 5 3)
-    :column1 1)))
+    :start-column1 1)))
 
 ;;; Validate a range for a symmetric matrix.
 (define-test symmetric-matrix-validated-range

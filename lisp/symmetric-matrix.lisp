@@ -46,14 +46,15 @@
   "Return true if object is a symmetric-matrix, NIL otherwise."
   (typep object 'symmetric-matrix))
 
-(defun %initialize-symmetric-matrix-with-seq (matrix data
-                                              rows columns
-                                              element-type)
+(defun %initialize-symmetric-matrix-with-seq
+       (matrix data rows columns element-type)
   "Initialize and validate a symmetric matrix with a sequence."
-  (let ((contents (setf (contents matrix)
-                        (make-array (list rows columns)
-                                    :element-type element-type
-                                    :initial-contents data))))
+  (let ((contents
+         (setf (contents matrix)
+               (make-array
+                (list rows columns)
+                :element-type element-type
+                :initial-contents data))))
     (dotimes (i0 rows matrix)
       (dotimes (i1 i0)
         (unless (number-equal
@@ -63,35 +64,33 @@
 
 (defmethod initialize-matrix ((matrix symmetric-matrix) (data list)
                               (rows integer) (columns integer)
-                              &optional (element-type t))
+                              element-type)
   "Initialize a symmetric matrix."
-  (%initialize-symmetric-matrix-with-seq matrix data
-                                         rows columns
-                                         element-type))
+  (%initialize-symmetric-matrix-with-seq
+   matrix data rows columns element-type))
 
 (defmethod initialize-matrix ((matrix symmetric-matrix) (data vector)
                               (rows integer) (columns integer)
-                              &optional (element-type t))
+                              element-type)
   "Initialize a symmetric matrix."
-  (%initialize-symmetric-matrix-with-seq matrix data
-                                         rows columns
-                                         element-type))
+  (%initialize-symmetric-matrix-with-seq
+   matrix data rows columns element-type))
 
 (defmethod initialize-matrix ((matrix symmetric-matrix) (data array)
                               (rows integer) (columns integer)
-                              &optional (element-type t))
+                              element-type)
   "Initialize a symmetric matrix."
-  (let ((contents (setf (contents matrix)
-                        (make-array (list rows columns)
-                                    :element-type element-type))))
+  (let ((contents
+         (setf (contents matrix)
+               (make-array
+                (list rows columns)
+                :element-type element-type))))
     (dotimes (i0 rows matrix)
       (setf (aref contents i0 i0) (aref data i0 i0))
       (dotimes (i1 i0)
         (unless (number-equal
-                 (setf (aref contents i0 i1)
-                       (aref data i0 i1))
-                 (setf (aref contents i1 i0)
-                       (aref data i1 i0)))
+                 (setf (aref contents i0 i1) (aref data i0 i1))
+                 (setf (aref contents i1 i0) (aref data i1 i0)))
           (error "The data is not symmetric."))))))
 
 (defmethod (setf mref) ((data number) (matrix symmetric-matrix)
@@ -113,9 +112,8 @@
         (setf (aref mat mi0 mi1) (aref dat di0 di1)
               (aref mat mi1 mi0) (aref dat di1 di0))))))
 
-(defun %setf-symmetric-submatrix-off-diagonal (matrix data
-                                               row column
-                                               numrows numcols)
+(defun %setf-symmetric-submatrix-off-diagonal
+       (matrix data row column numrows numcols)
   (let ((mat (contents matrix))
         (dat (contents data)))
     (do ((di0 0   (1+ di0))
@@ -128,76 +126,93 @@
               (aref mat mi1 mi0) (aref dat di0 di1))))))
 
 (defmethod submatrix ((matrix symmetric-matrix)
-                      (row integer) (column integer)
-                      &key row-end column-end)
+                      (start-row integer) (start-column integer)
+                      &key end-row end-column)
   "Return a matrix created from the submatrix of matrix."
-  (destructuring-bind (row column row-end column-end)
-      (matrix-validated-range matrix row column row-end column-end)
-    (let* ((numrows (- row-end row))
-           (numcols (- column-end column))
+  (multiple-value-bind (start-row start-column end-row end-column)
+      (matrix-validated-range
+       matrix start-row start-column end-row end-column)
+    (let* ((m-rows (- end-row start-row))
+           (n-columns (- end-column start-column))
            (original (contents matrix))
-           (contents (make-array (list numrows numcols)
-                                 :element-type
-                                 (matrix-element-type matrix))))
+           (contents
+            (make-array
+             (list m-rows n-columns)
+             :element-type
+             (matrix-element-type matrix))))
       (make-instance
-       (cond ((and (= row column) (= numrows numcols))
-              'symmetric-matrix)
-             ((= numrows numcols)
-              'square-matrix)
-             (t 'dense-matrix))
+       (cond
+        ((and (= start-row start-column) (= m-rows n-columns))
+         'symmetric-matrix)
+        ((= m-rows n-columns)
+         'square-matrix)
+        (t 'dense-matrix))
        :contents
-       (dotimes (i0 numrows contents)
-         (dotimes (i1 numcols)
-           (setf (aref contents i0 i1)
-                 (aref original (+ row i0) (+ column i1)))))))))
+       (dotimes (row m-rows contents)
+         (dotimes (column n-columns)
+           (setf
+            (aref contents row column)
+            (aref original (+ start-row row)
+                  (+ start-column column)))))))))
 
 (defmethod (setf submatrix) ((data symmetric-matrix)
                              (matrix symmetric-matrix)
-                             (row integer) (column integer)
-                             &key row-end column-end)
+                             (start-row integer)
+                             (start-column integer)
+                             &key end-row end-column)
   "Set a submatrix of the matrix."
-  (destructuring-bind (row column row-end column-end)
-      (matrix-validated-range matrix row column row-end column-end)
-    (let ((numrows (min (- row-end row)
-                        (matrix-row-dimension data)))
-          (numcols (min (- column-end column)
-                        (matrix-column-dimension data))))
+  (multiple-value-bind (start-row start-column end-row end-column)
+      (matrix-validated-range
+       matrix start-row start-column end-row end-column)
+    (let ((m-rows
+           (min
+            (- end-row start-row)
+            (matrix-row-dimension data)))
+          (n-columns
+           (min
+            (- end-column start-column)
+            (matrix-column-dimension data))))
       (cond
-        ((and (= row column) (= numrows numcols))
-         (%setf-symmetric-submatrix-on-diagonal matrix data
-                                                row numrows))
-        ((or (<= (+ row numrows -1) column)
-             (<= (+ column numcols -1) row))
-         (%setf-symmetric-submatrix-off-diagonal matrix data
-                                                 row column
-                                                 numrows numcols))
+        ((and (= start-row start-column)
+              (= m-rows n-columns))
+         (%setf-symmetric-submatrix-on-diagonal
+          matrix data start-row m-rows))
+        ((or (<= (+ start-row m-rows -1) start-column)
+             (<= (+ start-column n-columns -1) start-row))
+         (%setf-symmetric-submatrix-off-diagonal
+          matrix data start-row start-column m-rows n-columns))
         (t
-         (error "Range(~D:~D,~D:~D) results in an asymmetric matrix."
-                row row-end column column-end))))))
+         (error
+          "Range(~D:~D,~D:~D) results in an asymmetric matrix."
+          start-row end-row start-column end-column))))))
 
 (defmethod (setf submatrix) ((data dense-matrix)
                              (matrix symmetric-matrix)
-                             (row integer) (column integer)
-                             &key row-end column-end)
+                             (start-row integer)
+                             (start-column integer)
+                             &key end-row end-column)
   "Set a submatrix of MATRIX."
-  (destructuring-bind (row column row-end column-end)
-      (matrix-validated-range matrix row column row-end column-end)
-    (let ((numrows (min (- row-end row)
-                        (matrix-row-dimension data)))
-          (numcols (min (- column-end column)
-                        (matrix-column-dimension data))))
-      (if (or (<= (+ row numrows -1) column)
-              (<= (+ column numcols -1) row))
-          (%setf-symmetric-submatrix-off-diagonal matrix data
-                                                  row column
-                                                  numrows numcols)
-          (error "Range(~D:~D,~D:~D) results in an asymmetric matrix."
-                 row row-end column column-end)))))
+  (multiple-value-bind (start-row start-column end-row end-column)
+      (matrix-validated-range
+       matrix start-row start-column end-row end-column)
+    (let ((m-rows
+           (min
+            (- end-row start-row)
+            (matrix-row-dimension data)))
+          (n-columns
+           (min
+            (- end-column start-column)
+            (matrix-column-dimension data))))
+      (if (or (<= (+ start-row m-rows -1) start-column)
+              (<= (+ start-column n-columns -1) start-row))
+          (%setf-symmetric-submatrix-off-diagonal
+           matrix data start-row start-column m-rows n-columns)
+          (error
+           "Range(~D:~D,~D:~D) results in an asymmetric matrix."
+           start-row end-row start-column end-column)))))
 
-(defun %replace-symmetric-matrix-on-diagonal (matrix1 matrix2
-                                              row1 column1
-                                              row2 column2
-                                              numrows numcols)
+(defun %replace-symmetric-matrix-on-diagonal
+       (matrix1 matrix2 row1 column1 row2 column2 numrows numcols)
   "Destructively replace a subset on the diagonal of matrix1 with
 matrix2."
   (let ((contents1 (contents matrix1))
@@ -211,13 +226,14 @@ matrix2."
            (m1-i1 (+ 1 column1 i0) (1+ m1-i1))
            (m2-i1 (+ 1 column2 i0) (1+ m2-i1)))
           ((>= i1 numcols))
-        (setf (aref contents1 m1-i0 m1-i1) (aref contents2 m2-i0 m2-i1)
-              (aref contents1 m1-i1 m1-i0) (aref contents2 m2-i1 m2-i0))))))
+        (setf
+         (aref contents1 m1-i0 m1-i1)
+         (aref contents2 m2-i0 m2-i1)
+         (aref contents1 m1-i1 m1-i0)
+         (aref contents2 m2-i1 m2-i0))))))
 
-(defun %replace-symmetric-matrix-off-diagonal (matrix1 matrix2
-                                               row1 column1
-                                               row2 column2
-                                               numrows numcols)
+(defun %replace-symmetric-matrix-off-diagonal
+       (matrix1 matrix2 row1 column1 row2 column2 numrows numcols)
   "Destructively replace a subset off the diagonal of matrix1 with
 matrix2."
   (let ((contents1 (contents matrix1))
@@ -230,50 +246,85 @@ matrix2."
            (m1-i1 column1 (1+ m1-i1))
            (m2-i1 column2 (1+ m2-i1)))
           ((>= i1 numcols))
-        (setf (aref contents1 m1-i0 m1-i1) (aref contents2 m2-i0 m2-i1)
-              (aref contents1 m1-i1 m1-i0) (aref contents2 m2-i0 m2-i1))))))
+        (setf
+         (aref contents1 m1-i0 m1-i1)
+         (aref contents2 m2-i0 m2-i1)
+         (aref contents1 m1-i1 m1-i0)
+         (aref contents2 m2-i0 m2-i1))))))
 
-(defmethod replace-matrix ((matrix1 symmetric-matrix) (matrix2 symmetric-matrix)
-                           &key (row1 0) row1-end (column1 0) column1-end
-                           (row2 0) row2-end (column2 0) column2-end)
+(defmethod replace-matrix ((matrix1 symmetric-matrix)
+                           (matrix2 symmetric-matrix)
+                           &key (start-row1 0) end-row1
+                           (start-column1 0) end-column1
+                           (start-row2 0) end-row2
+                           (start-column2 0) end-column2)
   "Replace the elements of MATRIX1 with MATRIX2."
-  (destructuring-bind (row1 column1 row1-end column1-end)
-      (matrix-validated-range matrix1 row1 column1 row1-end column1-end)
-    (destructuring-bind (row2 column2 row2-end column2-end)
-        (matrix-validated-range matrix2 row2 column2 row2-end column2-end)
-      (let ((numrows (min (- row1-end row1) (- row2-end row2)))
-            (numcols (min (- column1-end column1) (- column2-end column2))))
+  (multiple-value-bind (start-row1 start-column1 end-row1 end-column1)
+      (matrix-validated-range
+       matrix1 start-row1 start-column1 end-row1 end-column1)
+    (destructuring-bind (start-row2 start-column2 end-row2 end-column2)
+        (matrix-validated-range
+         matrix2 start-row2 start-column2 end-row2 end-column2)
+      (let ((m-rows
+             (min
+              (- end-row1 start-row1)
+              (- end-row2 start-row2)))
+            (n-columns
+             (min
+              (- end-column1 start-column1)
+              (- end-column2 start-column2))))
         (cond
-          ((and (= row1 column1) (= row2 column2) (= numrows numcols))
-           (%replace-symmetric-matrix-on-diagonal matrix1 matrix2
-                                                  row1 column1
-                                                  row2 column2
-                                                  numrows numcols))
-          ((or (<= (+ row1 numrows -1) column1)
-               (<= (+ column1 numcols -1) row1))
-           (%replace-symmetric-matrix-off-diagonal matrix1 matrix2
-                                                   row1 column1
-                                                   row2 column2
-                                                   numrows numcols))
+          ((and (= start-row1 start-column1)
+                (= start-row2 start-column2)
+                (= m-rows n-columns))
+           (%replace-symmetric-matrix-on-diagonal
+            matrix1 matrix2
+            start-row1 start-column1
+            start-row2 start-column2
+            m-rows n-columns))
+          ((or (<= (+ start-row1 m-rows -1) start-column1)
+               (<= (+ start-column1 n-columns -1) start-row1))
+           (%replace-symmetric-matrix-off-diagonal
+            matrix1 matrix2
+            start-row1 start-column1
+            start-row2 start-column2
+            m-rows n-columns))
           (t
-           (error "Range(~D:~D,~D:~D) results in an asymmetric matrix."
-                  row1 (+ row1 numrows -1) column1 (+ column1 numcols -1))))))))
+           (error
+            "Range(~D:~D,~D:~D) results in an asymmetric matrix."
+            start-row1 (+ start-row1 m-rows -1)
+            start-column1 (+ start-column1 n-columns -1))))))))
 
-(defmethod replace-matrix ((matrix1 symmetric-matrix) (matrix2 dense-matrix)
-                           &key (row1 0) row1-end (column1 0) column1-end
-                           (row2 0) row2-end (column2 0) column2-end)
+(defmethod replace-matrix ((matrix1 symmetric-matrix)
+                           (matrix2 dense-matrix)
+                           &key (start-row1 0) end-row1
+                           (start-column1 0) end-column1
+                           (start-row2 0) end-row2
+                           (start-column2 0) end-column2)
   "Replace the elements of MATRIX1 with MATRIX2."
-  (destructuring-bind (row1 column1 row1-end column1-end)
-      (matrix-validated-range matrix1 row1 column1 row1-end column1-end)
-    (destructuring-bind (row2 column2 row2-end column2-end)
-        (matrix-validated-range matrix2 row2 column2 row2-end column2-end)
-      (let ((numrows (min (- row1-end row1) (- row2-end row2)))
-            (numcols (min (- column1-end column1) (- column2-end column2))))
-        (if (or (<= (+ row1 numrows -1) column1)
-                (<= (+ column1 numcols -1) row1))
-            (%replace-symmetric-matrix-off-diagonal matrix1 matrix2
-                                                    row1 column1
-                                                    row2 column2
-                                                    numrows numcols)
-            (error "Range(~D:~D,~D:~D) results in an asymmetric matrix."
-                   row1 (+ row1 numrows -1) column1 (+ column1 numcols -1)))))))
+  (multiple-value-bind (start-row1 start-column1 end-row1 end-column1)
+      (matrix-validated-range
+       matrix1 start-row1 start-column1 end-row1 end-column1)
+    (multiple-value-bind
+        (start-row2 start-column2 end-row2 end-column2)
+        (matrix-validated-range
+         matrix2 start-row2 start-column2 end-row2 end-column2)
+      (let ((m-rows
+             (min
+              (- end-row1 start-row1)
+              (- end-row2 start-row2)))
+            (n-columns
+             (min
+              (- end-column1 start-column1)
+              (- end-column2 start-column2))))
+        (if (or (<= (+ start-row1 m-rows -1) start-column1)
+                (<= (+ start-column1 n-columns -1) start-row1))
+            (%replace-symmetric-matrix-off-diagonal
+             matrix1 matrix2
+             start-row1 start-column1
+             start-row2 start-column2
+             m-rows n-columns)
+            (error
+             "Range(~D:~D,~D:~D) results in an asymmetric matrix."
+             start-row1 (+ start-row1 m-rows -1)
+             start-column1 (+ start-column1 n-columns -1)))))))
