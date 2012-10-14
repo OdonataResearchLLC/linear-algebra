@@ -362,28 +362,12 @@
   (make-instance
    (class-of matrix)
    :contents
-   (let* ((m-rows (matrix-row-dimension matrix))
-          (n-columns (matrix-column-dimension matrix))
-          (contents (contents matrix))
-          (scaled
-           (make-array
-            (list m-rows n-columns)
-            :element-type
-            (matrix-element-type matrix))))
-     (dotimes (row m-rows scaled)
-       (dotimes (column n-columns)
-         (setf (aref scaled row column)
-               (* scalar (aref contents row column))))))))
+   (scale scalar (contents matrix))))
 
 (defmethod nscale ((scalar number) (matrix dense-matrix))
   "Scale each element of the dense matrix."
-  (let* ((m-rows (matrix-row-dimension matrix))
-         (n-columns (matrix-column-dimension matrix))
-         (contents (contents matrix)))
-    (dotimes (row m-rows matrix)
-      (dotimes (column n-columns)
-        (setf (aref contents row column)
-              (* scalar (aref contents row column)))))))
+  (nscale scalar (contents matrix))
+  matrix)
 
 (defmethod add :before ((matrix1 dense-matrix)
                         (matrix2 dense-matrix)
@@ -402,6 +386,22 @@
    :contents
    (add-array
     (contents matrix1) (contents matrix2) scalar1 scalar2)))
+
+(defmethod nadd :before ((matrix1 dense-matrix)
+                         (matrix2 dense-matrix)
+                         &key scalar1 scalar2)
+  "Audit the input data."
+  (declare (ignore scalar1 scalar2))
+  (unless (equal (matrix-dimensions matrix1)
+                 (matrix-dimensions matrix2))
+    (error "The matrix dimensions are not compatible.")))
+
+(defmethod nadd ((matrix1 dense-matrix) (matrix2 dense-matrix)
+                 &key scalar1 scalar2)
+  "Return the addition of the 2 matrices."
+  (nadd-array
+   (contents matrix1) (contents matrix2) scalar1 scalar2)
+  matrix1)
 
 (defmethod product :before
   ((vector row-vector) (matrix dense-matrix) &key scalar)
