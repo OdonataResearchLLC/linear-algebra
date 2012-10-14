@@ -350,7 +350,7 @@
     (assert-rational-equal
      (hermitian-array 3 5)
      (linear-algebra:submatrix
-      matrix 3 3 :row-end 5 :column-end 5))
+      matrix 3 3 :end-row 5 :end-column 5))
     ;; Submatrix is a general matrix
     (assert-true
      (typep (linear-algebra:submatrix matrix 1 2)
@@ -359,17 +359,17 @@
      (linear-algebra:submatrix submat 1 2)
      (linear-algebra:submatrix matrix 1 2))
     (assert-true
-     (typep (linear-algebra:submatrix matrix 1 1 :row-end 5)
+     (typep (linear-algebra:submatrix matrix 1 1 :end-row 5)
             'linear-algebra:dense-matrix))
     (assert-rational-equal
-     (linear-algebra:submatrix submat 1 1 :row-end 5)
-     (linear-algebra:submatrix matrix 1 1 :row-end 5))
+     (linear-algebra:submatrix submat 1 1 :end-row 5)
+     (linear-algebra:submatrix matrix 1 1 :end-row 5))
     (assert-true
-     (typep (linear-algebra:submatrix matrix 1 1 :column-end 8)
+     (typep (linear-algebra:submatrix matrix 1 1 :end-column 8)
             'linear-algebra:dense-matrix))
     (assert-rational-equal
-     (linear-algebra:submatrix submat 1 1 :column-end 8)
-     (linear-algebra:submatrix matrix 1 1 :column-end 8))
+     (linear-algebra:submatrix submat 1 1 :end-column 8)
+     (linear-algebra:submatrix matrix 1 1 :end-column 8))
     ;; Start row exceeds dimensions
     (assert-error
      'error (linear-algebra:submatrix matrix 11 5))
@@ -378,16 +378,16 @@
      'error (linear-algebra:submatrix matrix 5 11))
     ;; End row exceeds dimensions
     (assert-error
-     'error (linear-algebra:submatrix matrix 5 5 :row-end 11))
+     'error (linear-algebra:submatrix matrix 5 5 :end-row 11))
     ;; End column exceeds dimensions
     (assert-error
-     'error (linear-algebra:submatrix matrix 5 5 :column-end 11))
+     'error (linear-algebra:submatrix matrix 5 5 :end-column 11))
     ;; Start row exceeds end row
     (assert-error
-     'error (linear-algebra:submatrix matrix 7 7 :row-end 6))
+     'error (linear-algebra:submatrix matrix 7 7 :end-row 6))
     ;; Start column exceeds end column
     (assert-error
-     'error (linear-algebra:submatrix matrix 7 7 :column-end 6))))
+     'error (linear-algebra:submatrix matrix 7 7 :end-column 6))))
 
 ;;; Set the submatrix of a Hermitian matrix
 (define-test setf-hermitian-submatrix
@@ -414,7 +414,7 @@
        array-ul
        (setf-submatrix 5
                        (linear-algebra:submatrix
-                        matrix 0 0 :row-end 3 :column-end 3)
+                        matrix 0 0 :end-row 3 :end-column 3)
                        (hermitian-matrix))))
     ;; Lower right submatrix
     (assert-rational-equal
@@ -446,7 +446,7 @@
        array-mid
        (setf-submatrix 5
                        (linear-algebra:submatrix
-                        matrix 1 1 :row-end 4 :column-end 4)
+                        matrix 1 1 :end-row 4 :end-column 4)
                        (hermitian-matrix 1))))
     ;; Off diagonal submatrix
     (let ((array-off
@@ -467,11 +467,11 @@
        (setf-submatrix
         5 (linear-algebra:submatrix matrix 0 3)
         (linear-algebra:submatrix
-         submatrix 0 0 :row-end 2 :column-end 2)))
+         submatrix 0 0 :end-row 2 :end-column 2)))
       (assert-rational-equal
        array-off
        (setf-submatrix
-        5 (linear-algebra:submatrix matrix 0 3 :row-end 2)
+        5 (linear-algebra:submatrix matrix 0 3 :end-row 2)
         submatrix)))
     (let ((array-off
            (make-array
@@ -488,14 +488,16 @@
                         (#C(3 -1) #C(3 -2) #C(3 -3))))))
       (assert-rational-equal
        array-off
-       (setf-submatrix 5
-                       (linear-algebra:submatrix matrix 3 0 :column-end 2)
-                       submatrix))
+       (setf-submatrix
+        5
+        (linear-algebra:submatrix matrix 3 0 :end-column 2)
+        submatrix))
       (assert-rational-equal
        array-off
-       (setf-submatrix 5
-                       (linear-algebra:submatrix matrix 3 0)
-                       (linear-algebra:submatrix submatrix 0 0 :column-end 2)))))
+       (setf-submatrix
+        5
+        (linear-algebra:submatrix matrix 3 0)
+        (linear-algebra:submatrix submatrix 0 0 :end-column 2)))))
   ;; Non-Hermitian subsets
   (assert-error
    'error
@@ -530,25 +532,25 @@
      (linear-algebra:replace-matrix
       (unit-hermitian-matrix 5)
       (hermitian-matrix)
-      :row1-end 3 :column1-end 3))
+      :end-row1 3 :end-column1 3))
     (assert-rational-equal
      array-ul
      (linear-algebra:replace-matrix
       (unit-hermitian-matrix 5)
       (hermitian-matrix)
-      :row2-end 3 :column1-end 3))
+      :end-row2 3 :end-column1 3))
     (assert-rational-equal
      array-ul
      (linear-algebra:replace-matrix
       (unit-hermitian-matrix 5)
       (hermitian-matrix)
-      :row1-end 3 :column2-end 3))
+      :end-row1 3 :end-column2 3))
     (assert-rational-equal
      array-ul
      (linear-algebra:replace-matrix
       (unit-hermitian-matrix 5)
       (hermitian-matrix)
-      :row2-end 3 :column2-end 3)))
+      :end-row2 3 :end-column2 3)))
   ;; Lower right submatrix
   (assert-rational-equal
    (make-array
@@ -561,7 +563,7 @@
    (linear-algebra:replace-matrix
     (unit-hermitian-matrix 5)
     (hermitian-matrix)
-    :row1 2 :column1 2))
+    :start-row1 2 :start-column1 2))
   ;; Middle submatrix
   (let ((array-mid
          (make-array
@@ -576,35 +578,35 @@
      (linear-algebra:replace-matrix
       (unit-hermitian-matrix 5)
       (hermitian-matrix 1 4)
-      :row1 1 :column1 1))
+      :start-row1 1 :start-column1 1))
     (assert-rational-equal
      array-mid
      (linear-algebra:replace-matrix
       (unit-hermitian-matrix 5)
       (hermitian-matrix 1 4)
-      :row1 1 :column1 1
-      :row1-end 4 :column1-end 4))
+      :start-row1 1 :start-column1 1
+      :end-row1 4 :end-column1 4))
     (assert-rational-equal
      array-mid
      (linear-algebra:replace-matrix
       (unit-hermitian-matrix 5)
       (hermitian-matrix 1)
-      :row1 1 :column1 1
-      :row2-end 3 :column1-end 4))
+      :start-row1 1 :start-column1 1
+      :end-row2 3 :end-column1 4))
     (assert-rational-equal
      array-mid
      (linear-algebra:replace-matrix
       (unit-hermitian-matrix 5)
       (hermitian-matrix 1)
-      :row1 1 :column1 1
-      :row1-end 4 :column2-end 3))
+      :start-row1 1 :start-column1 1
+      :end-row1 4 :end-column2 3))
     (assert-rational-equal
      array-mid
      (linear-algebra:replace-matrix
       (unit-hermitian-matrix 5)
       (hermitian-matrix 1)
-      :row1 1 :column1 1
-      :row2-end 3 :column2-end 3)))
+      :start-row1 1 :start-column1 1
+      :end-row2 3 :end-column2 3)))
   ;; Off diagonal submatrix
   (let ((array-off
          (make-array
@@ -628,17 +630,17 @@
      array-off
      (linear-algebra:replace-matrix
       (unit-hermitian-matrix 5) submatrix1
-      :row1 0 :column1 3))
+      :start-row1 0 :start-column1 3))
     (assert-rational-equal
      array-off
      (linear-algebra:replace-matrix
       (unit-hermitian-matrix 5) submatrix2
-      :row1 0 :column1 3 :row1-end 2))
+      :start-row1 0 :start-column1 3 :end-row1 2))
     (assert-rational-equal
      array-off
      (linear-algebra:replace-matrix
       (unit-hermitian-matrix 5) submatrix2
-      :row1 0 :column1 3 :row2-end 2)))
+      :start-row1 0 :start-column1 3 :end-row2 2)))
   (let ((array-off
          (make-array
           '(5 5) :initial-contents
@@ -656,19 +658,19 @@
      array-off
      (linear-algebra:replace-matrix
       (unit-hermitian-matrix 5) submatrix
-      :column1 3 :row1-end 2))
+      :start-column1 3 :end-row1 2))
     (assert-rational-equal
      array-off
      (linear-algebra:replace-matrix
       (unit-hermitian-matrix 5) submatrix
-      :column1 3 :row2-end 2)))
+      :start-column1 3 :end-row2 2)))
   ;; Non-Hermitian subsets
   (assert-error
    'error
    (linear-algebra:replace-matrix
     (unit-hermitian-matrix 5)
     (unit-matrix 5 3)
-    :column1 1)))
+    :start-column1 1)))
 
 ;;; Validate a range for a hermitian matrix.
 (define-test hermitian-matrix-validated-range
@@ -678,19 +680,19 @@
         (col1 (random 10))
         (col2 (random 10)))
     (assert-equal
-     (list row1 col1 10 10)
+     (values row1 col1 10 10)
      (linear-algebra:matrix-validated-range matrix row1 col1))
     (assert-equal
-     (list (min row1 row2) col1 (max row1 row2) 10)
+     (values (min row1 row2) col1 (max row1 row2) 10)
      (linear-algebra:matrix-validated-range
       matrix (min row1 row2) col1 (max row1 row2)))
     (assert-equal
-     (list row1 (min col1 col2) 10 (max col1 col2))
+     (values row1 (min col1 col2) 10 (max col1 col2))
      (linear-algebra:matrix-validated-range
       matrix row1 (min col1 col2) nil (max col1 col2)))
     (assert-equal
-     (list (min row1 row2) (min col1 col2)
-           (max row1 row2) (max col1 col2))
+     (values (min row1 row2) (min col1 col2)
+             (max row1 row2) (max col1 col2))
      (linear-algebra:matrix-validated-range
       matrix
       (min row1 row2) (min col1 col2)
@@ -714,4 +716,3 @@
      (linear-algebra:matrix-validated-range
       matrix
       9 9 1 1))))
-
