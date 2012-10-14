@@ -1059,6 +1059,176 @@
          (25.5 26.0 26.5 27.0))
      matrix1)))
 
+(define-test subtract-dense-matrix
+  (:tag :dense-matrix :subtract)
+  (let ((*epsilon* (* 3F0 single-float-epsilon))
+        (matrix1
+         (linear-algebra:make-matrix
+          5 4 :initial-contents
+          #2A(( 2.2  2.4  2.6  2.8)
+              ( 4.2  4.4  4.6  4.8)
+              ( 6.2  6.4  6.6  6.8)
+              ( 8.2  8.4  8.6  8.8)
+              (10.2 10.4 10.6 10.8))))
+        (matrix2
+         (linear-algebra:make-matrix
+          5 4 :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4)
+              (5.1 5.2 5.3 5.4)))))
+    ;; No scalar
+    (assert-float-equal
+     #2A((1.1 1.2 1.3 1.4)
+         (2.1 2.2 2.3 2.4)
+         (3.1 3.2 3.3 3.4)
+         (4.1 4.2 4.3 4.4)
+         (5.1 5.2 5.3 5.4))
+     (linear-algebra:subtract matrix1 matrix2))
+    ;; Scalar1
+    (assert-float-equal
+     #2A(( 3.3  3.6  3.9  4.2)
+         ( 6.3  6.6  6.9  7.2)
+         ( 9.3  9.6  9.9 10.2)
+         (12.3 12.6 12.9 13.2)
+         (15.3 15.6 15.9 16.2))
+     (linear-algebra:subtract matrix1 matrix2 :scalar1 2.0))
+    ;; Scalar2
+    (assert-float-equal
+     #2A((0.0 0.0 0.0 0.0)
+         (0.0 0.0 0.0 0.0)
+         (0.0 0.0 0.0 0.0)
+         (0.0 0.0 0.0 0.0)
+         (0.0 0.0 0.0 0.0))
+     (linear-algebra:subtract matrix1 matrix2 :scalar2 2.0))
+    ;; Scalar1 & Scalar2
+    (assert-float-equal
+     #2A((1.1 1.2 1.3 1.4)
+         (2.1 2.2 2.3 2.4)
+         (3.1 3.2 3.3 3.4)
+         (4.1 4.2 4.3 4.4)
+         (5.1 5.2 5.3 5.4))
+     (linear-algebra:subtract
+      matrix1 matrix2 :scalar1 2.0 :scalar2 3.0))))
+
+(define-test nsubtract-dense-matrix
+  (:tag :dense-matrix :nsubtract)
+  ;; No scalar
+  (let ((matrix1
+         (linear-algebra:make-matrix
+          5 4 :initial-contents
+          (make-array
+           '(5 4) :initial-contents
+           '(( 2.2  2.4  2.6  2.8)
+             ( 4.2  4.4  4.6  4.8)
+             ( 6.2  6.4  6.6  6.8)
+             ( 8.2  8.4  8.6  8.8)
+             (10.2 10.4 10.6 10.8)))))
+        (matrix2
+         (linear-algebra:make-matrix
+          5 4 :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4)
+              (5.1 5.2 5.3 5.4)))))
+    (assert-eq matrix1 (linear-algebra:nsubtract matrix1 matrix2))
+    (assert-float-equal
+     #2A((1.1 1.2 1.3 1.4)
+         (2.1 2.2 2.3 2.4)
+         (3.1 3.2 3.3 3.4)
+         (4.1 4.2 4.3 4.4)
+         (5.1 5.2 5.3 5.4))
+     matrix1))
+  ;; Scalar1
+  (let ((matrix1
+         (linear-algebra:make-matrix
+          5 4 :initial-contents
+          (make-array
+           '(5 4) :initial-contents
+           '((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)
+             (5.1 5.2 5.3 5.4)))))
+        (matrix2
+         (linear-algebra:make-matrix
+          5 4 :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4)
+              (5.1 5.2 5.3 5.4)))))
+    (assert-eq
+     matrix1 (linear-algebra:nsubtract matrix1 matrix2 :scalar1 2.0))
+    (assert-float-equal
+     #2A((1.1 1.2 1.3 1.4)
+         (2.1 2.2 2.3 2.4)
+         (3.1 3.2 3.3 3.4)
+         (4.1 4.2 4.3 4.4)
+         (5.1 5.2 5.3 5.4))
+     matrix1))
+  ;; Scalar2
+  (let ((*epsilon* (* 4F0 single-float-epsilon))
+        (matrix1
+         (linear-algebra:make-matrix
+          5 4 :initial-contents
+          (make-array
+           '(5 4) :initial-contents
+           '(( 3.3  3.6  3.9  4.2)
+             ( 6.3  6.6  6.9  7.2)
+             ( 9.3  9.6  9.9 10.2)
+             (12.3 12.6 12.9 13.2)
+             (15.3 15.6 15.9 16.2)))))
+        (matrix2
+         (linear-algebra:make-matrix
+          5 4 :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4)
+              (5.1 5.2 5.3 5.4)))))
+    (assert-eq
+     matrix1 (linear-algebra:nsubtract matrix1 matrix2 :scalar2 2.0))
+    (assert-float-equal
+     #2A((1.1 1.2 1.3 1.4)
+         (2.1 2.2 2.3 2.4)
+         (3.1 3.2 3.3 3.4)
+         (4.1 4.2 4.3 4.4)
+         (5.1 5.2 5.3 5.4))
+     matrix1))
+  ;; Scalar1 & Scalar2
+  (let ((*epsilon* (* 3F0 single-float-epsilon))
+        (matrix1
+         (linear-algebra:make-matrix
+          5 4 :initial-contents
+          (make-array
+           '(5 4) :initial-contents
+           '(( 2.2  2.4  2.6  2.8)
+             ( 4.2  4.4  4.6  4.8)
+             ( 6.2  6.4  6.6  6.8)
+             ( 8.2  8.4  8.6  8.8)
+             (10.2 10.4 10.6 10.8)))))
+        (matrix2
+         (linear-algebra:make-matrix
+          5 4 :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4)
+              (5.1 5.2 5.3 5.4)))))
+    (assert-eq
+     matrix1 (linear-algebra:nsubtract
+              matrix1 matrix2 :scalar1 2.0 :scalar2 3.0))
+    (assert-float-equal
+     #2A((1.1 1.2 1.3 1.4)
+         (2.1 2.2 2.3 2.4)
+         (3.1 3.2 3.3 3.4)
+         (4.1 4.2 4.3 4.4)
+         (5.1 5.2 5.3 5.4))
+     matrix1)))
+
 (define-test dense-matrix-product
   (:tag :dense-matrix :product)
   ;; Row vector - dense matrix
@@ -1168,4 +1338,3 @@
   (assert-error
    'error
    (linear-algebra:product (unit-matrix 3 5) (unit-matrix 6 7))))
-

@@ -403,6 +403,40 @@
    (contents matrix1) (contents matrix2) scalar1 scalar2)
   matrix1)
 
+(defmethod subtract :before
+  ((matrix1 dense-matrix) (matrix2 dense-matrix)
+   &key scalar1 scalar2)
+  "Audit the input data."
+  (declare (ignore scalar1 scalar2))
+  (unless (equal (matrix-dimensions matrix1)
+                 (matrix-dimensions matrix2))
+    (error "The matrix dimensions are not compatible.")))
+
+(defmethod subtract ((matrix1 dense-matrix) (matrix2 dense-matrix)
+                     &key scalar1 scalar2)
+  "Return the addition of the 2 matrices."
+  (make-instance
+   (common-class-of matrix1 matrix2 'dense-matrix)
+   :contents
+   (subtract-array
+    (contents matrix1) (contents matrix2) scalar1 scalar2)))
+
+(defmethod nsubtract :before
+  ((matrix1 dense-matrix) (matrix2 dense-matrix)
+   &key scalar1 scalar2)
+  "Audit the input data."
+  (declare (ignore scalar1 scalar2))
+  (unless (equal (matrix-dimensions matrix1)
+                 (matrix-dimensions matrix2))
+    (error "The matrix dimensions are not compatible.")))
+
+(defmethod nsubtract ((matrix1 dense-matrix) (matrix2 dense-matrix)
+                      &key scalar1 scalar2)
+  "Return the addition of the 2 matrices."
+  (nsubtract-array
+   (contents matrix1) (contents matrix2) scalar1 scalar2)
+  matrix1)
+
 (defmethod product :before
   ((vector row-vector) (matrix dense-matrix) &key scalar)
   "Verify the inputs."
