@@ -57,11 +57,11 @@
   (:documentation
    "Destructively transpose the vector or matrix."))
 
-(defgeneric permute (vector-or-matrix vector-or-matrix)
+(defgeneric permute (vector-or-matrix-1 vector-or-matrix-2)
   (:documentation
    "Permute the vector or matrix."))
 
-(defgeneric npermute (vector-or-matrix vector-or-matrix)
+(defgeneric npermute (vector-or-matrix-1 vector-or-matrix-2)
   (:documentation
    "Destructively permute the vector or matrix."))
 
