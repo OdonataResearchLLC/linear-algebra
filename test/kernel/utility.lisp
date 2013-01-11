@@ -35,8 +35,9 @@
 
 (in-package :linear-algebra-test)
 
-;;; sqrt |x|^2 + |y|^2
 (define-test lapy2
+  "sqrt |x|^2 + |y|^2"
+  (:tag :utility)
   ;; Real values
   (dolist (args (cartesian-product '(-3.0 3.0) '(-4.0 4.0)))
     (assert-float-equal
@@ -54,8 +55,9 @@
       (assert-float-equal
        6.024948 (apply #'linear-algebra-kernel:lapy2 args)))))
 
-;;; sqrt |x|^2 + |y|^2 + |z|^2
 (define-test lapy3
+  "sqrt |x|^2 + |y|^2 + |z|^2"
+  (:tag :utility)
   ;; Real values
   (dolist (args (nary-product '(-2.0 2.0) '(-3.0 3.0) '(-4.0 4.0)))
     (assert-float-equal
@@ -77,25 +79,8 @@
       (assert-float-equal
        10.49333 (apply #'linear-algebra-kernel:lapy3 args)))))
 
-(define-test scaled-binary-op
-  (assert-float-equal
-   5.0 (funcall
-        (linear-algebra-kernel:scaled-binary-op #'+ nil nil)
-        2.0 3.0))
-  (assert-float-equal
-   7.0 (funcall
-        (linear-algebra-kernel:scaled-binary-op #'+ 2.0 nil)
-        2.0 3.0))
-  (assert-float-equal
-   8.0 (funcall
-        (linear-algebra-kernel:scaled-binary-op #'+ nil 2.0)
-        2.0 3.0))
-  (assert-float-equal
-   10.0 (funcall
-         (linear-algebra-kernel:scaled-binary-op #'+ 2.0 2.0)
-         2.0 3.0)))
-
 (define-test common-class-of
+  (:tag :utility)
   (let ((object-a (make-array '(3 3) :adjustable t))
         (object-v (make-array 3 :adjustable t))
         (object-l (make-list 3))
@@ -122,6 +107,7 @@
      (linear-algebra-kernel:common-class-of object-v object-l))))
 
 (define-test common-array-element-type
+  (:tag :utility)
   (let ((array-s (make-array 0 :element-type 'single-float))
         (array-d (make-array 0 :element-type 'double-float)))
     (assert-eq
@@ -138,6 +124,7 @@
      (linear-algebra-kernel:common-array-element-type array-d array-d))))
 
 (define-test complex-equal
+  (:tag :utility :complex :equal)
   ;; complex float
   (assert-true
    (linear-algebra-kernel:complex-equal #C(1.0 2.0) #C(1.0 2.0)))
@@ -159,6 +146,7 @@
   (assert-error 'error (linear-algebra-kernel:complex-equal 1 1)))
 
 (define-test number-equal
+  (:tag :utility :equal)
   ;; float
   (assert-true (linear-algebra-kernel:number-equal 2.2 2.2))
   (assert-true (linear-algebra-kernel:number-equal 2 2.0))
