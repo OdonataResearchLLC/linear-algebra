@@ -38,6 +38,7 @@
 ;;; Vector permutation
 
 (define-test right-permute-vector
+  (:tag :permute)
   (assert-float-equal
    #(3.3 4.4 1.1 5.5 2.2)
    (linear-algebra-kernel:right-permute-vector
@@ -50,6 +51,7 @@
     (vector 4 2 0 1 3))))
 
 (define-test left-permute-vector
+  (:tag :permute)
   (assert-float-equal
    #(3.3 5.5 1.1 2.2 4.4)
    (linear-algebra-kernel:left-permute-vector
@@ -62,6 +64,7 @@
     (vector 1.1 2.2 3.3 4.4 5.5))))
 
 (define-test right-npermute-vector
+  (:tag :permute)
   (let ((vect (vector 1.1 2.2 3.3 4.4 5.5))
         (pmat (vector 2 4 0 1 3)))
     (assert-eq
@@ -76,6 +79,7 @@
     (assert-float-equal #(3.3 4.4 2.2 5.5 1.1) vect)))
 
 (define-test left-npermute-vector
+  (:tag :permute)
   (let ((vect (vector 1.1 2.2 3.3 4.4 5.5))
         (pmat (vector 2 3 0 4 1)))
     (assert-eq
@@ -92,6 +96,7 @@
 ;;; Array permutation
 
 (define-test right-permute-array
+  (:tag :permute)
   (assert-float-equal
    #2A((1.2 1.3 1.0 1.4 1.1)
        (2.2 2.3 2.0 2.4 2.1)
@@ -107,6 +112,7 @@
     (vector 2 4 0 1 3))))
 
 (define-test left-permute-array
+  (:tag :permute)
   (assert-float-equal
    #2A((3.0 3.1 3.2 3.3 3.4)
        (5.0 5.1 5.2 5.3 5.4)
@@ -122,6 +128,7 @@
         (5.0 5.1 5.2 5.3 5.4)))))
 
 (define-test right-npermute-array
+  (:tag :permute)
   (let ((array
          (make-array
           '(5 5) :initial-contents
@@ -143,6 +150,7 @@
      array)))
 
 (define-test left-npermute-array
+  (:tag :permute)
   (let ((array
          (make-array
           '(5 5) :initial-contents
