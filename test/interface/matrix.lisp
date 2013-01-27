@@ -38,14 +38,17 @@
 ;;; Matrix object predicate
 
 (define-test matrixp
-  (assert-true (linear-algebra:matrixp
-                (make-instance 'linear-algebra:matrix-object)))
+  (:tag :matrix)
+  (assert-true
+   (linear-algebra:matrixp
+    (make-instance 'linear-algebra:matrix-object)))
   (assert-false (linear-algebra:matrixp t)))
 
 ;;; Matrix bounds
 
-(defmacro test-matrix-in-bounds-p (matrix-type &optional
-                                   (initial-contents nil initial-contents-p))
+(defmacro test-matrix-in-bounds-p
+          (matrix-type &optional
+           (initial-contents nil initial-contents-p))
   (let ((mat (gensym "MATRIX-")))
     `(let ((,mat (linear-algebra:make-matrix
                   10 10 :matrix-type ,matrix-type
@@ -65,8 +68,8 @@
 
 ;;; Matrix element type
 
-(defmacro test-matrix-element-type (matrix-type &optional
-                                    (test-real-p t) (test-complex-p t))
+(defmacro test-matrix-element-type
+          (matrix-type &optional (test-real-p t) (test-complex-p t))
   (let ((numeric-types (gensym "NUMERIC-TYPES-"))
         (mtype (gensym "MTYPE-"))
         (ntype (gensym "NTYPE-")))
@@ -123,7 +126,8 @@
 
 ;;; Return a matrix modified with (SETF SUBMATRIX)
 
-(defmacro setf-submatrix (rows columns matrix-type submatrix-form data-form)
+(defmacro setf-submatrix
+          (rows columns matrix-type submatrix-form data-form)
   "Return the matrix modified with (SETF SUBMATRIX)"
   (let ((matrix (second submatrix-form)))
     `(let ((,matrix (zero-matrix ,rows ,columns

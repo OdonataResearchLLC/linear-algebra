@@ -58,12 +58,12 @@
     (cond
       ((and initial-element-p initial-contents-p)
        (error "Cannot specify both INITIAL-ELEMENT and INITIAL-CONTENTS."))
-      (initial-contents-p
-       (initialize-matrix
-        new-matrix initial-contents rows columns element-type))
       (initial-element-p
        (initialize-matrix
         new-matrix initial-element rows columns element-type))
+      (initial-contents-p
+       (initialize-matrix
+        new-matrix initial-contents rows columns element-type))
       (t
        (initialize-matrix
         new-matrix (coerce 0 element-type) rows columns element-type)))))
@@ -74,7 +74,8 @@
 
 (defgeneric matrix-in-bounds-p (matrix row column)
   (:documentation
-   "Return true if ROW and COLUMN do not exceed the dimensions of MATRIX."))
+   "Return true if ROW and COLUMN do not exceed the dimensions of
+MATRIX."))
 
 (defgeneric matrix-element-type (matrix)
   (:documentation
@@ -125,7 +126,7 @@
 (defun matrix-validated-range (matrix start-row start-column
                                &optional end-row end-column)
   "Returns a validated range of rows and columns for the matrix."
-  (let* ((row-dimension (matrix-row-dimension matrix))
+  (let* ((row-dimension    (matrix-row-dimension matrix))
          (column-dimension (matrix-column-dimension matrix))
          (end-row    (or end-row row-dimension))
          (end-column (or end-column column-dimension)))
