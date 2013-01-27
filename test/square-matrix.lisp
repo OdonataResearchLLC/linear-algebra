@@ -36,7 +36,7 @@
 (in-package :linear-algebra-test)
 
 (define-test make-square-matrix
-  (:tag :square-matrix)
+  (:tag :square-matrix :make-matrix)
   ;; A default square matrix
   (let ((matrix (linear-algebra:make-matrix
                  10 10
@@ -160,32 +160,32 @@
 
 ;;; Test the square matrix bounds
 (define-test square-matrix-in-bounds-p
-  (:tag :square-matrix)
+  (:tag :square-matrix :matrix-in-bounds-p)
   (test-matrix-in-bounds-p 'linear-algebra:square-matrix))
 
 ;;; Test the square matrix element type
 (define-test square-matrix-element-type
-  (:tag :square-matrix)
+  (:tag :square-matrix :matrix-element-type)
   (test-matrix-element-type 'linear-algebra:square-matrix))
 
 ;;; Test the square matrix dimensions
 (define-test square-matrix-dimensions
-  (:tag :square-matrix)
+  (:tag :square-matrix :matrix-dimensions)
   (test-matrix-dimensions 'linear-algebra:square-matrix 9 9))
 
 ;;; Test the square matrix row dimension
 (define-test square-matrix-row-dimension
-  (:tag :square-matrix)
+  (:tag :square-matrix :matrix-row-dimension)
   (test-matrix-row-dimension 'linear-algebra:square-matrix 9 9))
 
 ;;; Test the square matrix column dimension
 (define-test square-matrix-column-dimension
-  (:tag :square-matrix)
+  (:tag :square-matrix :matrix-column-dimension)
   (test-matrix-column-dimension 'linear-algebra:square-matrix 9 9))
 
 ;;; Reference square matrix elements
 (define-test square-matrix-mref
-  (:tag :square-matrix)
+  (:tag :square-matrix :mref)
   (let* ((initial-contents
           '((1.1 1.2 1.3 1.4 1.5)
             (2.1 2.2 2.3 2.4 2.5)
@@ -224,7 +224,7 @@
 
 ;;; Set square matrix elements
 (define-test square-matrix-setf-mref
-  (:tag :square-matrix)
+  (:tag :square-matrix :setf-mref)
   (let* ((rows 5) (columns 5)
          (rend (1- rows)) (cend (1- columns))
          (rowi (random-interior-index rows))
@@ -253,7 +253,7 @@
 
 ;;; Copy the square matrix
 (define-test copy-square-matrix
-  (:tag :square-matrix)
+  (:tag :square-matrix :copy-matrix)
   (let ((matrix (linear-algebra:make-matrix
                  5 5
                  :matrix-type 'linear-algebra:square-matrix
@@ -273,7 +273,7 @@
 
 ;;; Test the submatrix of a square matrix
 (define-test square-submatrix
-  (:tag :square-matrix)
+  (:tag :square-matrix :submatrix)
   (let ((matrix (linear-algebra:make-matrix
                  10 10
                  :matrix-type
@@ -311,7 +311,7 @@
 
 ;;; Set the submatrix of a square matrix
 (define-test setf-square-submatrix
-  (:tag :square-matrix)
+  (:tag :square-matrix :setf-submatrix)
   ;; Upper left submatrix
   (let ((array-ul (make-array
                    '(5 5) :initial-contents
@@ -487,7 +487,7 @@
 
 ;;; Replace all or part of a square matrix
 (define-test square-matrix-replace
-  (:tag :square-matrix)
+  (:tag :square-matrix :replace-matrix)
   ;; Replace the entire matrix
   (assert-rational-equal
    (unit-matrix 5 5)
@@ -607,6 +607,6 @@
 
 ;;; Validate a range for a square matrix.
 (define-test square-matrix-validated-range
-  (:tag :square-matrix)
+  (:tag :square-matrix :matrix-validated-range)
   (test-matrix-validated-range
    'linear-algebra:square-matrix 10 10))
