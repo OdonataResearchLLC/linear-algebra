@@ -60,9 +60,6 @@
            :map-vector
            :map-into-vector
            :dovector
-           :givens-rotation
-           :jacobi-rotation
-           :householder-reflection
            :apply-rotation :napply-rotation)
   ;; Matrix interface
   (:export :matrix-object

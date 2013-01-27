@@ -56,8 +56,7 @@
    (:module interface
     :depends-on ("linear-algebra-test")
     :components
-    ((:file "vector")
-     (:file "matrix")
+    ((:file "matrix")
      (:file "identity-matrix" :depends-on ("matrix"))
      (:file "permutation-matrix" :depends-on ("matrix"))))
    ;; Common lisp sequence tests

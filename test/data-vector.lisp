@@ -406,18 +406,6 @@
      (linear-algebra:map-into-vector
       col-data #'+ col-data row-data col-data))))
 
-;;; Householder Reflection
-(define-test data-vector-householder-reflection
-  (multiple-value-bind (beta tau vector)
-      (linear-algebra:householder-reflection
-       #C(1.0 2.0)
-       (linear-algebra:column-vector 1.0 2.0 3.0 4.0 5.0))
-    (assert-float-equal -7.745967 beta)
-    (assert-float-equal #C(1.1290995 0.2581989) tau)
-    (assert-float-equal
-     #(#C(0.2 -0.4) #C(0.4 -0.8) #C(0.6 -1.2) #C(0.8 -1.6) #C(1.0 -2.0))
-     vector)))
-
 ;;; Apply rotation
 (define-test apply-rotation-data-vector
   ;; Float
@@ -429,7 +417,7 @@
                :initial-contents '(4.0 9.0 16.0 25.0 36.0))))
     ;; Position 0
     (multiple-value-bind (cc ss rr)
-        (linear-algebra:givens-rotation
+        (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 0) (linear-algebra:vref vec2 0))
       (multiple-value-bind (rvec1 rvec2)
           (linear-algebra:apply-rotation vec1 vec2 cc ss)
@@ -440,7 +428,7 @@
          #(0.0 1.4000001 4.0000005 6.200001 11.2) rvec2)))
     ;; Position 1
     (multiple-value-bind (cc ss rr)
-        (linear-algebra:givens-rotation
+        (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 1) (linear-algebra:vref vec2 1))
       (multiple-value-bind (rvec1 rvec2)
           (linear-algebra:apply-rotation vec1 vec2 cc ss)
@@ -451,7 +439,7 @@
          #(-0.67990017 0.0 1.651186 2.525344 6.1191006) rvec2)))
     ;; Position 2
     (multiple-value-bind (cc ss rr)
-        (linear-algebra:givens-rotation
+        (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 2) (linear-algebra:vref vec2 2))
       (multiple-value-bind (rvec1 rvec2)
           (linear-algebra:apply-rotation vec1 vec2 cc ss)
@@ -462,7 +450,7 @@
          #(-1.1451968 -0.97341704 0.0 -0.05725956 2.519433) rvec2)))
     ;; Position 3
     (multiple-value-bind (cc ss rr)
-        (linear-algebra:givens-rotation
+        (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 3) (linear-algebra:vref vec2 3))
       (multiple-value-bind (rvec1 rvec2)
           (linear-algebra:apply-rotation vec1 vec2 cc ss)
@@ -473,7 +461,7 @@
          #(-1.1349905 -0.95192766 0.036612988 9.536743e-7 2.599495) rvec2)))
     ;; Position 4
     (multiple-value-bind (cc ss rr)
-        (linear-algebra:givens-rotation
+        (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 4) (linear-algebra:vref vec2 4))
       (multiple-value-bind (rvec1 rvec2)
           (linear-algebra:apply-rotation vec1 vec2 cc ss)
@@ -491,7 +479,7 @@
                :initial-contents #(#C(4.0 9.0) #C(16.0 25.0)))))
     ;; Position 0
     (multiple-value-bind (cc ss rr)
-        (linear-algebra:givens-rotation
+        (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 0) (linear-algebra:vref vec2 0))
       (multiple-value-bind (rvec1 rvec2)
           (linear-algebra:apply-rotation vec1 vec2 cc ss)
@@ -502,7 +490,7 @@
          #(#C(-4.7683716e-7 -4.7683716e-7) #C(3.326425 2.6071978)) rvec2)))
     ;; Position 1
     (multiple-value-bind (cc ss rr)
-        (linear-algebra:givens-rotation
+        (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 1) (linear-algebra:vref vec2 1))
       (multiple-value-bind (rvec1 rvec2)
           (linear-algebra:apply-rotation vec1 vec2 cc ss)
@@ -524,7 +512,7 @@
                5 :element-type 'single-float
                :initial-contents #(4.0 9.0 16.0 25.0 36.0))))
     (multiple-value-bind (cc ss rr)
-        (linear-algebra:givens-rotation
+        (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 0) (linear-algebra:vref vec2 0))
       (multiple-value-bind (rvec1 rvec2)
           (linear-algebra:napply-rotation vec1 vec2 cc ss)
@@ -543,7 +531,7 @@
                5 :element-type 'single-float
                :initial-contents #(4.0 9.0 16.0 25.0 36.0))))
     (multiple-value-bind (cc ss rr)
-        (linear-algebra:givens-rotation
+        (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 1) (linear-algebra:vref vec2 1))
       (multiple-value-bind (rvec1 rvec2)
           (linear-algebra:napply-rotation vec1 vec2 cc ss)
@@ -562,7 +550,7 @@
                5 :element-type 'single-float
                :initial-contents #(4.0 9.0 16.0 25.0 36.0))))
     (multiple-value-bind (cc ss rr)
-        (linear-algebra:givens-rotation
+        (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 2) (linear-algebra:vref vec2 2))
       (multiple-value-bind (rvec1 rvec2)
           (linear-algebra:napply-rotation vec1 vec2 cc ss)
@@ -581,7 +569,7 @@
                5 :element-type 'single-float
                :initial-contents #(4.0 9.0 16.0 25.0 36.0))))
     (multiple-value-bind (cc ss rr)
-        (linear-algebra:givens-rotation
+        (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 3) (linear-algebra:vref vec2 3))
       (multiple-value-bind (rvec1 rvec2)
           (linear-algebra:napply-rotation vec1 vec2 cc ss)
@@ -600,7 +588,7 @@
                5 :element-type 'single-float
                :initial-contents #(4.0 9.0 16.0 25.0 36.0))))
     (multiple-value-bind (cc ss rr)
-        (linear-algebra:givens-rotation
+        (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 4) (linear-algebra:vref vec2 4))
       (multiple-value-bind (rvec1 rvec2)
           (linear-algebra:napply-rotation vec1 vec2 cc ss)
@@ -619,7 +607,7 @@
                2 :element-type '(complex single-float)
                :initial-contents #(#C(4.0 9.0) #C(16.0 25.0)))))
     (multiple-value-bind (cc ss rr)
-        (linear-algebra:givens-rotation
+        (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 0) (linear-algebra:vref vec2 0))
       (multiple-value-bind (rvec1 rvec2)
           (linear-algebra:napply-rotation vec1 vec2 cc ss)
@@ -638,7 +626,7 @@
                2 :element-type '(complex single-float)
                :initial-contents #(#C(4.0 9.0) #C(16.0 25.0)))))
     (multiple-value-bind (cc ss rr)
-        (linear-algebra:givens-rotation
+        (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 1) (linear-algebra:vref vec2 1))
       (multiple-value-bind (rvec1 rvec2)
           (linear-algebra:napply-rotation vec1 vec2 cc ss)

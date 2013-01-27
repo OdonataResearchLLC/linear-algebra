@@ -120,52 +120,6 @@ applying the function to each element of the vectors."))
 
 ;;; Vector transformations
 
-(defun givens-rotation (f g)
-  "Return c,s,r defined from the Givens rotation."
-  (cond
-    ((zerop g)
-     (values 1 0 f))
-    ((zerop f)
-     (values 0 (signum (conjugate g)) (abs g)))
-    (t
-     (let* ((abs-f (abs f))
-            (abs-g (abs g))
-            (sqrtfg (sqrt (+ (* abs-f abs-f) (* abs-g abs-g)))))
-       (values
-        (/ abs-f sqrtfg)
-        (/ (* (signum f) (conjugate g)) sqrtfg)
-        (* (signum f) sqrtfg))))))
-
-(defun jacobi-rotation (x y z)
-  "Return a, b, cos(theta) and sin(theta) terms from the Jacobi rotation."
-  (let* ((yabs (abs y))
-         (tau  (/ (- x z) 2.0 yabs))
-         (tee  (/ (float-sign tau)
-                  (+ (abs tau) (sqrt (+ 1.0 (expt tau 2))))))
-         (cos-theta (/ (sqrt (+ 1.0 (expt tee 2))))) ; Invert sqrt
-         (sin-theta (* cos-theta tee)))
-    (values
-     ;; a : first eigenvalue
-     (+ (* cos-theta cos-theta x)
-        (* 2.0 cos-theta sin-theta yabs)
-        (* sin-theta sin-theta z))
-     ;; b : second eigenvalue
-     (+ (* sin-theta sin-theta x)
-        (* -2.0 cos-theta sin-theta yabs)
-        (* cos-theta cos-theta z))
-     ;; Cosine theta
-     cos-theta
-     ;; Sine theta
-     (* (conjugate (signum y)) sin-theta))))
-
-(defun householder-reflection (alpha vector)
-  "Return Beta, Tau and the Householder vector."
-  (let* ((beta (- (float-sign
-                   (realpart alpha)
-                   (lapy2 alpha (norm vector :measure 2)))))
-         (tau  (- 1 (/ alpha beta))))
-    (values beta tau (scale (/ alpha) vector))))
-
 (defgeneric apply-rotation (vector1 vector2 cc ss)
   (:documentation
    "Return the plane rotations of vector1 and vector2 by cc and ss."))
