@@ -36,6 +36,7 @@
 (in-package :linear-algebra-test)
 
 (define-test make-data-vector
+  (:tag :data-vector :make-vector)
   ;; A default vector.
   (assert-true
    (typep (linear-algebra:make-vector 10)
@@ -91,6 +92,7 @@
     :initial-contents (list 1.1 2.2 3.3))))
 
 (define-test column-vector
+  (:tag :data-vector :column-vector)
   ;; Column vector
   (assert-true
    (typep (linear-algebra:column-vector 1.0 2.0 3.0 4.0 5.0)
@@ -101,6 +103,7 @@
    (linear-algebra:column-vector 1.0 2.0 3.0 4.0 5.0)))
 
 (define-test row-vector
+  (:tag :data-vector :row-vector)
   ;; row vector
   (assert-true
    (typep (linear-algebra:row-vector 1.0 2.0 3.0 4.0 5.0)
@@ -111,6 +114,7 @@
    (linear-algebra:row-vector 1.0 2.0 3.0 4.0 5.0)))
 
 (define-test column-vector-p
+  (:tag :data-vector :column-vector)
   (assert-true
    (linear-algebra:column-vector-p
     (linear-algebra:column-vector 1.0 2.0 3.0 4.0 5.0)))
@@ -119,6 +123,7 @@
     (linear-algebra:row-vector 1 2 3 4 5))))
 
 (define-test row-vector-p
+  (:tag :data-vector :row-vector)
   (assert-true
    (linear-algebra:row-vector-p
     (linear-algebra:row-vector 1.0 2.0 3.0 4.0 5.0)))
@@ -127,6 +132,7 @@
     (linear-algebra:column-vector 1 2 3 4 5))))
 
 (define-test data-vector-in-bounds-p
+  (:tag :data-vector :vector-in-bounds-p)
   ;; Column vector bounds
   (let ((cvec (linear-algebra:column-vector 1 2 3 4 5)))
     (assert-true
@@ -149,6 +155,7 @@
      (linear-algebra:vector-in-bounds-p rvec 10))))
 
 (define-test data-vector-element-type
+  (:tag :data-vector :vector-element-type)
   ;; Column vector
   (assert-true
    (subtypep
@@ -167,6 +174,7 @@
     'single-float)))
 
 (define-test data-vector-length
+  (:tag :data-vector :vector-length)
   (assert-eq
    5 (linear-algebra:vector-length
       (linear-algebra:column-vector 1 2 3 4 5)))
@@ -175,6 +183,7 @@
       (linear-algebra:row-vector 1 2 3 4 5))))
 
 (define-test data-vref
+  (:tag :data-vector :vref)
   ;; Reference the element of a vector.
   (let* ((size 1000)
          (index (random-interior-index size))
@@ -216,6 +225,7 @@
      'error (setf (linear-algebra:vref list index) 42.0))))
 
 (define-test copy-data-vector
+  (:tag :data-vector :copy-vector)
   ;; Column vector
   (let* ((vec (linear-algebra:column-vector 1 2 3 4 5))
          (new (linear-algebra:copy-vector vec)))
@@ -234,6 +244,7 @@
     (assert-rational-equal vec new)))
 
 (define-test data-subvector
+  (:tag :data-vector :subvector)
   ;; Get subvectors
   (let* ((data (list 0 1 2 3 4 5 6 7 8 9))
          (vec  (linear-algebra:column-vector
@@ -262,6 +273,7 @@
      '(0 0 0 0 0 0 0 1 1 1) vec)))
 
 (define-test replace-data-vector
+  (:tag :data-vector :replace-vector)
   (flet ((zero-vector () (linear-algebra:make-vector 10)))
     (let ((data (linear-algebra:make-vector
                  5 :initial-element 1)))
@@ -306,6 +318,7 @@
                                       :start1 2 :end2 3)))))
 
 (define-test %map-data-vector
+  (:tag :data-vector :map-vector)
   (let ((col-data (linear-algebra:column-vector 1 1 1 1 1))
         (row-data (linear-algebra:row-vector 1 1 1 1 1)))
     (assert-true
@@ -345,6 +358,7 @@
       #'+ col-data row-data col-data row-data))))
 
 (define-test map-data-vector
+  (:tag :data-vector :map-vector)
   (let ((col-data (linear-algebra:column-vector 1 1 1 1 1))
         (row-data (linear-algebra:row-vector 1 1 1 1 1)))
     (assert-error 'error (linear-algebra:map-vector
@@ -360,6 +374,7 @@
       #'+ col-data row-data col-data))))
 
 (define-test %map-into-data-vector
+  (:tag :data-vector :map-into-vector)
   (let ((col-data (linear-algebra:column-vector 1 1 1 1 1))
         (row-data (linear-algebra:row-vector 1 1 1 1 1)))
     (assert-true
@@ -394,6 +409,7 @@
       col-data #'+ col-data row-data col-data row-data))))
 
 (define-test map-into-data-vector
+  (:tag :data-vector :map-into-vector)
   (let ((col-data (linear-algebra:column-vector 1 1 1 1 1))
         (row-data (linear-algebra:row-vector 1 1 1 1 1)))
     (assert-error 'error (linear-algebra:map-into-vector
@@ -408,6 +424,7 @@
 
 ;;; Apply rotation
 (define-test apply-rotation-data-vector
+  (:tag :data-vector :apply-rotation)
   ;; Float
   (let ((vec1 (linear-algebra:make-vector
                5 :element-type 'single-float
@@ -504,6 +521,7 @@
 
 ;;; Destructively apply rotation
 (define-test napply-rotation-data-vector
+  (:tag :data-vector :napply-rotation)
   ;; Float, position 0
   (let ((vec1 (linear-algebra:make-vector
                5 :element-type 'single-float
@@ -641,6 +659,7 @@
          #(#C(-1.1497688 -0.9510431) #C(0.0 0.0)) vec2)))))
 
 (define-test sumsq-data-vector
+  (:tag :data-vector :sumsq)
   ;; Real
   (let ((col-data (linear-algebra:column-vector
                    -6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
@@ -671,6 +690,7 @@
       (assert-float-equal #C(2.75 -1.125) sumsq))))
 
 (define-test sump-data-vector
+  (:tag :data-vector :sump)
   ;; Real
   (let ((col-data (linear-algebra:column-vector
                    -6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
@@ -719,6 +739,7 @@
 ;;; Data vector norm
 
 (define-test norm-data-vector
+  (:tag :data-vector :norm)
   (let ((data (linear-algebra:column-vector
                -6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
         (zdata (linear-algebra:column-vector
@@ -748,6 +769,7 @@
 ;;; Data vector transpose
 
 (define-test transpose-data-vector
+  (:tag :data-vector :transpose)
   (let ((col-data (linear-algebra:column-vector
                    1.0 2.0 3.0 4.0 5.0))
         (row-data (linear-algebra:row-vector
@@ -764,6 +786,7 @@
      row-data (linear-algebra:transpose row-data))))
 
 (define-test ntranspose-data-vector
+  (:tag :data-vector :ntranspose)
   (let ((col-data (linear-algebra:column-vector
                    1.0 2.0 3.0 4.0 5.0))
         (row-data (linear-algebra:row-vector
@@ -788,6 +811,7 @@
 ;;; Data vector permutation
 
 (define-test permute-data-vector
+  (:tag :data-vector :permute)
   (let ((rvec (linear-algebra:row-vector
                1.1 2.2 3.3 4.4 5.5))
         (cvec (linear-algebra:column-vector
@@ -817,6 +841,7 @@
      'error (linear-algebra:permute pmat cerr))))
 
 (define-test npermute-data-vector
+  (:tag :data-vector :npermute)
   (let ((rvec (linear-algebra:row-vector
                1.1 2.2 3.3 4.4 5.5))
         (cvec (linear-algebra:column-vector
@@ -855,6 +880,7 @@
 ;;; Data vector scale
 
 (define-test scale-data-vector
+  (:tag :data-vector :scale)
   (assert-float-equal
    #(2.0 4.0 6.0 8.0 10.0)
    (linear-algebra:scale
@@ -876,6 +902,7 @@
      #C(1.0 1.0) #C(2.0 2.0) #C(3.0 3.0) #C(4.0 4.0) #C(5.0 5.0)))))
 
 (define-test nscale-data-vector
+  (:tag :data-vector :nscale)
   (assert-float-equal
    #(2.0 4.0 6.0 8.0 10.0)
    (linear-algebra:nscale
@@ -899,6 +926,7 @@
 ;;; Vector addition
 
 (define-test add-data-vector
+  (:tag :data-vector :add)
   ;; Real
   (let ((vec1 (linear-algebra:column-vector 1.1 2.2 3.3 4.4))
         (vec2 (linear-algebra:column-vector 1.1 2.2 3.3 4.4)))
@@ -972,6 +1000,7 @@
 ;;; Destructive vector addition
 
 (define-test nadd-data-vector
+  (:tag :data-vector :nadd)
   ;; Real
   (let ((vec1 (linear-algebra:column-vector 1.1 2.2 3.3 4.4))
         (vec2 (linear-algebra:column-vector 1.1 2.2 3.3 4.4)))
@@ -1045,6 +1074,7 @@
 ;;; Vector subtraction
 
 (define-test subtract-data-vector
+  (:tag :data-vector :subtract)
   ;; Real
   (let ((vec1 (linear-algebra:column-vector 1.1 2.2 3.3 4.4))
         (vec2 (linear-algebra:column-vector 1.1 2.2 3.3 4.4)))
@@ -1118,6 +1148,7 @@
 ;;; Destructive vector subtraction
 
 (define-test nsubtract-data-vector
+  (:tag :data-vector :nsubtract)
   ;; Real
   (let ((vec1 (linear-algebra:column-vector 1.1 2.2 3.3 4.4))
         (vec2 (linear-algebra:column-vector 1.1 2.2 3.3 4.4)))
@@ -1191,6 +1222,7 @@
 ;;; Vector data dot product
 
 (define-test product-data-vector
+  (:tag :data-vector :product)
   ;; Real vectors
   (assert-rational-equal
    55 (linear-algebra:product
@@ -1256,4 +1288,3 @@
   (assert-error 'error (linear-algebra:product
                         (linear-algebra:column-vector 1 2 3)
                         (linear-algebra:row-vector 1 2 3))))
-

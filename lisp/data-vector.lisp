@@ -62,10 +62,11 @@
                               (size integer)
                               element-type)
   "Initialize a data vector with a value."
-  (setf (contents vector)
-        (make-array size
-                    :element-type element-type
-                    :initial-element data))
+  (setf
+   (contents vector)
+   (make-array size
+               :element-type element-type
+               :initial-element data))
   ;; Return the data vector
   vector)
 
@@ -74,10 +75,11 @@
                               (size integer)
                               element-type)
   "Initialize a data vector with a sequence."
-  (setf (contents vector)
-        (make-array size
-                    :element-type element-type
-                    :initial-contents data))
+  (setf
+   (contents vector)
+   (make-array size
+               :element-type element-type
+               :initial-contents data))
   ;; Return the data vector
   vector)
 
@@ -137,8 +139,9 @@
                              (vector data-vector)
                              start &optional end)
   "Set the subvector of the data vector."
-  (setf (subseq (contents vector) start end)
-        (contents subvector))
+  (setf
+   (subseq (contents vector) start end)
+   (contents subvector))
   ;; Return the subvector
   subvector)
 
@@ -210,43 +213,59 @@ applying the function to each element of the vectors."
 
 ;;; Data vector transformations
 
-(defmethod apply-rotation :before ((vector1 data-vector) (vector2 data-vector) cc ss)
+(defmethod apply-rotation :before ((vector1 data-vector)
+                                   (vector2 data-vector)
+                                   cc ss)
   "Verify the input to apply-rotation."
   (declare (ignore cc ss))
   (unless (= (vector-length vector1) (vector-length vector2))
     (error "VECTOR1 and VECTOR2 are not of equal length.")))
 
-(defmethod apply-rotation ((vector1 data-vector) (vector2 data-vector) cc ss)
+(defmethod apply-rotation ((vector1 data-vector)
+                           (vector2 data-vector)
+                           cc ss)
   "Return the plane rotations of vector1 and vector2 by cc and ss."
-  (let ((rvec1 (make-vector (vector-length vector1)
-                            :vector-type (class-of vector1)
-                            :element-type (vector-element-type vector1)))
-        (rvec2 (make-vector (vector-length vector2)
-                            :vector-type (class-of vector2)
-                            :element-type (vector-element-type vector2))))
+  (let ((rvec1 (make-vector
+                (vector-length vector1)
+                :vector-type (class-of vector1)
+                :element-type (vector-element-type vector1)))
+        (rvec2 (make-vector
+                (vector-length vector2)
+                :vector-type (class-of vector2)
+                :element-type (vector-element-type vector2))))
     (dotimes (pos (vector-length vector1) (values rvec1 rvec2))
-      (setf (vref rvec1 pos)
-            (+ (* cc (vref vector1 pos))
-               (* ss (vref vector2 pos))))
-      (setf (vref rvec2 pos)
-            (+ (* -1 (conjugate ss) (vref vector1 pos))
-               (* cc (vref vector2 pos)))))))
+      (setf
+       ;; Update result vector 1
+       (vref rvec1 pos)
+       (+ (* cc (vref vector1 pos))
+          (* ss (vref vector2 pos)))
+       ;; Update result vector 2
+       (vref rvec2 pos)
+       (+ (* -1 (conjugate ss) (vref vector1 pos))
+          (* cc (vref vector2 pos)))))))
 
-(defmethod napply-rotation :before ((vector1 data-vector) (vector2 data-vector) cc ss)
+(defmethod napply-rotation :before ((vector1 data-vector)
+                                    (vector2 data-vector)
+                                    cc ss)
   "Verify the input to napply-rotation."
   (declare (ignore cc ss))
   (unless (= (vector-length vector1) (vector-length vector2))
     (error "VECTOR1 and VECTOR2 are not of equal length.")))
 
-(defmethod napply-rotation ((vector1 data-vector) (vector2 data-vector) cc ss)
+(defmethod napply-rotation ((vector1 data-vector)
+                            (vector2 data-vector)
+                            cc ss)
   "Return the plane rotations of vector1 and vector2 by cc and ss."
   (dotimes (pos (vector-length vector1) (values vector1 vector2))
-    (psetf (vref vector1 pos)
-           (+ (* cc (vref vector1 pos))
-              (* ss (vref vector2 pos)))
-           (vref vector2 pos)
-           (+ (* -1 (conjugate ss) (vref vector1 pos))
-              (* cc (vref vector2 pos))))))
+    (psetf
+     ;; Update result vector 1
+     (vref vector1 pos)
+     (+ (* cc (vref vector1 pos))
+        (* ss (vref vector2 pos)))
+     ;; Update result vector 2
+     (vref vector2 pos)
+     (+ (* -1 (conjugate ss) (vref vector1 pos))
+        (* cc (vref vector2 pos))))))
 
 ;;; Data vector fundamental operations
 
@@ -286,7 +305,8 @@ applying the function to each element of the vectors."
   (ntranspose (contents vector) :conjugate conjugate)
   (change-class vector 'column-vector))
 
-(defmethod permute :before ((vector row-vector) (matrix permutation-matrix))
+(defmethod permute :before ((vector row-vector)
+                            (matrix permutation-matrix))
   "Verify that the dimensions are compatible."
   (unless (= (vector-length vector) (matrix-row-dimension matrix))
     (error "Vector and permutation matrix sizes incompatible.")))
@@ -298,7 +318,8 @@ applying the function to each element of the vectors."
    :contents
    (right-permute-vector (contents vector) (contents matrix))))
 
-(defmethod permute :before ((matrix permutation-matrix) (vector column-vector))
+(defmethod permute :before ((matrix permutation-matrix)
+                            (vector column-vector))
   "Verify that the dimensions are compatible."
   (unless (= (vector-length vector) (matrix-column-dimension matrix))
     (error "Vector and permutation matrix sizes incompatible.")))
@@ -310,7 +331,8 @@ applying the function to each element of the vectors."
    :contents
    (left-permute-vector (contents matrix) (contents vector))))
 
-(defmethod npermute :before ((vector row-vector) (matrix permutation-matrix))
+(defmethod npermute :before ((vector row-vector)
+                             (matrix permutation-matrix))
   "Verify that the dimensions are compatible."
   (unless (= (vector-length vector) (matrix-row-dimension matrix))
     (error "Vector and permutation matrix sizes incompatible.")))
@@ -321,7 +343,8 @@ applying the function to each element of the vectors."
   ;; Return permutation
   vector)
 
-(defmethod npermute :before ((matrix permutation-matrix) (vector column-vector))
+(defmethod npermute :before ((matrix permutation-matrix)
+                             (vector column-vector))
   "Verify that the dimensions are compatible."
   (unless (= (vector-length vector) (matrix-column-dimension matrix))
     (error "Vector and permutation matrix sizes incompatible.")))
@@ -358,8 +381,8 @@ applying the function to each element of the vectors."
   (make-instance
    (common-class-of vector1 vector2 'column-vector)
    :contents
-   (add-vector (contents vector1) (contents vector2)
-               scalar1 scalar2)))
+   (add-vector
+    (contents vector1) (contents vector2) scalar1 scalar2)))
 
 (defmethod add ((vector1 row-vector) (vector2 row-vector)
                 &key scalar1 scalar2)
@@ -367,8 +390,8 @@ applying the function to each element of the vectors."
   (make-instance
    (common-class-of vector1 vector2 'row-vector)
    :contents
-   (add-vector (contents vector1) (contents vector2)
-               scalar1 scalar2)))
+   (add-vector
+    (contents vector1) (contents vector2) scalar1 scalar2)))
 
 (defmethod nadd :before ((vector1 data-vector) (vector2 data-vector)
                          &key scalar1 scalar2)
@@ -380,16 +403,16 @@ applying the function to each element of the vectors."
 (defmethod nadd ((vector1 column-vector) (vector2 column-vector)
                  &key scalar1 scalar2)
   "Return the addition of scalar2*vector2 to scalar1*vector1."
-  (nadd-vector (contents vector1) (contents vector2)
-               scalar1 scalar2)
+  (nadd-vector
+   (contents vector1) (contents vector2) scalar1 scalar2)
   ;; Return vector1
   vector1)
 
 (defmethod nadd ((vector1 row-vector) (vector2 row-vector)
                  &key scalar1 scalar2)
   "Return the addition of scalar2*vector2 to scalar1*vector1."
-  (nadd-vector (contents vector1) (contents vector2)
-               scalar1 scalar2)
+  (nadd-vector
+   (contents vector1) (contents vector2) scalar1 scalar2)
   ;; Return vector1
   vector1)
 
@@ -406,8 +429,8 @@ applying the function to each element of the vectors."
   (make-instance
    (common-class-of vector1 vector2 'column-vector)
    :contents
-   (subtract-vector (contents vector1) (contents vector2)
-                    scalar1 scalar2)))
+   (subtract-vector
+    (contents vector1) (contents vector2) scalar1 scalar2)))
 
 (defmethod subtract ((vector1 row-vector) (vector2 row-vector)
                      &key scalar1 scalar2)
@@ -415,8 +438,8 @@ applying the function to each element of the vectors."
   (make-instance
    (common-class-of vector1 vector2 'row-vector)
    :contents
-   (subtract-vector (contents vector1) (contents vector2)
-                    scalar1 scalar2)))
+   (subtract-vector
+    (contents vector1) (contents vector2) scalar1 scalar2)))
 
 (defmethod nsubtract :before ((vector1 data-vector) (vector2 data-vector)
                               &key scalar1 scalar2)
@@ -428,16 +451,16 @@ applying the function to each element of the vectors."
 (defmethod nsubtract ((vector1 column-vector) (vector2 column-vector)
                       &key scalar1 scalar2)
   "Return the subraction of scalar2*vector2 from scalar1*vector1."
-  (nsubtract-vector (contents vector1) (contents vector2)
-                    scalar1 scalar2)
+  (nsubtract-vector
+   (contents vector1) (contents vector2) scalar1 scalar2)
   ;; Return vector1
   vector1)
 
 (defmethod nsubtract ((vector1 row-vector) (vector2 row-vector)
                       &key scalar1 scalar2)
   "Return the subraction of scalar2*vector2 from scalar1*vector1."
-  (nsubtract-vector (contents vector1) (contents vector2)
-                    scalar1 scalar2)
+  (nsubtract-vector
+   (contents vector1) (contents vector2) scalar1 scalar2)
   ;; Return vector1
   vector1)
 
@@ -451,5 +474,5 @@ applying the function to each element of the vectors."
 (defmethod product ((vector1 row-vector) (vector2 column-vector)
                     &key scalar conjugate)
   "Return the dot product of vector1 and vector2."
-  (inner-product-vector (contents vector1) (contents vector2)
-                        scalar conjugate))
+  (inner-product-vector
+   (contents vector1) (contents vector2) scalar conjugate))
