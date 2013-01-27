@@ -55,10 +55,11 @@
                               (columns integer)
                               element-type)
   "Initialize the dense matrix with an initial element."
-  (setf (contents matrix)
-        (make-array (list rows columns)
-                    :element-type element-type
-                    :initial-element data))
+  (setf
+   (contents matrix)
+   (make-array (list rows columns)
+               :element-type element-type
+               :initial-element data))
   ;; Return the matrix
   matrix)
 
@@ -68,10 +69,11 @@
                               (columns integer)
                               element-type)
   "Initialize the dense matrix with a nested sequence."
-  (setf (contents matrix)
-        (make-array (list rows columns)
-                    :element-type element-type
-                    :initial-contents data))
+  (setf
+   (contents matrix)
+   (make-array (list rows columns)
+               :element-type element-type
+               :initial-contents data))
   ;; Return the matrix
   matrix)
 
@@ -81,10 +83,11 @@
                               (columns integer)
                               element-type)
   "Initialize the dense matrix with a nested sequence."
-  (setf (contents matrix)
-        (make-array (list rows columns)
-                    :element-type element-type
-                    :initial-contents data))
+  (setf
+   (contents matrix)
+   (make-array (list rows columns)
+               :element-type element-type
+               :initial-contents data))
   ;; Return the matrix
   matrix)
 
@@ -292,8 +295,9 @@
               (contents (contents matrix)))
           (dotimes (row m-rows matrix)
             ;; FIXME : Conjugate on the diagonal may not be correct.
-            (setf (aref contents row row)
-                  (funcall op (aref contents row row)))
+            (setf
+             (aref contents row row)
+             (funcall op (aref contents row row)))
             (do ((column (1+ row) (1+ column)))
                 ((>= column n-columns))
               (psetf
@@ -426,8 +430,9 @@
    &key scalar1 scalar2)
   "Audit the input data."
   (declare (ignore scalar1 scalar2))
-  (unless (equal (matrix-dimensions matrix1)
-                 (matrix-dimensions matrix2))
+  (unless (equal
+           (matrix-dimensions matrix1)
+           (matrix-dimensions matrix2))
     (error "The matrix dimensions are not compatible.")))
 
 (defmethod nsubtract ((matrix1 dense-matrix) (matrix2 dense-matrix)

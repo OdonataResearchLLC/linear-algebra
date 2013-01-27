@@ -38,7 +38,7 @@
 ;;; Test dense matrix data operations
 
 (define-test make-dense-matrix
-  (:tag :dense-matrix)
+  (:tag :dense-matrix :make-matrix)
   ;; A default dense matrix
   (let ((matrix
          (linear-algebra:make-matrix
@@ -168,37 +168,37 @@
 ;;; Test the dense matrix bounds
 
 (define-test dense-matrix-in-bounds-p
-  (:tag :dense-matrix)
+  (:tag :dense-matrix :matrix-in-bounds-p)
   (test-matrix-in-bounds-p 'linear-algebra:dense-matrix))
 
 ;;; Test the dense matrix element type
 
 (define-test dense-matrix-element-type
-  (:tag :dense-matrix)
+  (:tag :dense-matrix :matrix-element-type)
   (test-matrix-element-type 'linear-algebra:dense-matrix))
 
 ;;; Test the dense matrix dimensions
 
 (define-test dense-matrix-dimensions
-  (:tag :dense-matrix)
+  (:tag :dense-matrix :matrix-dimensions)
   (test-matrix-dimensions 'linear-algebra:dense-matrix 5 7))
 
 ;;; Test the dense matrix row dimension
 
 (define-test dense-matrix-row-dimension
-  (:tag :dense-matrix)
+  (:tag :dense-matrix :matrix-row-dimension)
   (test-matrix-row-dimension 'linear-algebra:dense-matrix 5 7))
 
 ;;; Test the dense matrix column dimension
 
 (define-test dense-matrix-column-dimension
-  (:tag :dense-matrix)
+  (:tag :dense-matrix :matrix-column-dimension)
   (test-matrix-column-dimension 'linear-algebra:dense-matrix 5 7))
 
 ;;; Reference dense matrix elements
 
 (define-test dense-matrix-mref
-  (:tag :dense-matrix)
+  (:tag :dense-matrix :mref)
   (let* ((initial-contents
           '((1.1 1.2 1.3 1.4 1.5)
             (2.1 2.2 2.3 2.4 2.5)
@@ -236,7 +236,7 @@
 ;;; Set dense matrix elements
 
 (define-test dense-matrix-setf-mref
-  (:tag :dense-matrix)
+  (:tag :dense-matrix :setf-mref)
   (let* ((rows 3) (columns 5)
          (rend (1- rows)) (cend (1- columns))
          (rowi (random-interior-index rows))
@@ -265,7 +265,7 @@
 ;;; Copy the dense matrix
 
 (define-test copy-dense-matrix
-  (:tag :dense-matrix)
+  (:tag :dense-matrix :copy-matrix)
   (let ((matrix
          (linear-algebra:make-matrix
           3 5
@@ -289,7 +289,7 @@
 ;;; Test the submatrix of a dense matrix
 
 (define-test dense-submatrix
-  (:tag :dense-matrix)
+  (:tag :dense-matrix :submatrix)
   (let ((matrix
          (linear-algebra:make-matrix
           7 10
@@ -331,7 +331,7 @@
 ;;; Set the submatrix of a dense matrix
 
 (define-test setf-dense-submatrix
-  (:tag :dense-matrix)
+  (:tag :dense-matrix :setf-submatrix)
   ;; Upper left submatrix
   (let ((array-ul
          (make-array
@@ -511,7 +511,7 @@
 ;;; Replace all or part of a dense matrix
 
 (define-test dense-matrix-replace
-  (:tag :dense-matrix)
+  (:tag :dense-matrix :replace-matrix)
   ;; Replace the entire matrix
   (assert-rational-equal
    (unit-matrix 5 5)
@@ -624,7 +624,7 @@
 ;;; Validate a range for a dense matrix.
 
 (define-test dense-matrix-validated-range
-  (:tag :dense-matrix)
+  (:tag :dense-matrix :matrix-validated-range)
   (test-matrix-validated-range
    'linear-algebra:dense-matrix 10 10))
 
