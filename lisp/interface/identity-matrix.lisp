@@ -78,8 +78,9 @@
 (defmethod matrix-in-bounds-p ((matrix identity-matrix)
                                (row integer) (column integer))
   "Return true if row and column do not exceed the dimensions of matrix."
-  (and (<= 0 row)    (< row    (size matrix))
-       (<= 0 column) (< column (size matrix))))
+  (and
+   (<= 0 row)    (< row    (size matrix))
+   (<= 0 column) (< column (size matrix))))
 
 (defmethod matrix-element-type ((matrix identity-matrix))
   "Return the element type of the identity matrix."

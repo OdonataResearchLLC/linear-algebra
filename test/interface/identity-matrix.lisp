@@ -36,6 +36,7 @@
 (in-package :linear-algebra-test)
 
 (define-test make-identity-matrix
+  (:tag :matrix :identity-matrix :make-matrix)
   ;; A default identity matrix
   (let ((matrix
          (linear-algebra:make-matrix
@@ -111,36 +112,43 @@
       (0.0 0.0 1.0)))))
 
 ;;; Test the identity matrix predicate
- (define-test identity-matrix-predicate
-   (assert-true
-    (linear-algebra:identity-matrix-p
-     (linear-algebra:make-matrix
-      10 10 :matrix-type 'linear-algebra:identity-matrix)))
-   (assert-false
-    (linear-algebra:identity-matrix-p (make-array '(10 10)))))
+(define-test identity-matrix-predicate
+  (:tag :matrix :identity-matrix)
+  (assert-true
+   (linear-algebra:identity-matrix-p
+    (linear-algebra:make-matrix
+     10 10 :matrix-type 'linear-algebra:identity-matrix)))
+  (assert-false
+   (linear-algebra:identity-matrix-p (make-array '(10 10)))))
 
 ;;; Test the identity matrix bounds
 (define-test identity-matrix-in-bounds-p
+  (:tag :matrix :identity-matrix :matrix-in-bounds-p)
   (test-matrix-in-bounds-p 'linear-algebra:identity-matrix))
 
 ;;; Test the identity matrix element type
 (define-test identity-matrix-element-type
+  (:tag :matrix :identity-matrix :matrix-element-type)
   (test-matrix-element-type 'linear-algebra:identity-matrix))
 
 ;;; Test the identity matrix dimensions
 (define-test identity-matrix-dimensions
+  (:tag :matrix :identity-matrix :matrix-dimensions)
   (test-matrix-dimensions 'linear-algebra:identity-matrix 7 7))
 
 ;;; Test the identity matrix row dimension
 (define-test identity-matrix-row-dimension
+  (:tag :matrix :identity-matrix :matrix-row-dimension)
   (test-matrix-row-dimension 'linear-algebra:identity-matrix 7 7))
 
 ;;; Test the identity matrix column dimension
 (define-test identity-matrix-column-dimension
+  (:tag :matrix :identity-matrix :matrix-column-dimension)
   (test-matrix-column-dimension 'linear-algebra:identity-matrix 7 7))
 
 ;;; Reference identity matrix elements
 (define-test identity-matrix-mref
+  (:tag :matrix :identity-matrix :mref)
   (let* ((rows 5) (columns 5)
          (rend (1- rows)) (cend (1- columns))
          (rowi (random-interior-index rows))
@@ -170,6 +178,7 @@
 
 ;;; Set identity matrix elements
 (define-test identity-matrix-setf-mref
+  (:tag :matrix :identity-matrix :setf-mref)
   (assert-error
    'error
    (setf (linear-algebra:mref
@@ -181,6 +190,7 @@
 
 ;;; Copy the identity matrix
 (define-test copy-identity-matrix
+  (:tag :matrix :identity-matrix :copy-matrix)
   (let ((matrix (linear-algebra:make-matrix
                  5 5
                  :matrix-type
@@ -197,6 +207,7 @@
 
 ;;; Test the submatrix of a identity matrix
 (define-test identity-submatrix
+  (:tag :matrix :identity-matrix :submatrix)
   (let ((matrix (linear-algebra:make-matrix
                  10 10
                  :matrix-type
@@ -266,6 +277,7 @@
      'error (linear-algebra:submatrix matrix 7 7 :end-column 6))))
 
 (define-test setf-identity-submatrix
+  (:tag :matrix :identity-matrix :setf-submatrix)
   (assert-error
    'error
    (setf (linear-algebra:submatrix
@@ -276,6 +288,7 @@
          (unit-matrix 5 5))))
 
 (define-test identity-matrix-replace
+  (:tag :matrix :identity-matrix :replace-matrix)
   ;; Replace the entire matrix
   (assert-error
    'error
@@ -286,5 +299,6 @@
 
 ;;; Validate a range for an identity matrix.
 (define-test identity-matrix-validated-range
+  (:tag :matrix :identity-matrix :matrix-validated-range)
   (test-matrix-validated-range
    'linear-algebra:identity-matrix 10 10))
