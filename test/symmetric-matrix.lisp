@@ -473,7 +473,7 @@
          (unit-matrix 5 3))))
 
 ;;; Replace all or part of a symmetric matrix
-(define-test symmetric-matrix-replace
+(define-test replace-symmetric-matrix
   (:tag :symmetric-matrix :replace-matrix)
   ;; Replace the entire matrix
   (assert-float-equal
@@ -482,13 +482,14 @@
     (zero-matrix 10 10 :matrix-type 'linear-algebra:symmetric-matrix)
     (symmetric-matrix)))
   ;; Upper left submatrix
-  (let ((array-ul (make-array
-                   '(5 5) :initial-contents
-                   '((0.0 1.0 2.0 0.0 0.0)
-                     (1.0 1.1 2.1 0.0 0.0)
-                     (2.0 2.1 2.2 0.0 0.0)
-                     (0.0 0.0 0.0 0.0 0.0)
-                     (0.0 0.0 0.0 0.0 0.0)))))
+  (let ((array-ul
+         (make-array
+          '(5 5) :initial-contents
+          '((0.0 1.0 2.0 0.0 0.0)
+            (1.0 1.1 2.1 0.0 0.0)
+            (2.0 2.1 2.2 0.0 0.0)
+            (0.0 0.0 0.0 0.0 0.0)
+            (0.0 0.0 0.0 0.0 0.0)))))
     (assert-float-equal
      array-ul
      (linear-algebra:replace-matrix
@@ -532,13 +533,14 @@
     (symmetric-matrix)
     :start-row1 2 :start-column1 2))
   ;; Middle submatrix
-  (let ((array-mid (make-array
-                    '(5 5) :initial-contents
-                    '((0.0 0.0 0.0 0.0 0.0)
-                      (0.0 0.0 1.0 2.0 0.0)
-                      (0.0 1.0 1.1 2.1 0.0)
-                      (0.0 2.0 2.1 2.2 0.0)
-                      (0.0 0.0 0.0 0.0 0.0)))))
+  (let ((array-mid
+         (make-array
+          '(5 5) :initial-contents
+          '((0.0 0.0 0.0 0.0 0.0)
+            (0.0 0.0 1.0 2.0 0.0)
+            (0.0 1.0 1.1 2.1 0.0)
+            (0.0 2.0 2.1 2.2 0.0)
+            (0.0 0.0 0.0 0.0 0.0)))))
     (assert-float-equal
      array-mid
      (linear-algebra:replace-matrix
@@ -574,13 +576,14 @@
       :start-row1 1 :start-column1 1
       :end-row2 3 :end-column2 3)))
   ;; Off diagonal submatrix
-  (let ((array-off (make-array
-                    '(5 5) :initial-contents
-                    '((0.0 0.0 0.0 1.0 2.0)
-                      (0.0 0.0 1.0 1.1 2.1)
-                      (0.0 1.0 2.0 2.1 2.2)
-                      (1.0 1.1 2.1 0.0 0.0)
-                      (2.0 2.1 2.2 0.0 0.0)))))
+  (let ((array-off
+         (make-array
+          '(5 5) :initial-contents
+          '((0.0 0.0 0.0 1.0 2.0)
+            (0.0 0.0 1.0 1.1 2.1)
+            (0.0 1.0 2.0 2.1 2.2)
+            (1.0 1.1 2.1 0.0 0.0)
+            (2.0 2.1 2.2 0.0 0.0)))))
     (assert-float-equal
      array-off
      (linear-algebra:replace-matrix
@@ -601,13 +604,14 @@
       (symmetric-matrix)
       :start-row1 0 :start-column1 2
       :end-row2 3)))
-  (let ((array-off (make-array
-                    '(5 5) :initial-contents
-                    '((0.0 0.0 0.0 0.0 0.0)
-                      (0.0 0.0 0.0 1.0 2.0)
-                      (0.0 0.0 1.0 1.1 2.1)
-                      (0.0 1.0 1.1 0.0 0.0)
-                      (0.0 2.0 2.1 0.0 0.0)))))
+  (let ((array-off
+         (make-array
+          '(5 5) :initial-contents
+          '((0.0 0.0 0.0 0.0 0.0)
+            (0.0 0.0 0.0 1.0 2.0)
+            (0.0 0.0 1.0 1.1 2.1)
+            (0.0 1.0 1.1 0.0 0.0)
+            (0.0 2.0 2.1 0.0 0.0)))))
     (assert-float-equal
      array-off
      (linear-algebra:replace-matrix

@@ -263,7 +263,8 @@ matrix2."
   (multiple-value-bind (start-row1 start-column1 end-row1 end-column1)
       (matrix-validated-range
        matrix1 start-row1 start-column1 end-row1 end-column1)
-    (destructuring-bind (start-row2 start-column2 end-row2 end-column2)
+    (multiple-value-bind
+        (start-row2 start-column2 end-row2 end-column2)
         (matrix-validated-range
          matrix2 start-row2 start-column2 end-row2 end-column2)
       (let ((m-rows
@@ -275,26 +276,28 @@ matrix2."
               (- end-column1 start-column1)
               (- end-column2 start-column2))))
         (cond
-          ((and (= start-row1 start-column1)
-                (= start-row2 start-column2)
-                (= m-rows n-columns))
-           (%replace-symmetric-matrix-on-diagonal
-            matrix1 matrix2
-            start-row1 start-column1
-            start-row2 start-column2
-            m-rows n-columns))
-          ((or (<= (+ start-row1 m-rows -1) start-column1)
-               (<= (+ start-column1 n-columns -1) start-row1))
-           (%replace-symmetric-matrix-off-diagonal
-            matrix1 matrix2
-            start-row1 start-column1
-            start-row2 start-column2
-            m-rows n-columns))
-          (t
-           (error
-            "Range(~D:~D,~D:~D) results in an asymmetric matrix."
-            start-row1 (+ start-row1 m-rows -1)
-            start-column1 (+ start-column1 n-columns -1))))))))
+         ((and
+           (= start-row1 start-column1)
+           (= start-row2 start-column2)
+           (= m-rows n-columns))
+          (%replace-symmetric-matrix-on-diagonal
+           matrix1 matrix2
+           start-row1 start-column1
+           start-row2 start-column2
+           m-rows n-columns))
+         ((or
+           (<= (+ start-row1 m-rows -1) start-column1)
+           (<= (+ start-column1 n-columns -1) start-row1))
+          (%replace-symmetric-matrix-off-diagonal
+           matrix1 matrix2
+           start-row1 start-column1
+           start-row2 start-column2
+           m-rows n-columns))
+         (t
+          (error
+           "Range(~D:~D,~D:~D) results in an asymmetric matrix."
+           start-row1 (+ start-row1 m-rows -1)
+           start-column1 (+ start-column1 n-columns -1))))))))
 
 (defmethod replace-matrix ((matrix1 symmetric-matrix)
                            (matrix2 dense-matrix)
@@ -318,8 +321,9 @@ matrix2."
              (min
               (- end-column1 start-column1)
               (- end-column2 start-column2))))
-        (if (or (<= (+ start-row1 m-rows -1) start-column1)
-                (<= (+ start-column1 n-columns -1) start-row1))
+        (if (or
+             (<= (+ start-row1 m-rows -1) start-column1)
+             (<= (+ start-column1 n-columns -1) start-row1))
             (%replace-symmetric-matrix-off-diagonal
              matrix1 matrix2
              start-row1 start-column1
