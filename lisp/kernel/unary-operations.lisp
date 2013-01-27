@@ -44,9 +44,9 @@ vector."
     (dotimes (index (length vector) (values scale sumsq))
       (when (plusp (setq abs-val (abs (aref vector index))))
         (if (< scale abs-val)
-            (progn
-              (setq sumsq (1+ (* sumsq (expt (/ scale abs-val) 2))))
-              (setq scale abs-val))
+            (setq
+             sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
+             scale abs-val)
             (setq
              sumsq
              (+ sumsq (expt (/ (aref vector index) scale) 2))))))))
@@ -61,9 +61,9 @@ array."
       (dotimes (column n-columns)
         (when (plusp (setq abs-val (abs (aref array row column))))
           (if (< scale abs-val)
-              (progn
-                (setq sumsq (1+ (* sumsq (expt (/ scale abs-val) 2))))
-                (setq scale abs-val))
+              (setq
+               sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
+               scale abs-val)
               (setq sumsq (+ sumsq (expt (/ abs-val scale) 2)))))))))
 
 (defun sump-vector (vector p scale sump)
@@ -73,9 +73,9 @@ vector."
     (dotimes (index (length vector) (values scale sump))
       (when (plusp (setq abs-val (abs (aref vector index))))
         (if (< scale abs-val)
-            (progn
-              (setq sump (1+ (* sump (expt (/ scale abs-val) p))))
-              (setq scale abs-val))
+            (setq
+             sump (1+ (* sump (expt (/ scale abs-val) p)))
+             scale abs-val)
             (setq
              sump
              (+ sump (expt (/ (aref vector index) scale) p))))))))
@@ -91,9 +91,9 @@ matrix."
       (dotimes (column n-columns)
         (when (plusp (setq abs-val (abs (aref array row column))))
           (if (< scale abs-val)
-              (progn
-                (setq sump (1+ (* sump (expt (/ scale abs-val) p))))
-                (setq scale abs-val))
+              (setq
+               sump (1+ (* sump (expt (/ scale abs-val) p)))
+               scale abs-val)
               (setq
                sump
                (+ sump
