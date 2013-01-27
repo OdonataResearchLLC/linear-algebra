@@ -36,6 +36,7 @@
 (in-package :linear-algebra-test)
 
 (define-test sumsq-array
+  (:tag :array :sumsq)
   (multiple-value-bind (scale sumsq)
       (linear-algebra:sumsq
        #2A((1.1 1.2 1.3 1.4 1.5)
@@ -46,6 +47,7 @@
     (assert-float-equal 8.997532 sumsq)))
 
 (define-test sump-array
+  (:tag :array :sump)
   (multiple-value-bind (scale sump)
       (linear-algebra:sump
        #2A((1.1 1.2 1.3 1.4 1.5)
@@ -57,6 +59,7 @@
     (assert-float-equal 6.540154 sump)))
 
 (define-test norm-array
+  (:tag :array :norm)
   (let ((array
          #2A((1.1 1.2 1.3 1.4)
              (2.1 2.2 2.3 2.4)
@@ -73,6 +76,7 @@
      21.0 (linear-algebra:norm array :measure :infinity))))
 
 (define-test transpose-array
+  (:tag :array :transpose)
   (assert-float-equal
    #2A((1.1 2.1 3.1 4.1 5.1)
        (1.2 2.2 3.2 4.2 5.2)
@@ -107,6 +111,7 @@
     :conjugate t)))
 
 (define-test ntranspose-array
+  (:tag :array :ntranspose)
   (let ((original
          (make-array
           '(4 4) :initial-contents
@@ -144,6 +149,7 @@
     (assert-float-equal transpose original)))
 
 (define-test permute-array
+  (:tag :array :permute)
   (let ((array
          #2A((1.0 1.1 1.2 1.3 1.4)
              (2.0 2.1 2.2 2.3 2.4)
@@ -176,6 +182,7 @@
      (linear-algebra:permute pmat array))))
 
 (define-test npermute-array
+  (:tag :array :npermute)
   (let ((array
          (make-array
           '(5 5) :initial-contents
@@ -230,6 +237,7 @@
      array)))
 
 (define-test scale-array
+  (:tag :array :scale)
   (assert-float-equal
    #2A(( 3.3  3.6  3.9  4.2)
        ( 6.3  6.6  6.9  7.2)
@@ -245,6 +253,7 @@
         (5.1 5.2 5.3 5.4)))))
 
 (define-test nscale-array
+  (:tag :array :nscale)
   (let ((array
          (make-array
           '(5 4) :initial-contents
@@ -263,6 +272,7 @@
      array)))
 
 (define-test add-array
+  (:tag :array :add)
   (let ((array
          #2A((1.1 1.2 1.3 1.4)
              (2.1 2.2 2.3 2.4)
@@ -303,6 +313,7 @@
      (linear-algebra:add array array :scalar1 2.0 :scalar2 3.0))))
 
 (define-test nadd-array
+  (:tag :array :nadd)
   ;; No scalar
   (let ((array1
          (make-array
@@ -401,6 +412,7 @@
      array1)))
 
 (define-test subtract-array
+  (:tag :array :subtract)
   (let ((*epsilon* (* 3F0 single-float-epsilon))
         (array1
          #2A(( 2.2  2.4  2.6  2.8)
@@ -448,6 +460,7 @@
      (linear-algebra:subtract array1 array2 :scalar1 2.0 :scalar2 3.0))))
 
 (define-test nsubtract-array
+  (:tag :array :nsubtract)
   ;; No scalar
   (let ((array1
          (make-array
@@ -548,6 +561,7 @@
      array1)))
 
 (define-test product-array
+  (:tag :array :product)
   ;; Vector - array
   (assert-float-equal
    #(15.0 30.0 45.0)
