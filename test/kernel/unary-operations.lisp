@@ -38,6 +38,7 @@
 ;;; Scaled binary operations
 
 (define-test unary-sumsq-vector
+  (:tag :unary :sumsq)
   ;; Real
   (multiple-value-bind (scale sumsq)
       (linear-algebra-kernel:sumsq-vector
@@ -53,6 +54,7 @@
     (assert-float-equal #C (2.75 -1.125) sumsq)))
 
 (define-test unary-sumsq-array
+  (:tag :unary :sumsq)
   (multiple-value-bind (scale sumsq)
       (linear-algebra-kernel:sumsq-array
        #2A((1.1 1.2 1.3 1.4 1.5)
@@ -64,6 +66,7 @@
     (assert-float-equal 8.997532 sumsq)))
 
 (define-test unary-sump-vector
+  (:tag :unary :sump)
   ;; Real
   (multiple-value-bind (scale sump)
       (linear-algebra-kernel:sump-vector
@@ -92,6 +95,7 @@
     (assert-float-equal #C(2.6639833 0.54687494) sump)))
 
 (define-test unary-sump-array
+  (:tag :unary :sump)
   (multiple-value-bind (scale sump)
       (linear-algebra-kernel:sump-array
        #2A((1.1 1.2 1.3 1.4 1.5)
@@ -105,6 +109,7 @@
 ;;; Taxicab norm
 
 (define-test unary-norm-1-vector
+  (:tag :unary :norm)
   (assert-rational-equal
    36 (linear-algebra-kernel:norm-vector
        #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5) 1))
@@ -118,6 +123,7 @@
 ;;; Euclidean norm
 
 (define-test unary-norm-2-vector
+  (:tag :unary :norm)
   (assert-float-equal
    12.083046
    (linear-algebra-kernel:norm-vector
@@ -133,6 +139,7 @@
 ;;; P-norm
 
 (define-test unary-norm-p-vector
+  (:tag :unary :norm)
   (let ((data #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
         (zdata #(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
                  #C(-2 3) #C(-3 1) #C(-1 0))))
@@ -145,6 +152,7 @@
 ;;; Infinity norm
 
 (define-test unary-norm-infinity-vector
+  (:tag :unary :norm)
   (assert-rational-equal
    6 (linear-algebra-kernel:norm-vector
       #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5)
@@ -156,6 +164,7 @@
         :infinity)))
 
 (define-test unary-norm-array
+  (:tag :unary :norm)
   (let ((array
          #2A((1.1 1.2 1.3 1.4)
              (2.1 2.2 2.3 2.4)
