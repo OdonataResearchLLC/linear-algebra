@@ -42,6 +42,7 @@
    :initial-contents (symmetric-array start end)))
 
 (define-test make-symmetric-matrix
+  (:tag :symmetric-matrix :make-matrix)
   ;; A default symmetric matrix
   (let ((matrix (linear-algebra:make-matrix
                  10 10
@@ -173,6 +174,7 @@
 
 ;;; Test the symmetric matrix predicate
 (define-test symmetric-matrix-predicate
+  (:tag :symmetric-matrix)
   (assert-true
    (linear-algebra:symmetric-matrix-p
     (linear-algebra:make-matrix
@@ -182,26 +184,32 @@
 
 ;;; Test the symmetric matrix bounds
 (define-test symmetric-matrix-in-bounds-p
+  (:tag :symmetric-matrix :matrix-in-bounds-p)
   (test-matrix-in-bounds-p 'linear-algebra:symmetric-matrix))
 
 ;;; Test the symmetric matrix element type
 (define-test symmetric-matrix-element-type
+  (:tag :symmetric-matrix :matrix-element-type)
   (test-matrix-element-type 'linear-algebra:symmetric-matrix t nil))
 
 ;;; Test the symmetric matrix dimensions
 (define-test symmetric-matrix-dimensions
+  (:tag :symmetric-matrix :matrix-dimensions)
   (test-matrix-dimensions 'linear-algebra:symmetric-matrix 9 9))
 
 ;;; Test the symmetric matrix row dimension
 (define-test symmetric-matrix-row-dimension
+  (:tag :symmetric-matrix :matrix-row-dimension)
   (test-matrix-row-dimension 'linear-algebra:symmetric-matrix 9 9))
 
 ;;; Test the symmetric matrix column dimension
 (define-test symmetric-matrix-column-dimension
+  (:tag :symmetric-matrix :matrix-column-dimension)
   (test-matrix-column-dimension 'linear-algebra:symmetric-matrix 9 9))
 
 ;;; Reference symmetric matrix elements
 (define-test symmetric-matrix-mref
+  (:tag :symmetric-matrix :mref)
   (let* ((initial-contents
           '((1.1 1.2 1.3 1.4 1.5)
             (1.2 2.2 2.3 2.4 2.5)
@@ -248,6 +256,7 @@
 
 ;;; Set symmetric matrix elements
 (define-test symmetric-matrix-setf-mref
+  (:tag :symmetric-matrix :setf-mref)
   (let* ((rows 5) (columns 5)
          (rend (1- rows)) (cend (1- columns))
          (rowi (random-interior-index rows))
@@ -278,11 +287,13 @@
 
 ;;; Copy the symmetric matrix
 (define-test copy-symmetric-matrix
-  (let ((matrix (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type 'linear-algebra:symmetric-matrix
-                 :initial-contents
-                 (symmetric-array 0 5))))
+  (:tag :symmetric-matrix :copy-matrix)
+  (let ((matrix
+         (linear-algebra:make-matrix
+          5 5
+          :matrix-type 'linear-algebra:symmetric-matrix
+          :initial-contents
+          (symmetric-array 0 5))))
     (assert-true
      (linear-algebra:symmetric-matrix-p
       (linear-algebra:copy-matrix matrix)))
@@ -297,6 +308,7 @@
 
 ;;; Test the submatrix of a symmetric matrix
 (define-test symmetric-submatrix
+  (:tag :symmetric-matrix :submatrix)
   (let ((matrix (linear-algebra:make-matrix
                  10 10
                  :matrix-type 'linear-algebra:symmetric-matrix
@@ -358,6 +370,7 @@
 
 ;;; Set the submatrix of a symmetric matrix
 (define-test setf-symmetric-submatrix
+  (:tag :symmetric-matrix :setf-submatrix)
   ;; Upper left submatrix
   (let ((array-ul (make-array
                    '(5 5) :initial-contents
@@ -461,6 +474,7 @@
 
 ;;; Replace all or part of a symmetric matrix
 (define-test symmetric-matrix-replace
+  (:tag :symmetric-matrix :replace-matrix)
   ;; Replace the entire matrix
   (assert-float-equal
    (symmetric-matrix)
@@ -616,6 +630,7 @@
 
 ;;; Validate a range for a symmetric matrix.
 (define-test symmetric-matrix-validated-range
+  (:tag :symmetric-matrix :matrix-validated-range)
   (test-matrix-validated-range
    'linear-algebra:symmetric-matrix 10 10))
 

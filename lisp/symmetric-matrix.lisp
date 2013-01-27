@@ -96,8 +96,9 @@
 (defmethod (setf mref) ((data number) (matrix symmetric-matrix)
                         (row integer) (column integer))
   "Set the element of matrix at row,column."
-  (setf (aref (contents matrix) row column) data
-        (aref (contents matrix) column row) data))
+  (setf
+   (aref (contents matrix) row column) data
+   (aref (contents matrix) column row) data))
 
 (defun %setf-symmetric-submatrix-on-diagonal (matrix data row numrows)
   (let ((mat (contents matrix))
