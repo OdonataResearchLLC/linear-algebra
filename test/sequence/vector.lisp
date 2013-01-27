@@ -36,6 +36,7 @@
 (in-package :linear-algebra-test)
 
 (define-test sumsq-vector
+  (:tag :vector :sumsq)
   ;; Real
   (let ((data #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5)))
     (multiple-value-bind (scale sumsq)
@@ -51,6 +52,7 @@
       (assert-float-equal #C(2.75 -1.125) sumsq))))
 
 (define-test sump-vector
+  (:tag :vector :sump)
   ;; Real
   (let ((data #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5)))
     (multiple-value-bind (scale sump)
@@ -74,6 +76,7 @@
       (assert-float-equal #C(2.6639833 0.54687494) sump))))
 
 (define-test norm-vector
+  (:tag :vector :norm)
   ;; Taxicab norm
   (assert-rational-equal
    36 (linear-algebra:norm
@@ -118,12 +121,14 @@
 ;;; Vector transpose
 
 (define-test transpose-vector
+  (:tag :vector :transpose)
   (assert-float-equal
    #(1.0 2.0 3.0 4.0 5.0)
    (linear-algebra:transpose
     #(1.0 2.0 3.0 4.0 5.0))))
 
 (define-test ntranspose-vector
+  (:tag :vector :ntranspose)
   (let ((data (vector 1.0 2.0 3.0 4.0 5.0)))
     (assert-equal
      data (linear-algebra:ntranspose data))))
@@ -131,6 +136,7 @@
 ;;; Vector permutation
 
 (define-test permute-vector
+  (:tag :vector :permute)
   (let ((vect (vector 1.1 2.2 3.3 4.4 5.5))
         (pmat (linear-algebra:make-matrix
                5 5 :matrix-type
@@ -165,6 +171,7 @@
      (linear-algebra:permute pmat vect))))
 
 (define-test npermute-vector
+  (:tag :vector :npermute)
   (let ((vect (vector 1.1 2.2 3.3 4.4 5.5))
         (pmat (linear-algebra:make-matrix
                5 5 :matrix-type
@@ -217,6 +224,7 @@
 ;;; Vector scale
 
 (define-test scale-vector
+  (:tag :vector :scale)
   (assert-float-equal
    #(2.0 4.0 6.0 8.0 10.0)
    (linear-algebra:scale 2.0 #(1.0 2.0 3.0 4.0 5.0)))
@@ -234,6 +242,7 @@
     #(#C(1.0 1.0) #C(2.0 2.0) #C(3.0 3.0) #C(4.0 4.0) #C(5.0 5.0)))))
 
 (define-test nscale-vector
+  (:tag :vector :nscale)
   (let ((list (list 1.0 2.0 3.0 4.0 5.0)))
     (assert-eq list (linear-algebra:nscale 2.0 list))
     (assert-float-equal #(2.0 4.0 6.0 8.0 10.0) list))
@@ -258,6 +267,7 @@
 ;;; Vector addition
 
 (define-test add-vector
+  (:tag :vector :add)
   ;; Real
   (let ((vector1 #(1.1 2.2 3.3 4.4))
         (vector2 #(1.1 2.2 3.3 4.4)))
@@ -288,6 +298,7 @@
 ;;; Destructive vector addition
 
 (define-test nadd-vector
+  (:tag :vector :nadd)
   ;; Real
   (let ((vector1 (vector 1.1 2.2 3.3 4.4))
         (vector2 (vector 1.1 2.2 3.3 4.4)))
@@ -320,6 +331,7 @@
 ;;; Vector subtraction
 
 (define-test subtract-vector
+  (:tag :vector :subtract)
   ;; Real
   (let ((vector1 #(1.1 2.2 3.3 4.4))
         (vector2 #(1.1 2.2 3.3 4.4)))
@@ -356,6 +368,7 @@
 ;;; Destructive vector subtraction
 
 (define-test nsubtract-vector
+  (:tag :vector :nsubtract)
   ;; Real
   (let ((vector1 (vector 1.1 2.2 3.3 4.4))
         (vector2 (vector 1.1 2.2 3.3 4.4)))
@@ -389,6 +402,7 @@
 ;;; Vector dot product
 
 (define-test product-vector
+  (:tag :vector :product)
   ;; Real vectors
   (assert-rational-equal
    55 (linear-algebra:product #(1 2 3 4 5) #(1 2 3 4 5)))
