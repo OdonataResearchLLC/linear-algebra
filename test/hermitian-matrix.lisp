@@ -56,6 +56,7 @@
           (aref init i1 i0) #C(1  1)))))))
 
 (define-test make-hermitian-matrix
+  (:tag :hermitian-matrix :make-matrix)
   ;; A default Hermitian matrix
   (let ((matrix (linear-algebra:make-matrix
                  10 10
@@ -169,6 +170,7 @@
 
 ;;; Test the hermitian matrix predicate
 (define-test hermitian-matrix-predicate
+  (:tag :hermitian-matrix)
   (assert-true
    (linear-algebra:hermitian-matrix-p
     (linear-algebra:make-matrix
@@ -179,11 +181,13 @@
 
 ;;; Test the hermitian matrix bounds
 (define-test hermitian-matrix-in-bounds-p
-  (test-matrix-in-bounds-p 'linear-algebra:hermitian-matrix
-                           (hermitian-array)))
+  (:tag :hermitian-matrix :matrix-in-bounds-p)
+  (test-matrix-in-bounds-p
+   'linear-algebra:hermitian-matrix (hermitian-array)))
 
 ;;; Test the hermitian matrix element type
 (define-test hermitian-matrix-element-type
+  (:tag :hermitian-matrix :matrix-element-type)
   (let ((numeric-types
          '(integer fixnum
            short-float single-float double-float long-float)))
@@ -203,6 +207,7 @@
 
 ;;; Test the hermitian matrix dimensions
 (define-test hermitian-matrix-dimensions
+  (:tag :hermitian-matrix :matrix-dimensions)
   (assert-equal
    (list 10 10)
    (linear-algebra:matrix-dimensions
@@ -212,6 +217,7 @@
 
 ;;; Test the hermitian matrix row dimension
 (define-test hermitian-matrix-row-dimension
+  (:tag :hermitian-matrix :matrix-row-dimension)
   (assert-eq
    10
    (linear-algebra:matrix-row-dimension
@@ -221,6 +227,7 @@
 
 ;;; Test the hermitian matrix column dimension
 (define-test hermitian-matrix-column-dimension
+  (:tag :hermitian-matrix :matrix-column-dimension)
   (assert-eq
    10
    (linear-algebra:matrix-column-dimension
@@ -230,6 +237,7 @@
 
 ;;; Reference hermitian matrix elements
 (define-test hermitian-matrix-mref
+  (:tag :hermitian-matrix :mref)
   (let* ((initial-contents
           '((#C(1  0) #C(1  2) #C(1  3) #C(1  4) #C(1 5))
             (#C(1 -2) #C(2  0) #C(2  3) #C(2  4) #C(2 5))
@@ -278,6 +286,7 @@
 
 ;;; Set hermitian matrix elements
 (define-test hermitian-matrix-setf-mref
+  (:tag :hermitian-matrix :setf-mref)
   (let* ((rows 5) (columns 5)
          (rend (1- rows)) (cend (1- columns))
          (rowi (random-interior-index rows))
@@ -302,20 +311,22 @@
       (setf (linear-algebra:mref matrix rowi coli) val4)
       (assert-rational-equal val1 (linear-algebra:mref matrix 0 0))
       (assert-rational-equal val2 (linear-algebra:mref matrix 0 cend))
-      (assert-rational-equal val2 (conjugate
-                                   (linear-algebra:mref matrix rend 0)))
+      (assert-rational-equal
+       val2 (conjugate (linear-algebra:mref matrix rend 0)))
       (assert-rational-equal val3 (linear-algebra:mref matrix rend cend))
       (assert-rational-equal val4 (linear-algebra:mref matrix rowi coli))
-      (assert-rational-equal val4 (conjugate
-                                   (linear-algebra:mref matrix coli rowi))))))
+      (assert-rational-equal
+       val4 (conjugate (linear-algebra:mref matrix coli rowi))))))
 
 ;;; Copy the Hermitian matrix
 (define-test copy-hermitian-matrix
-  (let ((matrix (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type 'linear-algebra:hermitian-matrix
-                 :initial-contents
-                 (hermitian-array 0 5))))
+  (:tag :hermitian-matrix :copy-matrix)
+  (let ((matrix
+         (linear-algebra:make-matrix
+          5 5
+          :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          (hermitian-array 0 5))))
     (assert-true
      (linear-algebra:hermitian-matrix-p
       (linear-algebra:copy-matrix matrix)))
@@ -330,6 +341,7 @@
 
 ;;; Test the submatrix of a Hermitian matrix
 (define-test hermitian-submatrix
+  (:tag :hermitian-matrix :submatrix)
   (let ((matrix (linear-algebra:make-matrix
                  10 10
                  :matrix-type 'linear-algebra:hermitian-matrix
@@ -391,6 +403,7 @@
 
 ;;; Set the submatrix of a Hermitian matrix
 (define-test setf-hermitian-submatrix
+  (:tag :hermitian-matrix :setf-submatrix)
   (macrolet ((setf-submatrix (size submatrix-form data-form)
                (let ((matrix (second submatrix-form)))
                  `(let ((,matrix (unit-hermitian-matrix ,size)))
@@ -507,6 +520,7 @@
 
 ;;; Replace all or part of a Hermitian matrix
 (define-test hermitian-matrix-replace
+  (:tag :hermitian-matrix :replace-matrix)
   ;; Replace the entire matrix
   (assert-rational-equal
    (hermitian-matrix)
@@ -674,6 +688,7 @@
 
 ;;; Validate a range for a hermitian matrix.
 (define-test hermitian-matrix-validated-range
+  (:tag :hermitian-matrix :matrix-validated-range)
   (let ((matrix (unit-hermitian-matrix 10))
         (row1 (random 10))
         (row2 (random 10))
@@ -714,5 +729,4 @@
     (assert-error
      'error
      (linear-algebra:matrix-validated-range
-      matrix
-      9 9 1 1))))
+      matrix 9 9 1 1))))
