@@ -423,15 +423,18 @@
       col-data #'+ col-data row-data col-data))))
 
 ;;; Apply rotation
+
 (define-test apply-rotation-data-vector
   (:tag :data-vector :apply-rotation)
   ;; Float
-  (let ((vec1 (linear-algebra:make-vector
-               5 :element-type 'single-float
-               :initial-contents '(3.0 5.0 7.0 11.0 13.0)))
-        (vec2 (linear-algebra:make-vector
-               5 :element-type 'single-float
-               :initial-contents '(4.0 9.0 16.0 25.0 36.0))))
+  (let ((vec1
+         (linear-algebra:make-vector
+          5 :element-type 'single-float
+          :initial-contents '(3.0 5.0 7.0 11.0 13.0)))
+        (vec2
+         (linear-algebra:make-vector
+          5 :element-type 'single-float
+          :initial-contents '(4.0 9.0 16.0 25.0 36.0))))
     ;; Position 0
     (multiple-value-bind (cc ss rr)
         (linear-algebra-kernel:givens-rotation
@@ -475,7 +478,8 @@
         (assert-float-equal
          #(4.8694763 10.251528 17.46421 27.313 38.186943) rvec1)
         (assert-float-equal
-         #(-1.1349905 -0.95192766 0.036612988 9.536743e-7 2.599495) rvec2)))
+         #(-1.1349905 -0.95192766 0.036612988 9.536743e-7 2.599495)
+         rvec2)))
     ;; Position 4
     (multiple-value-bind (cc ss rr)
         (linear-algebra-kernel:givens-rotation
@@ -504,7 +508,8 @@
         (assert-float-equal
          #(#C(5.888673 9.814455) #C(19.85367 25.27784)) rvec1)
         (assert-float-equal
-         #(#C(-4.7683716e-7 -4.7683716e-7) #C(3.326425 2.6071978)) rvec2)))
+         #(#C(-4.7683716e-7 -4.7683716e-7) #C(3.326425 2.6071978))
+         rvec2)))
     ;; Position 1
     (multiple-value-bind (cc ss rr)
         (linear-algebra-kernel:givens-rotation
@@ -520,6 +525,7 @@
          #(#C(-1.1497688 -0.9510431) #C(0.0 0.0)) rvec2)))))
 
 ;;; Destructively apply rotation
+
 (define-test napply-rotation-data-vector
   (:tag :data-vector :napply-rotation)
   ;; Float, position 0
@@ -657,6 +663,8 @@
          #(#C(4.8474817 10.2603855) #C(17.405037 27.350775)) vec1)
         (assert-float-equal
          #(#C(-1.1497688 -0.9510431) #C(0.0 0.0)) vec2)))))
+
+;;; Fundamental operations
 
 (define-test sumsq-data-vector
   (:tag :data-vector :sumsq)
@@ -1248,14 +1256,17 @@
              (linear-algebra:row-vector #C(1 1) #C(2 1) #C(3 1))
              (linear-algebra:column-vector #C(1 2) #C(2 2) #C(3 2))))
   (assert-float-equal
-   #C(8.0 18.0) (linear-algebra:product
-                 (linear-algebra:row-vector #C(1.0 1.0) #C(2.0 1.0) #C(3.0 1.0))
-                 (linear-algebra:column-vector #C(1.0 2.0) #C(2.0 2.0) #C(3.0 2.0))))
+   #C(8.0 18.0)
+   (linear-algebra:product
+    (linear-algebra:row-vector #C(1.0 1.0) #C(2.0 1.0) #C(3.0 1.0))
+    (linear-algebra:column-vector #C(1.0 2.0) #C(2.0 2.0) #C(3.0 2.0))))
   (assert-float-equal
    #C(8.0d0 18.0d0)
    (linear-algebra:product
-    (linear-algebra:row-vector #C(1.0d0 1.0d0) #C(2.0d0 1.0d0) #C(3.0d0 1.0d0))
-    (linear-algebra:column-vector #C(1.0d0 2.0d0) #C(2.0d0 2.0d0) #C(3.0d0 2.0d0))))
+    (linear-algebra:row-vector
+     #C(1.0d0 1.0d0) #C(2.0d0 1.0d0) #C(3.0d0 1.0d0))
+    (linear-algebra:column-vector
+     #C(1.0d0 2.0d0) #C(2.0d0 2.0d0) #C(3.0d0 2.0d0))))
   ;; Complex conjugate
   (assert-rational-equal
    #C(20 6)
@@ -1272,19 +1283,29 @@
   (assert-float-equal
    #C(20.0d0 6.0d0)
    (linear-algebra:product
-    (linear-algebra:row-vector #C(1.0d0 1.0d0) #C(2.0d0 1.0d0) #C(3.0d0 1.0d0))
-    (linear-algebra:column-vector #C(1.0d0 2.0d0) #C(2.0d0 2.0d0) #C(3.0d0 2.0d0))
+    (linear-algebra:row-vector
+     #C(1.0d0 1.0d0) #C(2.0d0 1.0d0) #C(3.0d0 1.0d0))
+    (linear-algebra:column-vector
+     #C(1.0d0 2.0d0) #C(2.0d0 2.0d0) #C(3.0d0 2.0d0))
     :conjugate t))
   ;; Errors
-  (assert-error 'error (linear-algebra:product
-                        (linear-algebra:row-vector 1 2 3)
-                        (linear-algebra:column-vector 1 2 3 4)))
-  (assert-error 'error (linear-algebra:product
-                        (linear-algebra:column-vector 1 2 3)
-                        (linear-algebra:column-vector 1 2 3)))
-  (assert-error 'error (linear-algebra:product
-                        (linear-algebra:row-vector 1 2 3)
-                        (linear-algebra:row-vector 1 2 3)))
-  (assert-error 'error (linear-algebra:product
-                        (linear-algebra:column-vector 1 2 3)
-                        (linear-algebra:row-vector 1 2 3))))
+  (assert-error
+   'error
+   (linear-algebra:product
+    (linear-algebra:row-vector 1 2 3)
+    (linear-algebra:column-vector 1 2 3 4)))
+  (assert-error
+   'error
+   (linear-algebra:product
+    (linear-algebra:column-vector 1 2 3)
+    (linear-algebra:column-vector 1 2 3)))
+  (assert-error
+   'error
+   (linear-algebra:product
+    (linear-algebra:row-vector 1 2 3)
+    (linear-algebra:row-vector 1 2 3)))
+  (assert-error
+   'error
+   (linear-algebra:product
+    (linear-algebra:column-vector 1 2 3)
+    (linear-algebra:row-vector 1 2 3))))
