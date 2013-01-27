@@ -36,6 +36,7 @@
 (in-package :linear-algebra-test)
 
 (define-test sumsq-list
+  (:tag :list :sumsq)
   ;; Real
   (multiple-value-bind (scale sumsq)
       (linear-algebra:sumsq
@@ -51,6 +52,7 @@
     (assert-float-equal #C(2.75 -1.125) sumsq)))
 
 (define-test sump-list
+  (:tag :list :sump)
   ;; Real
   (let ((data '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5)))
     (multiple-value-bind (scale sump)
@@ -76,6 +78,7 @@
 ;;; Taxicab norm
 
 (define-test %norm-1-list
+  (:tag :list :norm)
   (assert-rational-equal
    36 (linear-algebra::%norm
        '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5) 1))
@@ -98,6 +101,7 @@
 ;;; Euclidean norm
 
 (define-test %norm-2-list
+  (:tag :list :norm)
   (assert-float-equal
    12.083046
    (linear-algebra::%norm
@@ -122,6 +126,7 @@
 ;;; P-norm
 
 (define-test %norm-p-list
+  (:tag :list :norm)
   (let ((data '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
         (zdata '(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
                  #C(-2 3) #C(-3 1) #C(-1 0))))
@@ -138,6 +143,7 @@
 ;;; Infinity norm
 
 (define-test %norm-infinity-list
+  (:tag :list :norm)
   (assert-rational-equal
    6 (linear-algebra::%norm
       '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5)
@@ -160,12 +166,14 @@
 ;;; List transpose
 
 (define-test transpose-list
+  (:tag :list :transpose)
   (assert-float-equal
    '(1.0 2.0 3.0 4.0 5.0)
    (linear-algebra:transpose
     '(1.0 2.0 3.0 4.0 5.0))))
 
 (define-test ntranspose-list
+  (:tag :list :ntranspose)
   (let ((data (list 1.0 2.0 3.0 4.0 5.0)))
     (assert-equal
      data (linear-algebra:ntranspose data))))
@@ -173,6 +181,7 @@
 ;;; List permutation
 
 (define-test permute-list
+  (:tag :list :permute)
   (let ((list (list 1.1 2.2 3.3 4.4 5.5))
         (pmat (linear-algebra:make-matrix
                5 5 :matrix-type
@@ -191,6 +200,7 @@
      (linear-algebra:permute pmat list))))
 
 (define-test npermute-list
+  (:tag :list :npermute)
   (let ((list (list 1.1 2.2 3.3 4.4 5.5))
         (pmat
          (linear-algebra:make-matrix
@@ -245,6 +255,7 @@
 ;;; List scale
 
 (define-test scale-list
+  (:tag :list :scale)
   (assert-float-equal
    '(2.0 4.0 6.0 8.0 10.0)
    (linear-algebra:scale 2.0 '(1.0 2.0 3.0 4.0 5.0)))
@@ -262,6 +273,7 @@
     '(#C(1.0 1.0) #C(2.0 2.0) #C(3.0 3.0) #C(4.0 4.0) #C(5.0 5.0)))))
 
 (define-test nscale-list
+  (:tag :list :nscale)
   (let ((list (list 1.0 2.0 3.0 4.0 5.0)))
     (assert-eq list (linear-algebra:nscale 2.0 list))
     (assert-float-equal '(2.0 4.0 6.0 8.0 10.0) list))
@@ -286,6 +298,7 @@
 ;;; List addition
 
 (define-test add-list
+  (:tag :list :add)
   ;; Real
   (let ((list1 '(1.1 2.2 3.3 4.4))
         (list2 '(1.1 2.2 3.3 4.4)))
@@ -316,6 +329,7 @@
 ;;; Destructive list addition
 
 (define-test nadd-list
+  (:tag :list :nadd)
   ;; Real
   (let ((list1 (list 1.1 2.2 3.3 4.4))
         (list2 (list 1.1 2.2 3.3 4.4)))
@@ -348,6 +362,7 @@
 ;;; List subtraction
 
 (define-test subtract-list
+  (:tag :list :subtract)
   ;; Real
   (let ((list1 '(1.1 2.2 3.3 4.4))
         (list2 '(1.1 2.2 3.3 4.4)))
@@ -382,6 +397,7 @@
 ;;; Destructive list subtraction
 
 (define-test nsubtract-list
+  (:tag :list :nsubtract)
   ;; Real
   (let ((list1 (list 1.1 2.2 3.3 4.4))
         (list2 (list 1.1 2.2 3.3 4.4)))
@@ -415,6 +431,7 @@
 ;;; List dot product
 
 (define-test product-list
+  (:tag :list :product)
   ;; Real vectors
   (assert-rational-equal
    55 (linear-algebra:product '(1 2 3 4 5) '(1 2 3 4 5)))
