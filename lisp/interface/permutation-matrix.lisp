@@ -77,18 +77,23 @@ columns."
 ;;; FIXME : Use the LOOP.
 (defun %initialize-permutation-matrix-with-seq (matrix data size)
   (if (= size (length data))
-      (let ((contents (setf (contents matrix)
-                            (make-array size :element-type 'fixnum))))
+      (let ((contents
+             (setf
+              (contents matrix)
+              (make-array size :element-type 'fixnum))))
         ;; Fill contents, there should be no duplicates.
-        (dotimes (i0 size)
-          (if (= size (length (elt data i0)))
-              (setf (aref contents i0)
-                    (or (position 1 (elt data i0))
-                        (error "Invalid permutation data.")))
-              (error "Columns unequal in length.")))
+        (dotimes (row size)
+          (let ((data-row (elt data row)))
+            (if (= size (length data-row))
+                (let ((column (position 1 data-row :test #'=)))
+                  (if column
+                      (setf (aref contents row) column)
+                      (error "Invalid permutation data.")))
+                (error "Rows unequal in length."))))
         ;; FIXME : Find a better way to identify duplicates.
         ;; If duplicates, not a permutation matrix.
-        (unless (= size (length (remove-duplicates contents)))
+        (unless (= size (length
+                         (remove-duplicates contents :test #'=)))
           (error "Invalid permutation in data."))
         ;; Return the matrix
         matrix)
@@ -137,7 +142,8 @@ columns."
                  ((= 1 (aref data row column))))
                column))))
        ;; FIXME : Find a better way to identify duplicates.
-       (unless (= rows (length (remove-duplicates (contents matrix))))
+       (unless (= rows (length (remove-duplicates
+                                (contents matrix) :test #'=)))
          (error "Invalid permutation in data."))
        ;; Return the permutation matrix
        matrix))))
@@ -174,11 +180,8 @@ columns."
 (defmethod (setf mref) ((data (eql 1)) (matrix permutation-matrix)
                         (row integer) (column integer))
   "Swap rows of the permutation matrix."
-  (let* ((contents (contents matrix))
-         (swap (position column contents)))
-    (psetf
-     (aref contents swap) (aref contents row)
-     (aref contents row)  column)))
+  (let ((contents (contents matrix)))
+    (rotatef (aref contents row) (aref contents column))))
 
 (defmethod copy-matrix ((matrix permutation-matrix))
   "Return a copy of the permutation matrix."

@@ -36,6 +36,7 @@
 (in-package :linear-algebra-test)
 
 (define-test make-permutation-matrix
+  (:tag :matrix :permutation-matrix :make-matrix)
   ;; A default permutation matrix
   (let ((matrix
          (linear-algebra:make-matrix
@@ -135,6 +136,7 @@
 
 ;;; Test the permutation matrix predicate
  (define-test permutation-matrix-predicate
+   (:tag :matrix :permutation-matrix)
    (assert-true
     (linear-algebra:permutation-matrix-p
      (linear-algebra:make-matrix
@@ -144,10 +146,12 @@
 
 ;;; Test the permutation matrix bounds
 (define-test permutation-matrix-in-bounds-p
+  (:tag :matrix :permutation-matrix :matrix-in-bounds-p)
   (test-matrix-in-bounds-p 'linear-algebra:permutation-matrix))
 
 ;;; Test the permutation matrix element type
 (define-test permutation-matrix-element-type
+  (:tag :matrix :permutation-matrix :matrix-element-type)
   (assert-eq 'fixnum
              (linear-algebra:matrix-element-type
               (linear-algebra:make-matrix
@@ -164,18 +168,23 @@
 
 ;;; Test the permutation matrix dimensions
 (define-test permutation-matrix-dimensions
+  (:tag :matrix :permutation-matrix :matrix-dimensions)
   (test-matrix-dimensions 'linear-algebra:permutation-matrix 9 9))
 
 ;;; Test the permutation matrix row dimension
 (define-test permutation-matrix-row-dimension
+  (:tag :matrix :permutation-matrix :matrix-row-dimension)
   (test-matrix-row-dimension 'linear-algebra:permutation-matrix 9 9))
 
 ;;; Test the permutation matrix column dimension
 (define-test permutation-matrix-column-dimension
-  (test-matrix-column-dimension 'linear-algebra:permutation-matrix 9 9))
+  (:tag :matrix :permutation-matrix :matrix-column-dimension)
+  (test-matrix-column-dimension
+   'linear-algebra:permutation-matrix 9 9))
 
 ;;; Reference permutation matrix elements
 (define-test permutation-matrix-mref
+  (:tag :matrix :permutation-matrix :mref)
   (let ((pvec #(2 3 4 0 1))
         (matrix (linear-algebra:make-matrix
                  5 5
@@ -199,6 +208,7 @@
 
 ;;; Set permutation matrix elements
 (define-test permutation-matrix-setf-mref
+  (:tag :matrix :permutation-matrix :setf-mref)
   (let ((matrix (linear-algebra:make-matrix
                  5 5
                  :matrix-type
@@ -216,6 +226,7 @@
 
 ;;; Copy the permutation matrix
 (define-test copy-permutation-matrix
+  (:tag :matrix :permutation-matrix :copy-matrix)
   (let ((matrix (linear-algebra:make-matrix
                  5 5
                  :matrix-type 'linear-algebra:permutation-matrix
@@ -237,6 +248,7 @@
 
 ;;; Test the submatrix of a permutation matrix
 (define-test permutation-matrix-submatrix
+  (:tag :matrix :permutation-matrix :submatrix)
   (let ((matrix (linear-algebra:make-matrix
                  5 5
                  :matrix-type
@@ -285,6 +297,7 @@
      'error (linear-algebra:submatrix matrix 5 5 :end-column 3))))
 
 (define-test permutation-matrix-transpose
+  (:tag :matrix :permutation-matrix :transpose)
   (let ((matrix (linear-algebra:make-matrix
                  5 5
                  :matrix-type
@@ -301,6 +314,7 @@
       (linear-algebra:transpose matrix)))))
 
 (define-test permutation-matrix-%init-ntranspose
+  (:tag :matrix :permutation-matrix :ntranspose)
   (multiple-value-bind (row0 skip)
       (linear-algebra::%init-ntranspose #(4 3 2 0 1))
     (assert-eql 0 row0)
@@ -317,6 +331,7 @@
 ;;; FIXME : Expand to cover all permutations of #(0 1 2 3 4)
 
 (define-test permutation-matrix-ntranspose
+  (:tag :matrix :permutation-matrix :ntranspose)
   (let ((matrix
          (make-instance
           'linear-algebra:permutation-matrix
@@ -352,6 +367,6 @@
 
 ;;; Validate a range for a permutation matrix.
 (define-test permutation-matrix-validated-range
+  (:tag :matrix :permutation-matrix :matrix-validate-range)
   (test-matrix-validated-range
    'linear-algebra:permutation-matrix 10 10))
-
