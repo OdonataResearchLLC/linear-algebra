@@ -63,9 +63,8 @@
       ((eq class1 class2) class1)
       ((subtypep class1 class2) class2)
       ((subtypep class2 class1) class1)
-      (t (if default-class-p
-             (find-class default-class)
-             (error "No common or default class."))))))
+      (default-class-p (find-class default-class))
+      (t (error "No common or default class.")))))
 
 (defun common-array-element-type (array1 array2)
   "Return the array type common to both arrays."
