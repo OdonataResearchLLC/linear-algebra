@@ -936,3 +936,38 @@
     (assert-error
      'error
      (linear-algebra:npermute pmat matrix))))
+
+(define-test scale-hermitian-matrix
+  (:tag :hermitian-matrix :scale)
+  (assert-float-equal
+   #2A((#C(3.0   0.0) #C(3.0   6.0) #C(3.0   9.0) #C( 3.0 12.0))
+       (#C(3.0  -6.0) #C(6.0   0.0) #C(6.0   9.0) #C( 6.0 12.0))
+       (#C(3.0  -9.0) #C(6.0  -9.0) #C(9.0   0.0) #C( 9.0 12.0))
+       (#C(3.0 -12.0) #C(6.0 -12.0) #C(9.0 -12.0) #C(12.0  0.0)))
+   (linear-algebra:scale
+    3.0
+    (linear-algebra:make-matrix
+     4 4 :matrix-type 'linear-algebra:hermitian-matrix
+     :initial-contents
+     '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
+       (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
+       (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0  0.0) #C(3.0 4.0))
+       (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0)))))))
+
+(define-test nscale-hermitian-matrix
+  (:tag :hermitian-matrix :nscale)
+  (let ((matrix
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
+            (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
+            (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0  0.0) #C(3.0 4.0))
+            (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0))))))
+    (assert-eq matrix (linear-algebra:nscale 3.0 matrix))
+    (assert-float-equal
+     #2A((#C(3.0   0.0) #C(3.0   6.0) #C(3.0   9.0) #C( 3.0 12.0))
+         (#C(3.0  -6.0) #C(6.0   0.0) #C(6.0   9.0) #C( 6.0 12.0))
+         (#C(3.0  -9.0) #C(6.0  -9.0) #C(9.0   0.0) #C( 9.0 12.0))
+         (#C(3.0 -12.0) #C(6.0 -12.0) #C(9.0 -12.0) #C(12.0  0.0)))
+     matrix)))
