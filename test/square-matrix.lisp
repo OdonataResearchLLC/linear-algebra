@@ -1195,3 +1195,123 @@
          (3.1 3.2 3.3 3.4)
          (4.1 4.2 4.3 4.4))
      matrix1)))
+
+(define-test product-square-matrix
+  (:tag :square-matrix :product)
+  ;; Row vector - dense matrix
+  (assert-true
+   (typep
+    (linear-algebra:product
+     (linear-algebra:row-vector 1.0 2.0 3.0)
+     (unit-matrix 3 3 :matrix-type 'linear-algebra:square-matrix))
+    'linear-algebra:row-vector))
+  (assert-float-equal
+   #(6.0 12.0 18.0)
+   (linear-algebra:product
+    (linear-algebra:row-vector 1.0 2.0 3.0)
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:square-matrix
+     :initial-contents
+     #2A((1.0 2.0 3.0)
+         (1.0 2.0 3.0)
+         (1.0 2.0 3.0)))))
+  (assert-float-equal
+   #(12.599999 25.199999 37.8)
+   (linear-algebra:product
+    (linear-algebra:row-vector 1.0 2.0 3.0)
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:square-matrix
+     :initial-contents
+     #2A((1.0 2.0 3.0)
+         (1.0 2.0 3.0)
+         (1.0 2.0 3.0)))
+    :scalar 2.1))
+  (assert-error
+   'error
+   (linear-algebra:product
+    (linear-algebra:row-vector 1.0 2.0 3.0 4.0 5.0 6.0)
+    (linear-algebra:make-matrix
+     3 3 :initial-element 1.0
+     :matrix-type 'linear-algebra:square-matrix)))
+  ;; Dense matrix - column vector
+  (assert-true
+   (typep
+    (linear-algebra:product
+     (unit-matrix 3 3 :matrix-type 'linear-algebra:square-matrix)
+     (linear-algebra:column-vector 1.0 2.0 3.0))
+    'linear-algebra:column-vector))
+  (assert-float-equal
+   #(6.0 12.0 18.0)
+   (linear-algebra:product
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:square-matrix
+     :initial-contents
+     #2A((1.0 1.0 1.0)
+         (2.0 2.0 2.0)
+         (3.0 3.0 3.0)))
+    (linear-algebra:column-vector 1.0 2.0 3.0)))
+  (assert-float-equal
+   #(12.599999 25.199999 37.8)
+   (linear-algebra:product
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:square-matrix
+     :initial-contents
+     #2A((1.0 1.0 1.0)
+         (2.0 2.0 2.0)
+         (3.0 3.0 3.0)))
+    (linear-algebra:column-vector 1.0 2.0 3.0)
+    :scalar 2.1))
+  (assert-error
+   'error
+   (linear-algebra:product
+    (linear-algebra:make-matrix
+     3 3 :initial-element 1.0
+     :matrix-type 'linear-algebra:square-matrix)
+    (linear-algebra:column-vector 1.0 2.0 3.0 4.0 5.0 6.0)))
+  ;; Dense matrix - matrix
+  (assert-true
+   (typep
+    (linear-algebra:product
+     (unit-matrix 3 3 :matrix-type 'linear-algebra:square-matrix)
+     (unit-matrix 3 3 :matrix-type 'linear-algebra:square-matrix))
+    'linear-algebra:square-matrix))
+  (assert-float-equal
+   #2A(( 6.0  6.0  6.0)
+       (12.0 12.0 12.0)
+       (18.0 18.0 18.0))
+   (linear-algebra:product
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:square-matrix
+     :initial-contents
+     #2A((1.0 1.0 1.0)
+         (2.0 2.0 2.0)
+         (3.0 3.0 3.0)))
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:square-matrix
+     :initial-contents
+     #2A((1.0 1.0 1.0)
+         (2.0 2.0 2.0)
+         (3.0 3.0 3.0)))))
+  (assert-float-equal
+   #2A((12.599999 12.599999 12.599999)
+       (25.199999 25.199999 25.199999)
+       (37.8      37.8      37.8))
+   (linear-algebra:product
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:square-matrix
+     :initial-contents
+     #2A((1.0 1.0 1.0)
+         (2.0 2.0 2.0)
+         (3.0 3.0 3.0)))
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:square-matrix
+     :initial-contents
+     #2A((1.0 1.0 1.0)
+         (2.0 2.0 2.0)
+         (3.0 3.0 3.0)))
+    :scalar 2.1))
+  (assert-error
+   'error
+   (linear-algebra:product
+    (unit-matrix 3 3 :matrix-type 'linear-algebra:square-matrix)
+    (unit-matrix 4 4 :matrix-type 'linear-algebra:square-matrix))))
