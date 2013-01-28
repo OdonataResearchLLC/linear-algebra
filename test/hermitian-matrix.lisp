@@ -58,115 +58,126 @@
 (define-test make-hermitian-matrix
   (:tag :hermitian-matrix :make-matrix)
   ;; A default Hermitian matrix
-  (let ((matrix (linear-algebra:make-matrix
-                 10 10
-                 :matrix-type 'linear-algebra:hermitian-matrix)))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          10 10
+          :matrix-type 'linear-algebra:hermitian-matrix)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:hermitian-matrix))
     (assert-rational-equal
      (make-array '(10 10) :initial-element 0)
      matrix))
   ;; Specify the Hermitian matrix element type
-  (let* ((data '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0 3.0))
-                 (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0 3.0))
-                 (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0 0.0))))
-         (matrix (linear-algebra:make-matrix
-                  3 3
-                  :matrix-type 'linear-algebra:hermitian-matrix
-                  :element-type '(complex single-float)
-                  :initial-contents data)))
+  (let* ((data
+          '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0 3.0))
+            (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0 3.0))
+            (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0 0.0))))
+         (matrix
+          (linear-algebra:make-matrix
+           3 3 :matrix-type 'linear-algebra:hermitian-matrix
+           :element-type '(complex single-float)
+           :initial-contents data)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:hermitian-matrix))
-    (assert-eq (array-element-type
-                (linear-algebra::contents matrix))
-               (array-element-type
-                (make-array '(3 3) :element-type '(complex single-float)
-                            :initial-contents data)))
+    (assert-eq
+     (array-element-type
+      (linear-algebra::contents matrix))
+     (array-element-type
+      (make-array
+       '(3 3) :element-type '(complex single-float)
+       :initial-contents data)))
     (assert-float-equal
      (make-array '(3 3) :element-type '(complex single-float)
                  :initial-contents data)
      matrix))
   ;; Specify the Hermitian matrix contents - Nested list
-  (let* ((data '((#C(1  0) #C(1  2) #C(1  3) #C(1 4))
-                 (#C(1 -2) #C(2  0) #C(2  3) #C(2 4))
-                 (#C(1 -3) #C(2 -3) #C(3  0) #C(3 4))
-                 (#C(1 -4) #C(2 -4) #C(3 -4) #C(4 0))))
-         (matrix (linear-algebra:make-matrix
-                  4 4
-                  :matrix-type 'linear-algebra:hermitian-matrix
-                  :initial-contents data)))
+  (let* ((data
+          '((#C(1  0) #C(1  2) #C(1  3) #C(1 4))
+            (#C(1 -2) #C(2  0) #C(2  3) #C(2 4))
+            (#C(1 -3) #C(2 -3) #C(3  0) #C(3 4))
+            (#C(1 -4) #C(2 -4) #C(3 -4) #C(4 0))))
+         (matrix
+          (linear-algebra:make-matrix
+           4 4
+           :matrix-type 'linear-algebra:hermitian-matrix
+           :initial-contents data)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:hermitian-matrix))
     (assert-rational-equal
      (make-array '(4 4) :initial-contents data)
      matrix))
   ;; Specify the Hermitian matrix contents - Nested vector
-  (let* ((data #(#(#C(1  0) #C(1  2) #C(1  3) #C(1 4))
-                 #(#C(1 -2) #C(2  0) #C(2  3) #C(2 4))
-                 #(#C(1 -3) #C(2 -3) #C(3  0) #C(3 4))
-                 #(#C(1 -4) #C(2 -4) #C(3 -4) #C(4 0))))
-         (matrix (linear-algebra:make-matrix
-                  4 4
-                  :matrix-type 'linear-algebra:hermitian-matrix
-                  :initial-contents data)))
+  (let* ((data
+          #(#(#C(1  0) #C(1  2) #C(1  3) #C(1 4))
+            #(#C(1 -2) #C(2  0) #C(2  3) #C(2 4))
+            #(#C(1 -3) #C(2 -3) #C(3  0) #C(3 4))
+            #(#C(1 -4) #C(2 -4) #C(3 -4) #C(4 0))))
+         (matrix
+          (linear-algebra:make-matrix
+           4 4
+           :matrix-type 'linear-algebra:hermitian-matrix
+           :initial-contents data)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:hermitian-matrix))
     (assert-rational-equal
      (make-array '(4 4) :initial-contents data)
      matrix))
   ;; Specify the Hermitian matrix contents - 2D array
-  (let* ((data (make-array '(4 4) :initial-contents
-                           '((#C(1  0) #C(1  2) #C(1  3) #C(1 4))
-                             (#C(1 -2) #C(2  0) #C(2  3) #C(2 4))
-                             (#C(1 -3) #C(2 -3) #C(3  0) #C(3 4))
-                             (#C(1 -4) #C(2 -4) #C(3 -4) #C(4 0)))))
-         (matrix (linear-algebra:make-matrix
-                  4 4
-                  :matrix-type 'linear-algebra:hermitian-matrix
-                  :initial-contents data)))
+  (let* ((data
+          (make-array
+           '(4 4) :initial-contents
+           '((#C(1  0) #C(1  2) #C(1  3) #C(1 4))
+             (#C(1 -2) #C(2  0) #C(2  3) #C(2 4))
+             (#C(1 -3) #C(2 -3) #C(3  0) #C(3 4))
+             (#C(1 -4) #C(2 -4) #C(3 -4) #C(4 0)))))
+         (matrix
+          (linear-algebra:make-matrix
+           4 4
+           :matrix-type 'linear-algebra:hermitian-matrix
+           :initial-contents data)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:hermitian-matrix))
     (assert-rational-equal data matrix))
   ;; Errors
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 4 4
-                 :matrix-type 'linear-algebra:hermitian-matrix
-                 :initial-contents #C(1 2)))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 4 4
-                 :matrix-type 'linear-algebra:hermitian-matrix
-                 :initial-contents
-                 #3A(((#C(1 0) #C(1 2)) (#C(2 1) #C(2 2)))
-                     ((#C(3 1) #C(3 2)) (#C(4 1) #C(4 2)))
-                     ((#C(5 1) #C(5 2)) (#C(6 1) #C(6 2))))))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 3 4
-                 :matrix-type 'linear-algebra:hermitian-matrix
-                 :initial-contents
-                 (hermitian-array 0 4)))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 4 3
-                 :matrix-type 'linear-algebra:hermitian-matrix
-                 :initial-contents
-                 (hermitian-array 0 4)))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type 'linear-algebra:symmetric-matrix
-                 :initial-contents
-                 (coordinate-array 0 0 5 5)))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    4 4 :matrix-type 'linear-algebra:hermitian-matrix
+    :initial-contents #C(1 2)))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    4 4 :matrix-type 'linear-algebra:hermitian-matrix
+    :initial-contents
+    #3A(((#C(1 0) #C(1 2)) (#C(2 1) #C(2 2)))
+        ((#C(3 1) #C(3 2)) (#C(4 1) #C(4 2)))
+        ((#C(5 1) #C(5 2)) (#C(6 1) #C(6 2))))))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    3 4 :matrix-type 'linear-algebra:hermitian-matrix
+    :initial-contents
+    (hermitian-array 0 4)))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    4 3 :matrix-type 'linear-algebra:hermitian-matrix
+    :initial-contents
+    (hermitian-array 0 4)))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    5 5 :matrix-type 'linear-algebra:symmetric-matrix
+    :initial-contents
+    (coordinate-array 0 0 5 5)))
   ;; Specify initial element and initial contents
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 4 4
-                 :matrix-type 'linear-algebra:hermitian-matrix
-                 :initial-element 1.1
-                 :initial-contents
-                 (hermitian-array 0 4))))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    4 4 :matrix-type 'linear-algebra:hermitian-matrix
+    :initial-element 1.1
+    :initial-contents
+    (hermitian-array 0 4))))
 
 ;;; Test the hermitian matrix predicate
 (define-test hermitian-matrix-predicate
@@ -199,10 +210,13 @@
           2 2 :matrix-type 'linear-algebra:hermitian-matrix
           :element-type `(complex ,ntype)
           :initial-contents
-          (list (list (complex (coerce 1 ntype) (coerce  0 ntype))
-                      (complex (coerce 1 ntype) (coerce  1 ntype)))
-                (list (complex (coerce 1 ntype) (coerce -1 ntype))
-                      (complex (coerce 1 ntype) (coerce  0 ntype))))))
+          (list
+           (list
+            (complex (coerce 1 ntype) (coerce  0 ntype))
+            (complex (coerce 1 ntype) (coerce  1 ntype)))
+           (list
+            (complex (coerce 1 ntype) (coerce -1 ntype))
+            (complex (coerce 1 ntype) (coerce  0 ntype))))))
         (upgraded-array-element-type `(complex ,ntype)))))))
 
 ;;; Test the hermitian matrix dimensions
@@ -247,19 +261,22 @@
          (rows 5) (columns 5)
          (rend (1- rows)) (cend (1- columns))
          (rowi (random-interior-index rows))
-         (coli (do ((i0 (random-interior-index columns)
-                        (random-interior-index columns)))
-                   ((/= i0 rowi) i0)))
-         (data (make-array
-                (list rows columns)
-                :initial-contents
-                initial-contents))
-         (matrix (linear-algebra:make-matrix
-                  rows columns
-                  :matrix-type
-                  'linear-algebra:hermitian-matrix
-                  :initial-contents
-                  initial-contents)))
+         (coli
+          (do ((i0 (random-interior-index columns)
+                   (random-interior-index columns)))
+              ((/= i0 rowi) i0)))
+         (data
+          (make-array
+           (list rows columns)
+           :initial-contents
+           initial-contents))
+         (matrix
+          (linear-algebra:make-matrix
+           rows columns
+           :matrix-type
+           'linear-algebra:hermitian-matrix
+           :initial-contents
+           initial-contents)))
     (assert-rational-equal
      (aref data 0 0)
      (linear-algebra:mref matrix 0 0))
@@ -290,21 +307,24 @@
   (let* ((rows 5) (columns 5)
          (rend (1- rows)) (cend (1- columns))
          (rowi (random-interior-index rows))
-         (coli (do ((i0 (random-interior-index columns)
-                        (random-interior-index columns)))
-                   ((/= i0 rowi) i0)))
-         (matrix (linear-algebra:make-matrix
-                  rows columns
-                  :matrix-type 'linear-algebra:hermitian-matrix
-                  :initial-contents
-                  '((#C(1  0) #C(1  2) #C(1  3) #C(1  4) #C(1 5))
-                    (#C(1 -2) #C(2  0) #C(2  3) #C(2  4) #C(2 5))
-                    (#C(1 -3) #C(2 -3) #C(3  0) #C(3  4) #C(3 5))
-                    (#C(1 -4) #C(2 -4) #C(3 -4) #C(4  0) #C(4 5))
-                    (#C(1 -5) #C(2 -5) #C(3 -5) #C(4 -5) #C(5 0))))))
+         (coli
+          (do ((i0 (random-interior-index columns)
+                   (random-interior-index columns)))
+              ((/= i0 rowi) i0)))
+         (matrix
+          (linear-algebra:make-matrix
+           rows columns
+           :matrix-type 'linear-algebra:hermitian-matrix
+           :initial-contents
+           '((#C(1  0) #C(1  2) #C(1  3) #C(1  4) #C(1 5))
+             (#C(1 -2) #C(2  0) #C(2  3) #C(2  4) #C(2 5))
+             (#C(1 -3) #C(2 -3) #C(3  0) #C(3  4) #C(3 5))
+             (#C(1 -4) #C(2 -4) #C(3 -4) #C(4  0) #C(4 5))
+             (#C(1 -5) #C(2 -5) #C(3 -5) #C(4 -5) #C(5 0))))))
     (multiple-value-bind (val1 val2 val3 val4)
-        (values #C(6 0) (complex-random #C(5 5))
-                #C(7 0) (complex-random #C(5 5)))
+        (values
+         #C(6 0) (complex-random #C(5 5))
+         #C(7 0) (complex-random #C(5 5)))
       (setf (linear-algebra:mref matrix 0 0)       val1)
       (setf (linear-algebra:mref matrix 0 cend)    val2)
       (setf (linear-algebra:mref matrix rend cend) val3)
@@ -313,8 +333,10 @@
       (assert-rational-equal val2 (linear-algebra:mref matrix 0 cend))
       (assert-rational-equal
        val2 (conjugate (linear-algebra:mref matrix rend 0)))
-      (assert-rational-equal val3 (linear-algebra:mref matrix rend cend))
-      (assert-rational-equal val4 (linear-algebra:mref matrix rowi coli))
+      (assert-rational-equal
+       val3 (linear-algebra:mref matrix rend cend))
+      (assert-rational-equal
+       val4 (linear-algebra:mref matrix rowi coli))
       (assert-rational-equal
        val4 (conjugate (linear-algebra:mref matrix coli rowi))))))
 
@@ -333,23 +355,26 @@
     (assert-false
      (eq matrix (linear-algebra:copy-matrix matrix)))
     (assert-false
-     (eq (linear-algebra::contents matrix)
-         (linear-algebra::contents
-          (linear-algebra:copy-matrix matrix))))
+     (eq
+      (linear-algebra::contents matrix)
+      (linear-algebra::contents
+       (linear-algebra:copy-matrix matrix))))
     (assert-rational-equal
      matrix (linear-algebra:copy-matrix matrix))))
 
 ;;; Test the submatrix of a Hermitian matrix
 (define-test hermitian-submatrix
   (:tag :hermitian-matrix :submatrix)
-  (let ((matrix (linear-algebra:make-matrix
-                 10 10
-                 :matrix-type 'linear-algebra:hermitian-matrix
-                 :initial-contents (hermitian-array)))
-        (submat (linear-algebra:make-matrix
-                 10 10
-                 :matrix-type 'linear-algebra:dense-matrix
-                 :initial-contents (hermitian-array))))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          10 10
+          :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents (hermitian-array)))
+        (submat
+         (linear-algebra:make-matrix
+          10 10
+          :matrix-type 'linear-algebra:dense-matrix
+          :initial-contents (hermitian-array))))
     ;; The entire matrix
     (assert-rational-equal
      (hermitian-array)
@@ -365,20 +390,23 @@
       matrix 3 3 :end-row 5 :end-column 5))
     ;; Submatrix is a general matrix
     (assert-true
-     (typep (linear-algebra:submatrix matrix 1 2)
-            'linear-algebra:dense-matrix))
+     (typep
+      (linear-algebra:submatrix matrix 1 2)
+      'linear-algebra:dense-matrix))
     (assert-rational-equal
      (linear-algebra:submatrix submat 1 2)
      (linear-algebra:submatrix matrix 1 2))
     (assert-true
-     (typep (linear-algebra:submatrix matrix 1 1 :end-row 5)
-            'linear-algebra:dense-matrix))
+     (typep
+      (linear-algebra:submatrix matrix 1 1 :end-row 5)
+      'linear-algebra:dense-matrix))
     (assert-rational-equal
      (linear-algebra:submatrix submat 1 1 :end-row 5)
      (linear-algebra:submatrix matrix 1 1 :end-row 5))
     (assert-true
-     (typep (linear-algebra:submatrix matrix 1 1 :end-column 8)
-            'linear-algebra:dense-matrix))
+     (typep
+      (linear-algebra:submatrix matrix 1 1 :end-column 8)
+      'linear-algebra:dense-matrix))
     (assert-rational-equal
      (linear-algebra:submatrix submat 1 1 :end-column 8)
      (linear-algebra:submatrix matrix 1 1 :end-column 8))
@@ -420,15 +448,17 @@
               (#C(1 -1) #C(1 -1) #C(1 -1) #C(1 -1) #C(1 0))))))
       (assert-rational-equal
        array-ul
-       (setf-submatrix 5
-                       (linear-algebra:submatrix matrix 0 0)
-                       (hermitian-matrix 0 3)))
+       (setf-submatrix
+        5
+        (linear-algebra:submatrix matrix 0 0)
+        (hermitian-matrix 0 3)))
       (assert-rational-equal
        array-ul
-       (setf-submatrix 5
-                       (linear-algebra:submatrix
-                        matrix 0 0 :end-row 3 :end-column 3)
-                       (hermitian-matrix))))
+       (setf-submatrix
+        5
+        (linear-algebra:submatrix
+         matrix 0 0 :end-row 3 :end-column 3)
+        (hermitian-matrix))))
     ;; Lower right submatrix
     (assert-rational-equal
      (make-array
@@ -438,9 +468,10 @@
         (#C(1 -1) #C(1 -1) #C(1  0) #C(2  1) #C(3 1))
         (#C(1 -1) #C(1 -1) #C(2 -1) #C(2  0) #C(3 2))
         (#C(1 -1) #C(1 -1) #C(3 -1) #C(3 -2) #C(3 0))))
-     (setf-submatrix 5
-                     (linear-algebra:submatrix matrix 2 2)
-                     (hermitian-matrix)))
+     (setf-submatrix
+      5
+      (linear-algebra:submatrix matrix 2 2)
+      (hermitian-matrix)))
     ;; Middle submatrix
     (let ((array-mid
            (make-array
@@ -452,15 +483,17 @@
               (#C(1 -1) #C(1 -1) #C(1 -1) #C(1 -1) #C(1 0))))))
       (assert-rational-equal
        array-mid
-       (setf-submatrix 5
-                       (linear-algebra:submatrix matrix 1 1)
-                       (hermitian-matrix 1 4)))
+       (setf-submatrix
+        5
+        (linear-algebra:submatrix matrix 1 1)
+        (hermitian-matrix 1 4)))
       (assert-rational-equal
        array-mid
-       (setf-submatrix 5
-                       (linear-algebra:submatrix
-                        matrix 1 1 :end-row 4 :end-column 4)
-                       (hermitian-matrix 1))))
+       (setf-submatrix
+        5
+        (linear-algebra:submatrix
+         matrix 1 1 :end-row 4 :end-column 4)
+        (hermitian-matrix 1))))
     ;; Off diagonal submatrix
     (let ((array-off
            (make-array
@@ -470,11 +503,12 @@
               (#C(1 -1) #C(1 -1) #C(1  0) #C(1  1) #C(1 1))
               (#C(1 -1) #C(2 -1) #C(1 -1) #C(1  0) #C(1 1))
               (#C(1 -2) #C(2 -2) #C(1 -1) #C(1 -1) #C(1 0)))))
-          (submatrix (linear-algebra:make-matrix
-                      3 3 :initial-contents
-                      '((#C(1 1) #C(1 2) #C(1 3))
-                        (#C(2 1) #C(2 2) #C(2 3))
-                        (#C(3 1) #C(3 2) #C(3 3))))))
+          (submatrix
+           (linear-algebra:make-matrix
+            3 3 :initial-contents
+            '((#C(1 1) #C(1 2) #C(1 3))
+              (#C(2 1) #C(2 2) #C(2 3))
+              (#C(3 1) #C(3 2) #C(3 3))))))
       (assert-rational-equal
        array-off
        (setf-submatrix
@@ -494,11 +528,12 @@
               (#C(1 -1) #C(1 -1) #C(1  0) #C(1  1) #C(1 1))
               (#C(1 -1) #C(1 -2) #C(1 -1) #C(1  0) #C(1 1))
               (#C(2 -1) #C(2 -2) #C(1 -1) #C(1 -1) #C(1 0)))))
-          (submatrix (linear-algebra:make-matrix
-                      3 3 :initial-contents
-                      '((#C(1 -1) #C(1 -2) #C(1 -3))
-                        (#C(2 -1) #C(2 -2) #C(2 -3))
-                        (#C(3 -1) #C(3 -2) #C(3 -3))))))
+          (submatrix
+           (linear-algebra:make-matrix
+            3 3 :initial-contents
+            '((#C(1 -1) #C(1 -2) #C(1 -3))
+              (#C(2 -1) #C(2 -2) #C(2 -3))
+              (#C(3 -1) #C(3 -2) #C(3 -3))))))
       (assert-rational-equal
        array-off
        (setf-submatrix
@@ -514,9 +549,10 @@
   ;; Non-Hermitian subsets
   (assert-error
    'error
-   (setf (linear-algebra:submatrix
-          (unit-hermitian-matrix 10) 0 1)
-         (unit-matrix 5 3))))
+   (setf
+    (linear-algebra:submatrix
+     (unit-hermitian-matrix 10) 0 1)
+    (unit-matrix 5 3))))
 
 ;;; Replace all or part of a Hermitian matrix
 (define-test hermitian-matrix-replace
@@ -630,16 +666,18 @@
             (#C(1 -1) #C(1 -1) #C(1  0) #C(1  1) #C(1 1))
             (#C(1 -1) #C(2 -1) #C(1 -1) #C(1  0) #C(1 1))
             (#C(1 -2) #C(2 -2) #C(1 -1) #C(1 -1) #C(1 0)))))
-        (submatrix1 (linear-algebra:make-matrix
-                     2 2 :initial-contents
-                     '((#C(1 1) #C(1 2))
-                       (#C(2 1) #C(2 2)))))
-        (submatrix2 (linear-algebra:make-matrix
-                     4 4 :initial-contents
-                     '((#C(1 1) #C(1 2) #C(1 3) #C(1 4))
-                       (#C(2 1) #C(2 2) #C(2 3) #C(2 4))
-                       (#C(3 1) #C(3 2) #C(3 3) #C(3 4))
-                       (#C(4 1) #C(4 2) #C(4 3) #C(4 4))))))
+        (submatrix1
+         (linear-algebra:make-matrix
+          2 2 :initial-contents
+          '((#C(1 1) #C(1 2))
+            (#C(2 1) #C(2 2)))))
+        (submatrix2
+         (linear-algebra:make-matrix
+          4 4 :initial-contents
+          '((#C(1 1) #C(1 2) #C(1 3) #C(1 4))
+            (#C(2 1) #C(2 2) #C(2 3) #C(2 4))
+            (#C(3 1) #C(3 2) #C(3 3) #C(3 4))
+            (#C(4 1) #C(4 2) #C(4 3) #C(4 4))))))
     (assert-rational-equal
      array-off
      (linear-algebra:replace-matrix
@@ -663,11 +701,12 @@
             (#C(1 -1) #C(1 -1) #C(1  0) #C(1  1) #C(1 1))
             (#C(1 -1) #C(2 -1) #C(1 -1) #C(1  0) #C(1 1))
             (#C(1 -2) #C(2 -2) #C(1 -1) #C(1 -1) #C(1 0)))))
-        (submatrix (linear-algebra:make-matrix
-                    3 3 :initial-contents
-                    '((#C(1 1) #C(1 2) #C(1 3))
-                      (#C(2 1) #C(2 2) #C(2 3))
-                      (#C(3 1) #C(3 2) #C(3 3))))))
+        (submatrix
+         (linear-algebra:make-matrix
+          3 3 :initial-contents
+          '((#C(1 1) #C(1 2) #C(1 3))
+            (#C(2 1) #C(2 2) #C(2 3))
+            (#C(3 1) #C(3 2) #C(3 3))))))
     (assert-rational-equal
      array-off
      (linear-algebra:replace-matrix
@@ -731,3 +770,34 @@
      'error
      (linear-algebra:matrix-validated-range
       matrix 9 9 1 1))))
+
+(define-test sumsq-hermitian-matrix
+  (:tag :hermitian-matrix :sumsq)
+  (multiple-value-bind (scale sumsq)
+      (linear-algebra:sumsq
+       (linear-algebra:make-matrix
+        5 5 :matrix-type 'linear-algebra:hermitian-matrix
+        :initial-contents
+        '((#C(1  0) #C(1  2) #C(1  3) #C(1  4) #C(1 5))
+          (#C(1 -2) #C(2  0) #C(2  3) #C(2  4) #C(2 5))
+          (#C(1 -3) #C(2 -3) #C(3  0) #C(3  4) #C(3 5))
+          (#C(1 -4) #C(2 -4) #C(3 -4) #C(4  0) #C(4 5))
+          (#C(1 -5) #C(2 -5) #C(3 -5) #C(4 -5) #C(5 0)))))
+    (assert-float-equal 6.4031243 scale)
+    (assert-float-equal 12.073173 sumsq)))
+
+(define-test sump-hermitian-matrix
+  (:tag :hermitian-matrix :sump)
+  (multiple-value-bind (scale sump)
+      (linear-algebra:sump
+       (linear-algebra:make-matrix
+        5 5 :matrix-type 'linear-algebra:hermitian-matrix
+        :initial-contents
+        '((#C(1  0) #C(1  2) #C(1  3) #C(1  4) #C(1 5))
+          (#C(1 -2) #C(2  0) #C(2  3) #C(2  4) #C(2 5))
+          (#C(1 -3) #C(2 -3) #C(3  0) #C(3  4) #C(3 5))
+          (#C(1 -4) #C(2 -4) #C(3 -4) #C(4  0) #C(4 5))
+          (#C(1 -5) #C(2 -5) #C(3 -5) #C(4 -5) #C(5 0))))
+       3.5)
+    (assert-float-equal 6.4031243 scale)
+    (assert-float-equal #C(0.27959093 1.5426422) sump)))
