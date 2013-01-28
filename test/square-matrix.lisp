@@ -846,3 +846,37 @@
          (2.0 2.1 2.2 2.3 2.4)
          (4.0 4.1 4.2 4.3 4.4))
      matrix)))
+
+(define-test scale-square-matrix
+  (:tag :square-matrix :scale)
+  (assert-float-equal
+   #2A(( 3.3  3.6  3.9  4.2)
+       ( 6.3  6.6  6.9  7.2)
+       ( 9.3  9.6  9.9 10.2)
+       (12.3 12.6 12.9 13.2))
+   (linear-algebra:scale
+    3.0 (linear-algebra:make-matrix
+         4 4 :matrix-type 'linear-algebra:square-matrix
+         :initial-contents
+         #2A((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4))))))
+
+(define-test nscale-square-matrix
+  (:tag :square-matrix :nscale)
+  (let ((matrix
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4)))))
+    (assert-eq matrix (linear-algebra:nscale 3.0 matrix))
+    (assert-float-equal
+     #2A(( 3.3  3.6  3.9  4.2)
+         ( 6.3  6.6  6.9  7.2)
+         ( 9.3  9.6  9.9 10.2)
+         (12.3 12.6 12.9 13.2))
+     matrix)))
