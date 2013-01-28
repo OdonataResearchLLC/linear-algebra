@@ -706,8 +706,9 @@
      (linear-algebra:matrix-validated-range
       matrix row1 (min col1 col2) nil (max col1 col2)))
     (assert-equal
-     (values (min row1 row2) (min col1 col2)
-             (max row1 row2) (max col1 col2))
+     (values
+      (min row1 row2) (min col1 col2)
+      (max row1 row2) (max col1 col2))
      (linear-algebra:matrix-validated-range
       matrix
       (min row1 row2) (min col1 col2)
