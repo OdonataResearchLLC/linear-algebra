@@ -826,3 +826,43 @@
     (assert-error
      'error
      (linear-algebra:norm matrix :measure :unknown))))
+
+(define-test transpose-hermitian-matrix
+  (:tag :hermitian-matrix :transpose)
+  (let ((matrix
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
+            (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
+            (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0  0.0) #C(3.0 4.0))
+            (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0)))))
+        (transpose
+         #2A((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
+             (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
+             (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0  0.0) #C(3.0 4.0))
+             (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0)))))
+    (assert-true
+     (typep
+      (linear-algebra:transpose matrix)
+      'linear-algebra:hermitian-matrix))
+    (assert-float-equal
+     transpose (linear-algebra:transpose matrix))))
+
+(define-test ntranspose-hermitian-matrix
+  (:tag :hermitian-matrix :ntranspose)
+  (let ((matrix
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
+            (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
+            (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0  0.0) #C(3.0 4.0))
+            (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0)))))
+        (transpose
+         #2A((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
+             (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
+             (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0  0.0) #C(3.0 4.0))
+             (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0)))))
+    (assert-eq matrix (linear-algebra:ntranspose matrix))
+    (assert-float-equal transpose matrix)))
