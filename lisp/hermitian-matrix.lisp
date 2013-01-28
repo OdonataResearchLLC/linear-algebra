@@ -368,3 +368,41 @@ matrix2."
   "The destructive transpose of a Hermitian matrix is itself."
   (declare (ignore conjugate))
   matrix)
+
+(defmethod permute ((matrix hermitian-matrix)
+                    (permutation permutation-matrix))
+  (if (every
+       #'= (matrix-dimensions matrix) (matrix-dimensions permutation))
+      (make-instance
+       'square-matrix
+       :contents
+       (right-permute-array (contents matrix) (contents permutation)))
+      (error
+       "Dense matrix~A and permutation matrix~A sizes incompatible."
+       (matrix-dimensions matrix)
+       (matrix-dimensions permutation))))
+
+(defmethod permute ((permutation permutation-matrix)
+                    (matrix hermitian-matrix))
+  (if (every
+       #'= (matrix-dimensions permutation) (matrix-dimensions matrix))
+      (make-instance
+       'square-matrix
+       :contents
+       (left-permute-array (contents permutation) (contents matrix)))
+      (error
+       "Permutation matrix~A and dense matrix~A sizes incompatible."
+       (matrix-dimensions matrix)
+       (matrix-dimensions permutation))))
+
+(defmethod npermute ((matrix hermitian-matrix)
+                     (permutation permutation-matrix))
+  "Destructively permute the array."
+  (error "Permutation of a ~A matrix results in a square matrix."
+         (class-name (class-of matrix))))
+
+(defmethod npermute ((permutation permutation-matrix)
+                     (matrix hermitian-matrix))
+  "Destructively permute the array."
+  (error "Permutation of a ~A matrix results in a square matrix."
+         (class-name (class-of matrix))))
