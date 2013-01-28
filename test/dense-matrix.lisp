@@ -661,13 +661,14 @@
 
 (define-test norm-dense-matrix
   (:tag :dense-matrix :norm)
-  (let ((matrix (linear-algebra:make-matrix
-                 5 4 :initial-contents
-                 #2A((1.1 1.2 1.3 1.4)
-                     (2.1 2.2 2.3 2.4)
-                     (3.1 3.2 3.3 3.4)
-                     (4.1 4.2 4.3 4.4)
-                     (5.1 5.2 5.3 5.4)))))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          5 4 :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4)
+              (5.1 5.2 5.3 5.4)))))
     (assert-float-equal
      17.0 (linear-algebra:norm matrix))
     (assert-float-equal
@@ -684,91 +685,51 @@
 
 (define-test transpose-dense-matrix
   (:tag :dense-matrix :transpose)
-  (let ((matrix (linear-algebra:make-matrix
-                 5 4 :initial-contents
-                 #2A((1.1 1.2 1.3 1.4)
-                     (2.1 2.2 2.3 2.4)
-                     (3.1 3.2 3.3 3.4)
-                     (4.1 4.2 4.3 4.4)
-                     (5.1 5.2 5.3 5.4))))
-        (transpose #2A((1.1 2.1 3.1 4.1 5.1)
-                       (1.2 2.2 3.2 4.2 5.2)
-                       (1.3 2.3 3.3 4.3 5.3)
-                       (1.4 2.4 3.4 4.4 5.4))))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          5 4 :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4)
+              (5.1 5.2 5.3 5.4))))
+        (transpose
+         #2A((1.1 2.1 3.1 4.1 5.1)
+             (1.2 2.2 3.2 4.2 5.2)
+             (1.3 2.3 3.3 4.3 5.3)
+             (1.4 2.4 3.4 4.4 5.4))))
     (assert-true
-     (typep (linear-algebra:transpose matrix)
-            'linear-algebra:dense-matrix))
+     (typep
+      (linear-algebra:transpose matrix)
+      'linear-algebra:dense-matrix))
     (assert-float-equal
-     transpose (linear-algebra:transpose matrix)))
-  (let ((matrix (linear-algebra:make-matrix
-                 5 2 :initial-contents
-                 #2A((#C(1.1 1.2) #C(1.3 1.4))
-                     (#C(2.1 2.2) #C(2.3 2.4))
-                     (#C(3.1 3.2) #C(3.3 3.4))
-                     (#C(4.1 4.2) #C(4.3 4.4))
-                     (#C(5.1 5.2) #C(5.3 5.4)))))
-        (transpose #2A((#C(1.1 1.2) #C(2.1 2.2) #C(3.1 3.2) #C(4.1 4.2) #C(5.1 5.2))
-                       (#C(1.3 1.4) #C(2.3 2.4) #C(3.3 3.4) #C(4.3 4.4) #C(5.3 5.4)))))
-    (assert-true
-     (typep (linear-algebra:transpose matrix)
-            'linear-algebra:dense-matrix)
-     (assert-float-equal
-      transpose (linear-algebra:transpose matrix))))
-  (let ((matrix (linear-algebra:make-matrix
-                 5 2 :initial-contents
-                 #2A((#C(1.1 1.2) #C(1.3 1.4))
-                     (#C(2.1 2.2) #C(2.3 2.4))
-                     (#C(3.1 3.2) #C(3.3 3.4))
-                     (#C(4.1 4.2) #C(4.3 4.4))
-                     (#C(5.1 5.2) #C(5.3 5.4)))))
-        (transpose #2A((#C(1.1 -1.2) #C(2.1 -2.2) #C(3.1 -3.2)
-                          #C(4.1 -4.2) #C(5.1 -5.2))
-                       (#C(1.3 -1.4) #C(2.3 -2.4) #C(3.3 -3.4)
-                          #C(4.3 -4.4) #C(5.3 -5.4)))))
-    (assert-true
-     (typep (linear-algebra:transpose matrix :conjugate t)
-            'linear-algebra:dense-matrix)
-     (assert-float-equal
-      transpose (linear-algebra:transpose matrix :conjugate t)))))
+     transpose (linear-algebra:transpose matrix))))
 
 (define-test ntranspose-dense-matrix
   (:tag :dense-matrix :ntranspose)
-  (assert-error 'error
-                (linear-algebra:ntranspose
-                 (linear-algebra:make-matrix
-                  5 4 :initial-contents
-                  #2A((1.1 1.2 1.3 1.4)
-                      (2.1 2.2 2.3 2.4)
-                      (3.1 3.2 3.3 3.4)
-                      (4.1 4.2 4.3 4.4)
-                      (5.1 5.2 5.3 5.4)))))
-  (let ((matrix (linear-algebra:make-matrix
-                 4 4 :initial-contents
-                 #2A((1.1 1.2 1.3 1.4)
-                     (2.1 2.2 2.3 2.4)
-                     (3.1 3.2 3.3 3.4)
-                     (4.1 4.2 4.3 4.4))))
-        (transpose #2A((1.1 2.1 3.1 4.1)
-                       (1.2 2.2 3.2 4.2)
-                       (1.3 2.3 3.3 4.3)
-                       (1.4 2.4 3.4 4.4))))
+  (assert-error
+   'error
+   (linear-algebra:ntranspose
+    (linear-algebra:make-matrix
+     5 4 :initial-contents
+     #2A((1.1 1.2 1.3 1.4)
+         (2.1 2.2 2.3 2.4)
+         (3.1 3.2 3.3 3.4)
+         (4.1 4.2 4.3 4.4)
+         (5.1 5.2 5.3 5.4)))))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          4 4 :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4))))
+        (transpose
+         #2A((1.1 2.1 3.1 4.1)
+             (1.2 2.2 3.2 4.2)
+             (1.3 2.3 3.3 4.3)
+             (1.4 2.4 3.4 4.4))))
     (assert-eq matrix (linear-algebra:ntranspose matrix))
-    (assert-float-equal transpose matrix)) 
-  (let ((matrix (linear-algebra:make-matrix
-                 2 2 :initial-contents
-                 #2A((#C(1.1 1.2) #C(1.3 1.4))
-                     (#C(2.1 2.2) #C(2.3 2.4)))))
-        (transpose #2A((#C(1.1 1.2) #C(2.1 2.2))
-                       (#C(1.3 1.4) #C(2.3 2.4)))))
-    (assert-eq matrix (linear-algebra:ntranspose matrix))
-    (assert-float-equal transpose matrix))
-  (let ((matrix (linear-algebra:make-matrix
-                 2 2 :initial-contents
-                 #2A((#C(1.1 1.2) #C(1.3 1.4))
-                     (#C(2.1 2.2) #C(2.3 2.4)))))
-        (transpose #2A((#C(1.1 -1.2) #C(2.1 -2.2))
-                       (#C(1.3 -1.4) #C(2.3 -2.4)))))
-    (assert-eq matrix (linear-algebra:ntranspose matrix :conjugate t))
     (assert-float-equal transpose matrix)))
 
 (define-test permute-dense-matrix
