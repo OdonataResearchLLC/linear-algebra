@@ -688,3 +688,67 @@
        3.5)
     (assert-float-equal 4.4 scale)
     (assert-float-equal 5.3832097 sump)))
+
+(define-test norm-square-matrix
+  (:tag :square-matrix :norm)
+  (let ((matrix
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4)))))
+    (assert-float-equal
+     11.6 (linear-algebra:norm matrix))
+    (assert-float-equal
+     11.6 (linear-algebra:norm matrix :measure 1))
+    (assert-float-equal
+     4.4 (linear-algebra:norm matrix :measure :max))
+    (assert-float-equal
+     11.882762 (linear-algebra:norm matrix :measure :frobenius))
+    (assert-float-equal
+     17.0 (linear-algebra:norm matrix :measure :infinity))
+    (assert-error
+     'error
+     (linear-algebra:norm matrix :measure :unknown))))
+
+(define-test transpose-square-matrix
+  (:tag :square-matrix :transpose)
+  (let ((matrix
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4))))
+        (transpose
+         #2A((1.1 2.1 3.1 4.1)
+             (1.2 2.2 3.2 4.2)
+             (1.3 2.3 3.3 4.3)
+             (1.4 2.4 3.4 4.4))))
+    (assert-true
+     (typep
+      (linear-algebra:transpose matrix)
+      'linear-algebra:square-matrix))
+    (assert-float-equal
+     transpose (linear-algebra:transpose matrix))))
+
+(define-test ntranspose-square-matrix
+  (:tag :square-matrix :ntranspose)
+  (let ((matrix
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4))))
+        (transpose
+         #2A((1.1 2.1 3.1 4.1)
+             (1.2 2.2 3.2 4.2)
+             (1.3 2.3 3.3 4.3)
+             (1.4 2.4 3.4 4.4))))
+    (assert-eq matrix (linear-algebra:ntranspose matrix))
+    (assert-float-equal transpose matrix)))
