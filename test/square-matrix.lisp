@@ -657,3 +657,19 @@
   (:tag :square-matrix :matrix-validated-range)
   (test-matrix-validated-range
    'linear-algebra:square-matrix 10 10))
+
+;;; Square matrix fundamental operations
+
+(define-test sumsq-square-matrix
+  (:tag :square-matrix :sumsq)
+  (multiple-value-bind (scale sumsq)
+      (linear-algebra:sumsq
+       (linear-algebra:make-matrix
+        4 4 :matrix-type 'linear-algebra:square-matrix
+        :initial-contents
+        #2A((1.1 1.2 1.3 1.4)
+            (2.1 2.2 2.3 2.4)
+            (3.1 3.2 3.3 3.4)
+            (4.1 4.2 4.3 4.4))))
+    (assert-float-equal 4.4 scale)
+    (assert-float-equal 7.293389 sumsq)))
