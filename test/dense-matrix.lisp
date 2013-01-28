@@ -682,7 +682,7 @@
      'error
      (linear-algebra:norm matrix :measure :unknown))))
 
-(define-test dense-matrix-transpose
+(define-test transpose-dense-matrix
   (:tag :dense-matrix :transpose)
   (let ((matrix (linear-algebra:make-matrix
                  5 4 :initial-contents
@@ -731,7 +731,7 @@
      (assert-float-equal
       transpose (linear-algebra:transpose matrix :conjugate t)))))
 
-(define-test dense-matrix-ntranspose
+(define-test ntranspose-dense-matrix
   (:tag :dense-matrix :ntranspose)
   (assert-error 'error
                 (linear-algebra:ntranspose
@@ -865,7 +865,7 @@
          (4.0 4.1 4.2 4.3 4.4))
      matrix)))
 
-(define-test dense-matrix-scale
+(define-test scale-dense-matrix
   (:tag :dense-matrix :scale)
   (assert-float-equal
    #2A(( 3.3  3.6  3.9  4.2)
@@ -882,7 +882,7 @@
              (4.1 4.2 4.3 4.4)
              (5.1 5.2 5.3 5.4))))))
 
-(define-test dense-matrix-nscale
+(define-test nscale-dense-matrix
   (:tag :dense-matrix :nscale)
   (let ((matrix
          (linear-algebra:make-matrix
@@ -1229,7 +1229,7 @@
          (5.1 5.2 5.3 5.4))
      matrix1)))
 
-(define-test dense-matrix-product
+(define-test product-dense-matrix
   (:tag :dense-matrix :product)
   ;; Row vector - dense matrix
   (assert-true
