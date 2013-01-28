@@ -880,3 +880,154 @@
          ( 9.3  9.6  9.9 10.2)
          (12.3 12.6 12.9 13.2))
      matrix)))
+
+(define-test add-square-matrix
+  (:tag :square-matrix :add)
+  (let ((matrix
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4)))))
+    ;; No scalar
+    (assert-float-equal
+     #2A(( 2.2  2.4  2.6  2.8)
+         ( 4.2  4.4  4.6  4.8)
+         ( 6.2  6.4  6.6  6.8)
+         ( 8.2  8.4  8.6  8.8))
+     (linear-algebra:add matrix matrix))
+    ;; Scalar1
+    (assert-float-equal
+     #2A(( 3.3  3.6  3.9  4.2)
+         ( 6.3  6.6  6.9  7.2)
+         ( 9.3  9.6  9.9 10.2)
+         (12.3 12.6 12.9 13.2))
+     (linear-algebra:add matrix matrix :scalar1 2.0))
+    ;; Scalar2
+    (assert-float-equal
+     #2A(( 3.3  3.6  3.9  4.2)
+         ( 6.3  6.6  6.9  7.2)
+         ( 9.3  9.6  9.9 10.2)
+         (12.3 12.6 12.9 13.2))
+     (linear-algebra:add matrix matrix :scalar2 2.0))
+    ;; Scalar1 & Scalar2
+    (assert-float-equal
+     #2A(( 5.5  6.0  6.5  7.0)
+         (10.5 11.0 11.5 12.0)
+         (15.5 16.0 16.5 17.0)
+         (20.5 21.0 21.5 22.0))
+     (linear-algebra:add matrix matrix :scalar1 2.0 :scalar2 3.0))))
+
+(define-test nadd-square-matrix
+  (:tag :square-matrix :nadd)
+  ;; No scalar
+  (let ((matrix1
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          (make-array
+           '(4 4) :initial-contents
+           '((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)))))
+        (matrix2
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4)))))
+    (assert-eq matrix1 (linear-algebra:nadd matrix1 matrix2))
+    (assert-float-equal
+     #2A((2.2 2.4 2.6 2.8)
+         (4.2 4.4 4.6 4.8)
+         (6.2 6.4 6.6 6.8)
+         (8.2 8.4 8.6 8.8))
+     matrix1))
+  ;; Scalar1
+  (let ((matrix1
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          (make-array
+           '(4 4) :initial-contents
+           '((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)))))
+        (matrix2
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4)))))
+    (assert-eq
+     matrix1 (linear-algebra:nadd matrix1 matrix2 :scalar1 2.0))
+    (assert-float-equal
+     #2A(( 3.3  3.6  3.9  4.2)
+         ( 6.3  6.6  6.9  7.2)
+         ( 9.3  9.6  9.9 10.2)
+         (12.3 12.6 12.9 13.2))
+     matrix1))
+  ;; Scalar2
+  (let ((matrix1
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          (make-array
+           '(4 4) :initial-contents
+           '((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)))))
+        (matrix2
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4)))))
+    (assert-eq
+     matrix1 (linear-algebra:nadd matrix1 matrix2 :scalar2 2.0))
+    (assert-float-equal
+     #2A(( 3.3  3.6  3.9  4.2)
+         ( 6.3  6.6  6.9  7.2)
+         ( 9.3  9.6  9.9 10.2)
+         (12.3 12.6 12.9 13.2))
+     matrix1))
+  ;; Scalar1 & Scalar2
+  (let ((matrix1
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          (make-array
+           '(4 4) :initial-contents
+           '((1.1 1.2 1.3 1.4)
+             (2.1 2.2 2.3 2.4)
+             (3.1 3.2 3.3 3.4)
+             (4.1 4.2 4.3 4.4)))))
+        (matrix2
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          #2A((1.1 1.2 1.3 1.4)
+              (2.1 2.2 2.3 2.4)
+              (3.1 3.2 3.3 3.4)
+              (4.1 4.2 4.3 4.4)))))
+    (assert-eq
+     matrix1
+     (linear-algebra:nadd
+      matrix1 matrix2 :scalar1 2.0 :scalar2 3.0))
+    (assert-float-equal
+     #2A(( 5.5  6.0  6.5  7.0)
+         (10.5 11.0 11.5 12.0)
+         (15.5 16.0 16.5 17.0)
+         (20.5 21.0 21.5 22.0))
+     matrix1)))
