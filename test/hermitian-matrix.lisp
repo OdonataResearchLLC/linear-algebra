@@ -971,3 +971,154 @@
          (#C(3.0  -9.0) #C(6.0  -9.0) #C(9.0   0.0) #C( 9.0 12.0))
          (#C(3.0 -12.0) #C(6.0 -12.0) #C(9.0 -12.0) #C(12.0  0.0)))
      matrix)))
+
+(define-test add-hermitian-matrix
+  (:tag :hermitian-matrix :add)
+  (let ((matrix
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
+            (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
+            (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0  0.0) #C(3.0 4.0))
+            (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0))))))
+    ;; No scalar
+    (assert-float-equal
+     #2A((#C(2.0  0.0) #C(2.0  4.0) #C(2.0  6.0) #C(2.0 8.0))
+         (#C(2.0 -4.0) #C(4.0  0.0) #C(4.0  6.0) #C(4.0 8.0))
+         (#C(2.0 -6.0) #C(4.0 -6.0) #C(6.0  0.0) #C(6.0 8.0))
+         (#C(2.0 -8.0) #C(4.0 -8.0) #C(6.0 -8.0) #C(8.0 0.0)))
+     (linear-algebra:add matrix matrix))
+    ;; Scalar1
+    (assert-float-equal
+     #2A((#C(3.0   0.0) #C(3.0   6.0) #C(3.0   9.0) #C( 3.0 12.0))
+         (#C(3.0  -6.0) #C(6.0   0.0) #C(6.0   9.0) #C( 6.0 12.0))
+         (#C(3.0  -9.0) #C(6.0  -9.0) #C(9.0   0.0) #C( 9.0 12.0))
+         (#C(3.0 -12.0) #C(6.0 -12.0) #C(9.0 -12.0) #C(12.0  0.0)))
+     (linear-algebra:add matrix matrix :scalar1 2.0))
+    ;; Scalar2
+    (assert-float-equal
+     #2A((#C(3.0   0.0) #C(3.0   6.0) #C(3.0   9.0) #C( 3.0 12.0))
+         (#C(3.0  -6.0) #C(6.0   0.0) #C(6.0   9.0) #C( 6.0 12.0))
+         (#C(3.0  -9.0) #C(6.0  -9.0) #C(9.0   0.0) #C( 9.0 12.0))
+         (#C(3.0 -12.0) #C(6.0 -12.0) #C(9.0 -12.0) #C(12.0  0.0)))
+     (linear-algebra:add matrix matrix :scalar2 2.0))
+    ;; Scalar1 & Scalar2
+    (assert-float-equal
+     #2A((#C(5.0   0.0) #C( 5.0  10.0) #C( 5.0  15.0) #C( 5.0 20.0))
+         (#C(5.0 -10.0) #C(10.0   0.0) #C(10.0  15.0) #C(10.0 20.0))
+         (#C(5.0 -15.0) #C(10.0 -15.0) #C(15.0   0.0) #C(15.0 20.0))
+         (#C(5.0 -20.0) #C(10.0 -20.0) #C(15.0 -20.0) #C(20.0  0.0)))
+     (linear-algebra:add matrix matrix :scalar1 2.0 :scalar2 3.0))))
+
+(define-test nadd-hermitian-matrix
+  (:tag :hermitian-matrix :nadd)
+  ;; No scalar
+  (let ((matrix1
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          (make-array
+           '(4 4) :initial-contents
+           '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
+             (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
+             (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0  0.0) #C(3.0 4.0))
+             (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0))))))
+        (matrix2
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
+            (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
+            (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0  0.0) #C(3.0 4.0))
+            (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0))))))
+    (assert-eq matrix1 (linear-algebra:nadd matrix1 matrix2))
+    (assert-float-equal
+     #2A((#C(2.0  0.0) #C(2.0  4.0) #C(2.0  6.0) #C(2.0 8.0))
+         (#C(2.0 -4.0) #C(4.0  0.0) #C(4.0  6.0) #C(4.0 8.0))
+         (#C(2.0 -6.0) #C(4.0 -6.0) #C(6.0  0.0) #C(6.0 8.0))
+         (#C(2.0 -8.0) #C(4.0 -8.0) #C(6.0 -8.0) #C(8.0 0.0)))
+     matrix1))
+  ;; Scalar1
+  (let ((matrix1
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          (make-array
+           '(4 4) :initial-contents
+           '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
+             (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
+             (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0  0.0) #C(3.0 4.0))
+             (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0))))))
+        (matrix2
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
+            (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
+            (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0  0.0) #C(3.0 4.0))
+            (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0))))))
+    (assert-eq
+     matrix1 (linear-algebra:nadd matrix1 matrix2 :scalar1 2.0))
+    (assert-float-equal
+     #2A((#C(3.0   0.0) #C(3.0   6.0) #C(3.0   9.0) #C( 3.0 12.0))
+         (#C(3.0  -6.0) #C(6.0   0.0) #C(6.0   9.0) #C( 6.0 12.0))
+         (#C(3.0  -9.0) #C(6.0  -9.0) #C(9.0   0.0) #C( 9.0 12.0))
+         (#C(3.0 -12.0) #C(6.0 -12.0) #C(9.0 -12.0) #C(12.0  0.0)))
+     matrix1))
+  ;; Scalar2
+  (let ((matrix1
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          (make-array
+           '(4 4) :initial-contents
+           '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
+             (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
+             (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0  0.0) #C(3.0 4.0))
+             (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0))))))
+        (matrix2
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
+            (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
+            (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0  0.0) #C(3.0 4.0))
+            (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0))))))
+    (assert-eq
+     matrix1 (linear-algebra:nadd matrix1 matrix2 :scalar2 2.0))
+    (assert-float-equal
+     #2A((#C(3.0   0.0) #C(3.0   6.0) #C(3.0   9.0) #C( 3.0 12.0))
+         (#C(3.0  -6.0) #C(6.0   0.0) #C(6.0   9.0) #C( 6.0 12.0))
+         (#C(3.0  -9.0) #C(6.0  -9.0) #C(9.0   0.0) #C( 9.0 12.0))
+         (#C(3.0 -12.0) #C(6.0 -12.0) #C(9.0 -12.0) #C(12.0  0.0)))
+     matrix1))
+  ;; Scalar1 & Scalar2
+  (let ((matrix1
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          (make-array
+           '(4 4) :initial-contents
+           '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
+             (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
+             (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0  0.0) #C(3.0 4.0))
+             (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0))))))
+        (matrix2
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:square-matrix
+          :initial-contents
+          '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
+            (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
+            (#C(1.0 -3.0) #C(2.0 -3.0) #C(3.0  0.0) #C(3.0 4.0))
+            (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0))))))
+    (assert-eq
+     matrix1
+     (linear-algebra:nadd
+      matrix1 matrix2 :scalar1 2.0 :scalar2 3.0))
+    (assert-float-equal
+     #2A((#C(5.0   0.0) #C( 5.0  10.0) #C( 5.0  15.0) #C( 5.0 20.0))
+         (#C(5.0 -10.0) #C(10.0   0.0) #C(10.0  15.0) #C(10.0 20.0))
+         (#C(5.0 -15.0) #C(10.0 -15.0) #C(15.0   0.0) #C(15.0 20.0))
+         (#C(5.0 -20.0) #C(10.0 -20.0) #C(15.0 -20.0) #C(20.0  0.0)))
+     matrix1)))
