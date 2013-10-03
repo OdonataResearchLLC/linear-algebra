@@ -1122,3 +1122,52 @@
          (#C(5.0 -15.0) #C(10.0 -15.0) #C(15.0   0.0) #C(15.0 20.0))
          (#C(5.0 -20.0) #C(10.0 -20.0) #C(15.0 -20.0) #C(20.0  0.0)))
      matrix1)))
+
+(define-test subtract-hermitian-matrix
+  (:tag :hermitian-matrix :subtract)
+  (let ((*epsilon* (* 3F0 single-float-epsilon))
+        (matrix1
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          #2A((#C(2.0  0.0) #C(4.0  2.0) #C(6.0  2.0) #C(8.0 2.0))
+              (#C(4.0 -2.0) #C(4.0  0.0) #C(6.0  4.0) #C(8.0 4.0))
+              (#C(6.0 -2.0) #C(6.0 -4.0) #C(6.0  0.0) #C(8.0 6.0))
+              (#C(8.0 -2.0) #C(8.0 -4.0) #C(8.0 -6.0) #C(8.0 0.0)))))
+        (matrix2
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0) #C(4.0 1.0))
+              (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0) #C(4.0 2.0))
+              (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0) #C(4.0 3.0))
+              (#C(4.0 -1.0) #C(4.0 -2.0) #C(4.0 -3.0) #C(4.0 0.0))))))
+    ;; No scalar
+    (assert-float-equal
+     #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0) #C(4.0 1.0))
+         (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0) #C(4.0 2.0))
+         (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0) #C(4.0 3.0))
+         (#C(4.0 -1.0) #C(4.0 -2.0) #C(4.0 -3.0) #C(4.0 0.0)))
+     (linear-algebra:subtract matrix1 matrix2))
+    ;; Scalar1
+    (assert-float-equal
+     #2A((#C( 3.0  0.0) #C( 6.0  3.0) #C( 9.0  3.0) #C(12.0  3.0))
+         (#C( 6.0 -3.0) #C( 6.0  0.0) #C( 9.0  6.0) #C(12.0  6.0))
+         (#C( 9.0 -3.0) #C( 9.0 -6.0) #C( 9.0  0.0) #C(12.0  9.0))
+         (#C(12.0 -3.0) #C(12.0 -6.0) #C(12.0 -9.0) #C(12.0  0.0)))
+     (linear-algebra:subtract matrix1 matrix2 :scalar1 2.0))
+    ;; Scalar2
+    (assert-float-equal
+     #2A((#C(0.0  0.0) #C(0.0  0.0) #C(0.0  0.0) #C(0.0 0.0))
+         (#C(0.0 -0.0) #C(0.0  0.0) #C(0.0  0.0) #C(0.0 0.0))
+         (#C(0.0 -0.0) #C(0.0 -0.0) #C(0.0  0.0) #C(0.0 0.0))
+         (#C(0.0 -0.0) #C(0.0 -0.0) #C(0.0 -0.0) #C(0.0 0.0)))
+     (linear-algebra:subtract matrix1 matrix2 :scalar2 2.0))
+    ;; Scalar1 & Scalar2
+    (assert-float-equal
+     #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0) #C(4.0 1.0))
+         (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0) #C(4.0 2.0))
+         (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0) #C(4.0 3.0))
+         (#C(4.0 -1.0) #C(4.0 -2.0) #C(4.0 -3.0) #C(4.0 0.0)))
+     (linear-algebra:subtract
+      matrix1 matrix2 :scalar1 2.0 :scalar2 3.0))))
