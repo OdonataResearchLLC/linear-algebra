@@ -1171,3 +1171,231 @@
          (#C(4.0 -1.0) #C(4.0 -2.0) #C(4.0 -3.0) #C(4.0 0.0)))
      (linear-algebra:subtract
       matrix1 matrix2 :scalar1 2.0 :scalar2 3.0))))
+
+(define-test nsubtract-hermitian-matrix
+  (:tag :hermitian-matrix :nsubtract)
+  ;; No scalar
+  (let ((matrix1
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          (make-array
+           '(4 4) :initial-contents
+           '((#C(2.0  0.0) #C(4.0  2.0) #C(6.0  2.0) #C(8.0 2.0))
+             (#C(4.0 -2.0) #C(4.0  0.0) #C(6.0  4.0) #C(8.0 4.0))
+             (#C(6.0 -2.0) #C(6.0 -4.0) #C(6.0  0.0) #C(8.0 6.0))
+             (#C(8.0 -2.0) #C(8.0 -4.0) #C(8.0 -6.0) #C(8.0 0.0))))))
+        (matrix2
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0) #C(4.0 1.0))
+              (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0) #C(4.0 2.0))
+              (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0) #C(4.0 3.0))
+              (#C(4.0 -1.0) #C(4.0 -2.0) #C(4.0 -3.0) #C(4.0 0.0))))))
+    (assert-eq matrix1 (linear-algebra:nsubtract matrix1 matrix2))
+    (assert-float-equal
+     #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0) #C(4.0 1.0))
+         (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0) #C(4.0 2.0))
+         (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0) #C(4.0 3.0))
+         (#C(4.0 -1.0) #C(4.0 -2.0) #C(4.0 -3.0) #C(4.0 0.0)))
+     matrix1))
+  ;; Scalar1
+  (let ((matrix1
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          (make-array
+           '(4 4) :initial-contents
+           '((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0) #C(4.0 1.0))
+             (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0) #C(4.0 2.0))
+             (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0) #C(4.0 3.0))
+             (#C(4.0 -1.0) #C(4.0 -2.0) #C(4.0 -3.0) #C(4.0 0.0))))))
+        (matrix2
+         (linear-algebra:make-matrix
+          4 4 :initial-contents
+          #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0) #C(4.0 1.0))
+              (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0) #C(4.0 2.0))
+              (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0) #C(4.0 3.0))
+              (#C(4.0 -1.0) #C(4.0 -2.0) #C(4.0 -3.0) #C(4.0 0.0))))))
+    (assert-eq
+     matrix1
+     (linear-algebra:nsubtract matrix1 matrix2 :scalar1 2.0))
+    (assert-float-equal
+     #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0) #C(4.0 1.0))
+         (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0) #C(4.0 2.0))
+         (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0) #C(4.0 3.0))
+         (#C(4.0 -1.0) #C(4.0 -2.0) #C(4.0 -3.0) #C(4.0 0.0)))
+     matrix1))
+  ;; Scalar2
+  (let ((matrix1
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          (make-array
+           '(4 4) :initial-contents
+           '((#C( 3.0  0.0) #C( 6.0  3.0) #C( 9.0  3.0) #C(12.0  3.0))
+             (#C( 6.0 -3.0) #C( 6.0  0.0) #C( 9.0  6.0) #C(12.0  6.0))
+             (#C( 9.0 -3.0) #C( 9.0 -6.0) #C( 9.0  0.0) #C(12.0  9.0))
+             (#C(12.0 -3.0) #C(12.0 -6.0) #C(12.0 -9.0) #C(12.0  0.0))))))
+        (matrix2
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0) #C(4.0 1.0))
+              (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0) #C(4.0 2.0))
+              (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0) #C(4.0 3.0))
+              (#C(4.0 -1.0) #C(4.0 -2.0) #C(4.0 -3.0) #C(4.0 0.0))))))
+    (assert-eq
+     matrix1
+     (linear-algebra:nsubtract matrix1 matrix2 :scalar2 2.0))
+    (assert-float-equal
+     #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0) #C(4.0 1.0))
+         (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0) #C(4.0 2.0))
+         (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0) #C(4.0 3.0))
+         (#C(4.0 -1.0) #C(4.0 -2.0) #C(4.0 -3.0) #C(4.0 0.0)))
+     matrix1))
+  ;; Scalar1 & Scalar2
+  (let ((*epsilon* (* 3F0 single-float-epsilon))
+        (matrix1
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          (make-array
+           '(4 4) :initial-contents
+           '((#C(2.0  0.0) #C(4.0  2.0) #C(6.0  2.0) #C(8.0 2.0))
+             (#C(4.0 -2.0) #C(4.0  0.0) #C(6.0  4.0) #C(8.0 4.0))
+             (#C(6.0 -2.0) #C(6.0 -4.0) #C(6.0  0.0) #C(8.0 6.0))
+             (#C(8.0 -2.0) #C(8.0 -4.0) #C(8.0 -6.0) #C(8.0 0.0))))))
+        (matrix2
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0) #C(4.0 1.0))
+              (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0) #C(4.0 2.0))
+              (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0) #C(4.0 3.0))
+              (#C(4.0 -1.0) #C(4.0 -2.0) #C(4.0 -3.0) #C(4.0 0.0))))))
+    (assert-eq
+     matrix1
+     (linear-algebra:nsubtract
+      matrix1 matrix2 :scalar1 2.0 :scalar2 3.0))
+    (assert-float-equal
+     #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0) #C(4.0 1.0))
+         (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0) #C(4.0 2.0))
+         (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0) #C(4.0 3.0))
+         (#C(4.0 -1.0) #C(4.0 -2.0) #C(4.0 -3.0) #C(4.0 0.0)))
+     matrix1)))
+
+(define-test product-hermitian-matrix
+  (:tag :hermitian-matrix :product)
+  ;; Row vector - Hermitian matrix
+  (assert-true
+   (typep
+    (linear-algebra:product
+     (linear-algebra:row-vector 1.0 2.0 3.0)
+     (unit-hermitian-matrix 3))
+    'linear-algebra:row-vector))
+  (assert-float-equal
+   #(#C(14.0 -5.0) #C(15.0 -5.0) #C(18.0 5.0))
+   (linear-algebra:product
+    (linear-algebra:row-vector 1.0 2.0 3.0)
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:hermitian-matrix
+     :initial-contents
+     #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0))
+         (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0))
+         (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0))))))
+  (assert-float-equal
+   #(#C(29.399998 -10.5) #C(31.499999 -10.5) #C(37.8 10.5))
+   (linear-algebra:product
+    (linear-algebra:row-vector 1.0 2.0 3.0)
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:hermitian-matrix
+     :initial-contents
+     #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0))
+         (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0))
+         (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0))))
+    :scalar 2.1))
+  (assert-error
+   'error
+   (linear-algebra:product
+    (linear-algebra:row-vector 1.0 2.0 3.0 4.0 5.0 6.0)
+    (unit-hermitian-matrix 3)))
+  ;; Hermitian matrix - column vector
+  (assert-true
+   (typep
+    (linear-algebra:product
+     (unit-hermitian-matrix 3)
+     (linear-algebra:column-vector 1.0 2.0 3.0))
+    'linear-algebra:column-vector))
+  (assert-float-equal
+   #(#C(14.0 5.0) #C(15.0 5.0) #C(18.0 -5.0))
+   (linear-algebra:product
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:hermitian-matrix
+     :initial-contents
+     #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0))
+         (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0))
+         (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0))))
+    (linear-algebra:column-vector 1.0 2.0 3.0)))
+  (assert-float-equal
+   #(#C(29.399998 10.5) #C(31.499999 10.5) #C(37.8 -10.5))
+   (linear-algebra:product
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:hermitian-matrix
+     :initial-contents
+     #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0))
+         (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0))
+         (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0))))
+    (linear-algebra:column-vector 1.0 2.0 3.0)
+    :scalar 2.1))
+  (assert-error
+   'error
+   (linear-algebra:product
+    (unit-hermitian-matrix 3)
+    (linear-algebra:column-vector 1.0 2.0 3.0 4.0 5.0 6.0)))
+  ;; Hermitian matrix - matrix
+  (assert-true
+   (typep
+    (linear-algebra:product
+     (unit-hermitian-matrix 3) (unit-hermitian-matrix 3))
+    'linear-algebra:hermitian-matrix))
+  (assert-float-equal
+   #2A((#C(16.0   0.0) #C(17.0  0.0) #C(16.0 11.0))
+       (#C(17.0   0.0) #C(22.0  0.0) #C(22.0  9.0))
+       (#C(16.0 -11.0) #C(22.0 -9.0) #C(32.0  0.0)))
+   (linear-algebra:product
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:hermitian-matrix
+     :initial-contents
+     #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0))
+         (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0))
+         (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0))))
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:hermitian-matrix
+     :initial-contents
+     #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0))
+         (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0))
+         (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0))))))
+  (assert-float-equal
+   #2A((#C(33.6 0.0) #C(35.699997 0.0) #C(33.6 23.099999))
+       (#C(35.699997 0.0) #C(46.199997 0.0) #C(46.199997 18.9))
+       (#C(33.6 -23.099999) #C(46.199997 -18.9) #C(67.2 0.0)))
+   (linear-algebra:product
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:hermitian-matrix
+     :initial-contents
+     #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0))
+         (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0))
+         (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0))))
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:hermitian-matrix
+     :initial-contents
+     #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0))
+         (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0))
+         (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0))))
+    :scalar 2.1))
+  (assert-error
+   'error
+   (linear-algebra:product
+    (unit-hermitian-matrix 3) (unit-hermitian-matrix 4))))
