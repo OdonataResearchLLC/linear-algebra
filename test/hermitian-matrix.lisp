@@ -1069,7 +1069,7 @@
   ;; Scalar2
   (let ((matrix1
          (linear-algebra:make-matrix
-          4 4 :matrix-type 'linear-algebra:square-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
           :initial-contents
           (make-array
            '(4 4) :initial-contents
@@ -1079,7 +1079,7 @@
              (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0))))))
         (matrix2
          (linear-algebra:make-matrix
-          4 4 :matrix-type 'linear-algebra:square-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
           :initial-contents
           '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
             (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
@@ -1096,7 +1096,7 @@
   ;; Scalar1 & Scalar2
   (let ((matrix1
          (linear-algebra:make-matrix
-          4 4 :matrix-type 'linear-algebra:square-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
           :initial-contents
           (make-array
            '(4 4) :initial-contents
@@ -1106,7 +1106,7 @@
              (#C(1.0 -4.0) #C(2.0 -4.0) #C(3.0 -4.0) #C(4.0 0.0))))))
         (matrix2
          (linear-algebra:make-matrix
-          4 4 :matrix-type 'linear-algebra:square-matrix
+          4 4 :matrix-type 'linear-algebra:hermitian-matrix
           :initial-contents
           '((#C(1.0  0.0) #C(1.0  2.0) #C(1.0  3.0) #C(1.0 4.0))
             (#C(1.0 -2.0) #C(2.0  0.0) #C(2.0  3.0) #C(2.0 4.0))
