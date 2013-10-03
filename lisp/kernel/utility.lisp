@@ -37,7 +37,7 @@
 
 ;;; Squared sums
 
-(defun lapy2 (x y)
+(defun sumsq2 (x y)
   "Return the square root of |x|^2 + |y|^2."
   (let* ((abs-x (abs x))
          (abs-y (abs y))
@@ -45,7 +45,7 @@
          (v/w (/ (min abs-x abs-y) w)))
     (* w (sqrt (+ 1 (* v/w v/w))))))
 
-(defun lapy3 (x y z)
+(defun sumsq3 (x y z)
   "Return the square root of |x|^2 + |y|^2 + |z|^2."
   (let* ((abs-x (abs x))
          (abs-y (abs y))
@@ -100,7 +100,7 @@
   "Return Beta, Tau and the Householder vector."
   (let* ((beta (- (float-sign
                    (realpart alpha)
-                   (lapy2 alpha (norm-vector vector 2)))))
+                   (sumsq2 alpha (norm-vector vector 2)))))
          (tau  (- 1 (/ alpha beta))))
     (values
      beta tau

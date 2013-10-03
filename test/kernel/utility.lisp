@@ -35,13 +35,13 @@
 
 (in-package :linear-algebra-test)
 
-(define-test lapy2
+(define-test sumsq2
   "sqrt |x|^2 + |y|^2"
   (:tag :utility)
   ;; Real values
   (dolist (args (cartesian-product '(-3.0 3.0) '(-4.0 4.0)))
     (assert-float-equal
-     5.0 (apply #'linear-algebra-kernel:lapy2 args)))
+     5.0 (apply #'linear-algebra-kernel:sumsq2 args)))
   ;; Complex values
   (let ((args1
          (mapcar
@@ -53,15 +53,15 @@
           (cartesian-product '(-3.3 3.3) '(-4.4 4.4)))))
     (dolist (args (cartesian-product args1 args2))
       (assert-float-equal
-       6.024948 (apply #'linear-algebra-kernel:lapy2 args)))))
+       6.024948 (apply #'linear-algebra-kernel:sumsq2 args)))))
 
-(define-test lapy3
+(define-test sumsq3
   "sqrt |x|^2 + |y|^2 + |z|^2"
   (:tag :utility)
   ;; Real values
   (dolist (args (nary-product '(-2.0 2.0) '(-3.0 3.0) '(-4.0 4.0)))
     (assert-float-equal
-     5.3851647 (apply #'linear-algebra-kernel:lapy3 args)))
+     5.3851647 (apply #'linear-algebra-kernel:sumsq3 args)))
   ;; Complex values
   (let ((args1
          (mapcar
@@ -77,7 +77,7 @@
           (cartesian-product '(-5.5 5.5) '(-6.6 6.6)))))
     (dolist (args (nary-product args1 args2 args3))
       (assert-float-equal
-       10.49333 (apply #'linear-algebra-kernel:lapy3 args)))))
+       10.49333 (apply #'linear-algebra-kernel:sumsq3 args)))))
 
 ;;; Givens Rotation
 

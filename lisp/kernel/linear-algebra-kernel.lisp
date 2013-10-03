@@ -38,7 +38,7 @@
 (defpackage :linear-algebra-kernel
   (:use :common-lisp :floating-point)
   ;; Utility functions
-  (:export :lapy2 :lapy3
+  (:export :sumsq2 :sumsq3
            :givens-rotation
            :jacobi-rotation
            :householder-reflection
