@@ -305,6 +305,7 @@
      matrix (linear-algebra:copy-matrix matrix))))
 
 ;;; Test the submatrix of a square matrix
+
 (define-test square-submatrix
   (:tag :square-matrix :submatrix)
   (let ((matrix

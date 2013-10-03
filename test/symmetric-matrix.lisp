@@ -638,3 +638,5 @@
   (test-matrix-validated-range
    'linear-algebra:symmetric-matrix 10 10))
 
+;;; Fundamental operations
+
