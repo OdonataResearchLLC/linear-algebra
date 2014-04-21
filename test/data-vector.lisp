@@ -848,43 +848,6 @@
     (assert-error
      'error (linear-algebra:permute pmat cerr))))
 
-(define-test npermute-data-vector
-  (:tag :data-vector :npermute)
-  (let ((rvec (linear-algebra:row-vector
-               1.1 2.2 3.3 4.4 5.5))
-        (cvec (linear-algebra:column-vector
-               1.1 2.2 3.3 4.4 5.5))
-        (rerr (linear-algebra:row-vector
-               1.1 2.2 3.3 4.4 5.5 6.6))
-        (cerr (linear-algebra:column-vector
-               1.1 2.2 3.3 4.4 5.5 6.6))
-        (rmat (linear-algebra:make-matrix
-               5 5 :matrix-type
-               'linear-algebra:permutation-matrix
-               :initial-contents
-               '((0 0 0 0 1)
-                 (0 0 1 0 0)
-                 (1 0 0 0 0)
-                 (0 1 0 0 0)
-                 (0 0 0 1 0))))
-        (cmat (linear-algebra:make-matrix
-               5 5 :matrix-type
-               'linear-algebra:permutation-matrix
-               :initial-contents
-               '((0 0 1 0 0)
-                 (0 0 0 1 0)
-                 (1 0 0 0 0)
-                 (0 0 0 0 1)
-                 (0 1 0 0 0)))))
-    (assert-eq rvec (linear-algebra:npermute rvec rmat))
-    (assert-float-equal #(3.3 4.4 2.2 5.5 1.1) rvec)
-    (assert-eq cvec (linear-algebra:npermute cmat cvec))
-    (assert-float-equal #(3.3 5.5 1.1 2.2 4.4) cvec)
-    (assert-error
-     'error (linear-algebra:npermute rerr pmat))
-    (assert-error
-     'error (linear-algebra:npermute pmat cerr))))
-
 ;;; Data vector scale
 
 (define-test scale-data-vector

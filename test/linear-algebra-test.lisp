@@ -132,6 +132,19 @@ point."
     (dotimes (row size the-array)
       (setf (aref the-array row (svref permutation row)) 1))))
 
+(defun permutations (list)
+  "Return permutations of the list. [Erik Naggum]"
+  (if (cdr list)
+      (loop
+       with rotation = list
+       do (setq rotation (nconc (last rotation) (nbutlast rotation)))
+       nconc
+       (loop
+        for list in (permutations (rest rotation))
+        collect (cons (first rotation) (copy-list list)))
+       until (eq rotation list))
+      (list list)))
+
 (defun cartesian-product (list1 list2)
   "Return a list of the Cartesian product of two lists."
   (mapcan (lambda (x) (mapcar (lambda (y) (list x y)) list2)) list1))

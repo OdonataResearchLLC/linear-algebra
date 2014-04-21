@@ -199,59 +199,6 @@
      (list 3.3 5.5 1.1 2.2 4.4)
      (linear-algebra:permute pmat list))))
 
-(define-test npermute-list
-  (:tag :list :npermute)
-  (let ((list (list 1.1 2.2 3.3 4.4 5.5))
-        (pmat
-         (linear-algebra:make-matrix
-          5 5
-          :matrix-type
-          'linear-algebra:permutation-matrix
-          :initial-contents
-          '((0 0 1 0 0)
-            (0 0 0 0 1)
-            (1 0 0 0 0)
-            (0 1 0 0 0)
-            (0 0 0 1 0)))))
-    (assert-eq list (linear-algebra:npermute list pmat))
-    (assert-float-equal #(3.3 4.4 1.1 5.5 2.2) list))
-  (let ((list (list 1.1 2.2 3.3 4.4 5.5))
-        (pmat (linear-algebra:make-matrix
-               5 5 :matrix-type
-               'linear-algebra:permutation-matrix
-               :initial-contents
-               '((0 0 0 0 1)
-                 (0 0 1 0 0)
-                 (1 0 0 0 0)
-                 (0 1 0 0 0)
-                 (0 0 0 1 0)))))
-    (assert-eq list (linear-algebra:npermute list pmat))
-    (assert-float-equal #(3.3 4.4 2.2 5.5 1.1) list))
-  (let ((list (list 1.1 2.2 3.3 4.4 5.5))
-        (pmat (linear-algebra:make-matrix
-               5 5 :matrix-type
-               'linear-algebra:permutation-matrix
-               :initial-contents
-               '((0 0 1 0 0)
-                 (0 0 0 0 1)
-                 (1 0 0 0 0)
-                 (0 1 0 0 0)
-                 (0 0 0 1 0)))))
-    (assert-eq list (linear-algebra:npermute pmat list))
-    (assert-float-equal #(3.3 5.5 1.1 2.2 4.4) list))
-  (let ((list (list 1.1 2.2 3.3 4.4 5.5))
-        (pmat (linear-algebra:make-matrix
-               5 5 :matrix-type
-               'linear-algebra:permutation-matrix
-               :initial-contents
-               '((0 0 0 0 1)
-                 (0 0 1 0 0)
-                 (1 0 0 0 0)
-                 (0 1 0 0 0)
-                 (0 0 0 1 0)))))
-    (assert-eq list (linear-algebra:npermute pmat list))
-    (assert-float-equal #(5.5 3.3 1.1 2.2 4.4) list)))
-
 ;;; List scale
 
 (define-test scale-list

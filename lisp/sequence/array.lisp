@@ -99,20 +99,6 @@ matrix."
       (error "Permutation matrix~A and array~A sizes incompatible."
              (matrix-dimensions matrix) (array-dimensions data))))
 
-(defmethod npermute ((data array) (matrix permutation-matrix))
-  "Destructively permute the array."
-  (if (every #'= (array-dimensions data) (matrix-dimensions matrix))
-      (right-npermute-array data (contents matrix))
-      (error "Array~A and permutation matrix~A sizes incompatible."
-             (array-dimensions data) (matrix-dimensions matrix))))
-
-(defmethod npermute ((matrix permutation-matrix) (data array))
-  "Destructively permute the array."
-  (if (every #'= (array-dimensions data) (matrix-dimensions matrix))
-      (left-npermute-array (contents (ntranspose matrix)) data)
-      (error "Permutation matrix~A and array~A sizes incompatible."
-             (matrix-dimensions matrix) (array-dimensions data))))
-
 (defmethod scale ((scalar number) (data array))
   "Scale each element of the array."
   (let* ((m-rows (array-dimension data 0))

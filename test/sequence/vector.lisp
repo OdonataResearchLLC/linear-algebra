@@ -170,57 +170,6 @@
      #(5.5 3.3 1.1 2.2 4.4)
      (linear-algebra:permute pmat vect))))
 
-(define-test npermute-vector
-  (:tag :vector :npermute)
-  (let ((vect (vector 1.1 2.2 3.3 4.4 5.5))
-        (pmat (linear-algebra:make-matrix
-               5 5 :matrix-type
-               'linear-algebra:permutation-matrix
-               :initial-contents
-               '((0 0 1 0 0)
-                 (0 0 0 0 1)
-                 (1 0 0 0 0)
-                 (0 1 0 0 0)
-                 (0 0 0 1 0)))))
-    (assert-eq vect (linear-algebra:npermute vect pmat))
-    (assert-float-equal #(3.3 4.4 1.1 5.5 2.2) vect))
-  (let ((vect (vector 1.1 2.2 3.3 4.4 5.5))
-        (pmat (linear-algebra:make-matrix
-               5 5 :matrix-type
-               'linear-algebra:permutation-matrix
-               :initial-contents
-               '((0 0 0 0 1)
-                 (0 0 1 0 0)
-                 (1 0 0 0 0)
-                 (0 1 0 0 0)
-                 (0 0 0 1 0)))))
-    (assert-eq vect (linear-algebra:npermute vect pmat))
-    (assert-float-equal #(3.3 4.4 2.2 5.5 1.1) vect))
-  (let ((vect (vector 1.1 2.2 3.3 4.4 5.5))
-        (pmat (linear-algebra:make-matrix
-               5 5 :matrix-type
-               'linear-algebra:permutation-matrix
-               :initial-contents
-               '((0 0 1 0 0)
-                 (0 0 0 0 1)
-                 (1 0 0 0 0)
-                 (0 1 0 0 0)
-                 (0 0 0 1 0)))))
-    (assert-eq vect (linear-algebra:npermute pmat vect))
-    (assert-float-equal #(3.3 5.5 1.1 2.2 4.4) vect))
-  (let ((vect (vector 1.1 2.2 3.3 4.4 5.5))
-        (pmat (linear-algebra:make-matrix
-               5 5 :matrix-type
-               'linear-algebra:permutation-matrix
-               :initial-contents
-               '((0 0 0 0 1)
-                 (0 0 1 0 0)
-                 (1 0 0 0 0)
-                 (0 1 0 0 0)
-                 (0 0 0 1 0)))))
-    (assert-eq vect (linear-algebra:npermute pmat vect))
-    (assert-float-equal #(5.5 3.3 1.1 2.2 4.4) vect)))
-
 ;;; Vector scale
 
 (define-test scale-vector

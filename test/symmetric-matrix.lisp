@@ -473,7 +473,7 @@
          (unit-matrix 5 3))))
 
 ;;; Replace all or part of a symmetric matrix
-(define-test replace-symmetric-matrix
+(define-test symmetric-matrix-replace
   (:tag :symmetric-matrix :replace-matrix)
   ;; Replace the entire matrix
   (assert-float-equal
@@ -638,5 +638,96 @@
   (test-matrix-validated-range
    'linear-algebra:symmetric-matrix 10 10))
 
-;;; Fundamental operations
+;;; Symmetric matrix fundamental operations
+
+(define-test sumsq-symmetric-matrix
+  (:tag :symmetric-matrix :sumsq)
+  (multiple-value-bind (scale sumsq)
+      (linear-algebra:sumsq
+       (linear-algebra:make-matrix
+        4 4 :matrix-type 'linear-algebra:symmetric-matrix
+        :initial-contents
+        #2A((1.1 1.2 1.3 1.4)
+            (1.2 2.2 2.3 2.4)
+            (1.3 2.3 3.3 3.4)
+            (1.4 2.4 3.4 4.4))))
+    (assert-float-equal 4.4 scale)
+    (assert-float-equal 4.7365694 sumsq)))
+
+(define-test sump-symmetric-matrix
+  (:tag :symmetric-matrix :sump)
+  (multiple-value-bind (scale sump)
+      (linear-algebra:sump
+       (linear-algebra:make-matrix
+        4 4 :matrix-type 'linear-algebra:symmetric-matrix
+        :initial-contents
+        #2A((1.1 1.2 1.3 1.4)
+            (1.2 2.2 2.3 2.4)
+            (1.3 2.3 3.3 3.4)
+            (1.4 2.4 3.4 4.4)))
+       3.5)
+    (assert-float-equal 4.4 scale)
+    (assert-float-equal 2.804554 sump)))
+
+(define-test norm-symmetric-matrix
+  (:tag :symmetric-matrix :norm)
+  (let ((matrix (symmetric-matrix)))
+    (assert-float-equal
+     94.5 (linear-algebra:norm matrix))
+    (assert-float-equal
+     94.5 (linear-algebra:norm matrix :measure 1))
+    (assert-float-equal
+     9.9 (linear-algebra:norm matrix :measure :max))
+    (assert-float-equal
+     68.94671 (linear-algebra:norm matrix :measure :frobenius))
+    (assert-float-equal
+     94.5 (linear-algebra:norm matrix :measure :infinity))
+    (assert-error
+     'error
+     (linear-algebra:norm matrix :measure :unknown))))
+
+(define-test transpose-symmetric-matrix
+  (:tag :symmetric-matrix :transpose)
+  (let ((matrix (symmetric-matrix))
+        (transpose (symmetric-array)))
+    (assert-true
+     (typep
+      (linear-algebra:transpose matrix)
+      'linear-algebra:symmetric-matrix))
+    (assert-float-equal
+     transpose (linear-algebra:transpose matrix))))
+
+(define-test ntranspose-symmetric-matrix
+  (:tag :symmetric-matrix :ntranspose)
+  (let ((matrix (symmetric-matrix))
+        (transpose (symmetric-array)))
+    (assert-eq matrix (linear-algebra:ntranspose matrix))
+    (assert-float-equal transpose matrix)))
+
+(define-test permute-symmetric-matrix
+  (:tag :symmetric-matrix :permute)
+  (let ((matrix (symmetric-matrix 0 5))
+        (pmat
+         (linear-algebra:make-matrix
+          5 5 :matrix-type 'linear-algebra:permutation-matrix
+          :initial-contents
+          '((0 0 1 0 0)
+            (0 0 0 0 1)
+            (1 0 0 0 0)
+            (0 1 0 0 0)
+            (0 0 0 1 0)))))
+    (assert-float-equal
+     #2A((2.0 3.0 0.0 4.0 1.0)
+         (2.1 3.1 1.0 4.1 1.1)
+         (2.2 3.2 2.0 4.2 2.1)
+         (3.2 3.3 3.0 4.3 3.1)
+         (4.2 4.3 4.0 4.4 4.1))
+     (linear-algebra:permute matrix pmat))
+    (assert-float-equal
+     #2A((2.0 2.1 2.2 3.2 4.2)
+         (4.0 4.1 4.2 4.3 4.4)
+         (0.0 1.0 2.0 3.0 4.0)
+         (1.0 1.1 2.1 3.1 4.1)
+         (3.0 3.1 3.2 3.3 4.3))
+     (linear-algebra:permute pmat matrix))))
 

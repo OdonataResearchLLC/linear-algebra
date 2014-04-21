@@ -52,10 +52,10 @@
            :norm-vector
            :norm-array)
   ;; Permutation
-  (:export :right-permute-vector :right-npermute-vector
-           :left-permute-vector :left-npermute-vector
-           :right-permute-array :right-npermute-array
-           :left-permute-array :left-npermute-array)
+  (:export :right-permute-vector
+           :left-permute-vector
+           :right-permute-array
+           :left-permute-array)
   ;; Binary operations
   (:export :compatible-dimensions-p
            :scaled-binary-op

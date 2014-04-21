@@ -218,58 +218,14 @@ columns."
 (defmethod transpose ((matrix permutation-matrix) &key conjugate)
   "Transpose the permutation matrix."
   (declare (ignore conjugate))
-  (let ((contents (contents matrix)))
-    (make-instance
-     'permutation-matrix
-     :contents
-     (loop with permuted =
-           (make-array (length contents) :element-type 'fixnum)
-           for column across contents
-           as  row = 0 then (1+ row)
-           do (setf (aref permuted column) row)
-           finally (return permuted)))))
-
-(defun %init-ntranspose (contents)
-  "Count the number of rows to skip and the first row."
-  (loop with row0 = nil
-        for row below (length contents)
-        as column = (aref contents row)
-        if (= row column) count row into skip
-        else do (unless row0 (setf row0 row))
-        finally (return (values row0 skip))))
-
-(defmethod ntranspose ((matrix permutation-matrix) &key conjugate)
-  "Destructively transpose the permutation matrix."
-  (declare (ignore conjugate))
-  (loop with mat = (contents matrix)
-        with update-datum-p
-        with datum = 0
-        with row = 0
-        with column = (aref mat 0)
-        with cache = (aref mat column)
-        repeat (length mat)
-        ;; Finish shift loop
-        if update-datum-p do
-        (setf
-         update-datum-p nil
-         row (1+ (min row column))
-         datum row
-         column (aref mat row)
-         cache (aref mat column))
-        ;; On diagonal
-        else if (= row column) do
-        (setf datum (incf row))
-        (when (array-in-bounds-p mat row)
-          (setf
-           column (aref mat row)
-           cache (aref mat column)))
-        ;; Found end of shift loop
-        else if (= datum cache) do
-        (setf
-         update-datum-p t
-         (aref mat column) row
-         (aref mat cache) column)
-        ;; Shift the elements
-        else do
-        (shiftf (aref mat column) row column cache (aref mat cache))
-        finally (return matrix)))
+  (make-instance
+   'permutation-matrix
+   :contents
+   (loop
+    with contents = (contents matrix)
+    with permuted =
+    (make-array (length contents) :element-type 'fixnum)
+    for column across contents
+    as  row = 0 then (1+ row)
+    do (setf (aref permuted column) row)
+    finally return permuted)))

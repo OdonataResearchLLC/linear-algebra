@@ -42,7 +42,7 @@
   (:export :sumsq :sump
            :norm
            :transpose :ntranspose
-           :permute :npermute
+           :permute
            :scale :nscale
            :add :nadd
            :subtract :nsubtract

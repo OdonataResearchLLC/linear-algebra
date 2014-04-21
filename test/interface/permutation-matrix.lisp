@@ -298,75 +298,147 @@
 
 (define-test permutation-matrix-transpose
   (:tag :matrix :permutation-matrix :transpose)
-  (let ((matrix (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type
-                 'linear-algebra:permutation-matrix
-                 :initial-contents
-                 '((0 0 0 0 1)
-                   (0 0 0 1 0)
-                   (0 0 1 0 0)
-                   (1 0 0 0 0)
-                   (0 1 0 0 0)))))
-    (assert-rational-equal
-     #(3 4 2 1 0)
-     (linear-algebra::contents
-      (linear-algebra:transpose matrix)))))
-
-(define-test permutation-matrix-%init-ntranspose
-  (:tag :matrix :permutation-matrix :ntranspose)
-  (multiple-value-bind (row0 skip)
-      (linear-algebra::%init-ntranspose #(4 3 2 0 1))
-    (assert-eql 0 row0)
-    (assert-eql 1 skip))
-  (multiple-value-bind (row0 skip)
-      (linear-algebra::%init-ntranspose #(0 1 4 2 3))
-    (assert-eql 2 row0)
-    (assert-eql 2 skip))
-  (multiple-value-bind (row0 skip)
-      (linear-algebra::%init-ntranspose #(4 1 2 3 0))
-    (assert-eql 0 row0)
-    (assert-eql 3 skip)))
-
-;;; FIXME : Expand to cover all permutations of #(0 1 2 3 4)
-
-(define-test permutation-matrix-ntranspose
-  (:tag :matrix :permutation-matrix :ntranspose)
-  (let ((matrix
-         (make-instance
-          'linear-algebra:permutation-matrix
-          :contents (vector 4 0 2 3 1))))
-    (assert-eq matrix (linear-algebra:ntranspose matrix))
-    (assert-rational-equal
-     #(1 4 2 3 0)
-     (linear-algebra::contents matrix)))
-  (let ((matrix
-         (make-instance
-          'linear-algebra:permutation-matrix
-          :contents (vector 4 3 2 0 1))))
-    (assert-eq matrix (linear-algebra:ntranspose matrix))
-    (assert-rational-equal
-     #(3 4 2 1 0)
-     (linear-algebra::contents matrix)))
-  (let ((matrix
-         (make-instance
-          'linear-algebra:permutation-matrix
-          :contents (vector 2 4 0 1 3))))
-    (assert-eq matrix (linear-algebra:ntranspose matrix))
-    (assert-rational-equal
-     #(2 3 0 4 1)
-     (linear-algebra::contents matrix)))
-  (let ((matrix
-         (make-instance
-          'linear-algebra:permutation-matrix
-          :contents (vector 0 1 3 4 2))))
-    (assert-eq matrix (linear-algebra:ntranspose matrix))
-    (assert-rational-equal
-     #(0 1 4 2 3)
-     (linear-algebra::contents matrix))))
+  (loop
+   for (permutation transpose) in (validated-permutation-transpose)
+   do
+   (assert-rational-equal
+    transpose
+    (linear-algebra::contents
+     (linear-algebra:transpose
+      (make-instance
+       'linear-algebra:permutation-matrix
+       :contents permutation)))
+    permutation)))
 
 ;;; Validate a range for a permutation matrix.
+
 (define-test permutation-matrix-validated-range
   (:tag :matrix :permutation-matrix :matrix-validate-range)
   (test-matrix-validated-range
    'linear-algebra:permutation-matrix 10 10))
+
+;;; Validated transposition
+
+(defun validated-permutation-transpose ()
+  "Return a list of transposes of permutation vectors."
+  (list
+   (list (vector 4 3 2 1 0) (vector 4 3 2 1 0))
+   (list (vector 4 3 2 0 1) (vector 3 4 2 1 0))
+   (list (vector 4 3 1 0 2) (vector 3 2 4 1 0))
+   (list (vector 4 3 1 2 0) (vector 4 2 3 1 0))
+   (list (vector 4 3 0 2 1) (vector 2 4 3 1 0))
+   (list (vector 4 3 0 1 2) (vector 2 3 4 1 0))
+   (list (vector 4 2 1 0 3) (vector 3 2 1 4 0))
+   (list (vector 4 2 1 3 0) (vector 4 2 1 3 0))
+   (list (vector 4 2 0 3 1) (vector 2 4 1 3 0))
+   (list (vector 4 2 0 1 3) (vector 2 3 1 4 0))
+   (list (vector 4 2 3 1 0) (vector 4 3 1 2 0))
+   (list (vector 4 2 3 0 1) (vector 3 4 1 2 0))
+   (list (vector 4 1 0 3 2) (vector 2 1 4 3 0))
+   (list (vector 4 1 0 2 3) (vector 2 1 3 4 0))
+   (list (vector 4 1 3 2 0) (vector 4 1 3 2 0))
+   (list (vector 4 1 3 0 2) (vector 3 1 4 2 0))
+   (list (vector 4 1 2 0 3) (vector 3 1 2 4 0))
+   (list (vector 4 1 2 3 0) (vector 4 1 2 3 0))
+   (list (vector 4 0 3 2 1) (vector 1 4 3 2 0))
+   (list (vector 4 0 3 1 2) (vector 1 3 4 2 0))
+   (list (vector 4 0 2 1 3) (vector 1 3 2 4 0))
+   (list (vector 4 0 2 3 1) (vector 1 4 2 3 0))
+   (list (vector 4 0 1 3 2) (vector 1 2 4 3 0))
+   (list (vector 4 0 1 2 3) (vector 1 2 3 4 0))
+   (list (vector 3 2 1 0 4) (vector 3 2 1 0 4))
+   (list (vector 3 2 1 4 0) (vector 4 2 1 0 3))
+   (list (vector 3 2 0 4 1) (vector 2 4 1 0 3))
+   (list (vector 3 2 0 1 4) (vector 2 3 1 0 4))
+   (list (vector 3 2 4 1 0) (vector 4 3 1 0 2))
+   (list (vector 3 2 4 0 1) (vector 3 4 1 0 2))
+   (list (vector 3 1 0 4 2) (vector 2 1 4 0 3))
+   (list (vector 3 1 0 2 4) (vector 2 1 3 0 4))
+   (list (vector 3 1 4 2 0) (vector 4 1 3 0 2))
+   (list (vector 3 1 4 0 2) (vector 3 1 4 0 2))
+   (list (vector 3 1 2 0 4) (vector 3 1 2 0 4))
+   (list (vector 3 1 2 4 0) (vector 4 1 2 0 3))
+   (list (vector 3 0 4 2 1) (vector 1 4 3 0 2))
+   (list (vector 3 0 4 1 2) (vector 1 3 4 0 2))
+   (list (vector 3 0 2 1 4) (vector 1 3 2 0 4))
+   (list (vector 3 0 2 4 1) (vector 1 4 2 0 3))
+   (list (vector 3 0 1 4 2) (vector 1 2 4 0 3))
+   (list (vector 3 0 1 2 4) (vector 1 2 3 0 4))
+   (list (vector 3 4 2 1 0) (vector 4 3 2 0 1))
+   (list (vector 3 4 2 0 1) (vector 3 4 2 0 1))
+   (list (vector 3 4 1 0 2) (vector 3 2 4 0 1))
+   (list (vector 3 4 1 2 0) (vector 4 2 3 0 1))
+   (list (vector 3 4 0 2 1) (vector 2 4 3 0 1))
+   (list (vector 3 4 0 1 2) (vector 2 3 4 0 1))
+   (list (vector 2 1 0 4 3) (vector 2 1 0 4 3))
+   (list (vector 2 1 0 3 4) (vector 2 1 0 3 4))
+   (list (vector 2 1 4 3 0) (vector 4 1 0 3 2))
+   (list (vector 2 1 4 0 3) (vector 3 1 0 4 2))
+   (list (vector 2 1 3 0 4) (vector 3 1 0 2 4))
+   (list (vector 2 1 3 4 0) (vector 4 1 0 2 3))
+   (list (vector 2 0 4 3 1) (vector 1 4 0 3 2))
+   (list (vector 2 0 4 1 3) (vector 1 3 0 4 2))
+   (list (vector 2 0 3 1 4) (vector 1 3 0 2 4))
+   (list (vector 2 0 3 4 1) (vector 1 4 0 2 3))
+   (list (vector 2 0 1 4 3) (vector 1 2 0 4 3))
+   (list (vector 2 0 1 3 4) (vector 1 2 0 3 4))
+   (list (vector 2 4 3 1 0) (vector 4 3 0 2 1))
+   (list (vector 2 4 3 0 1) (vector 3 4 0 2 1))
+   (list (vector 2 4 1 0 3) (vector 3 2 0 4 1))
+   (list (vector 2 4 1 3 0) (vector 4 2 0 3 1))
+   (list (vector 2 4 0 3 1) (vector 2 4 0 3 1))
+   (list (vector 2 4 0 1 3) (vector 2 3 0 4 1))
+   (list (vector 2 3 1 0 4) (vector 3 2 0 1 4))
+   (list (vector 2 3 1 4 0) (vector 4 2 0 1 3))
+   (list (vector 2 3 0 4 1) (vector 2 4 0 1 3))
+   (list (vector 2 3 0 1 4) (vector 2 3 0 1 4))
+   (list (vector 2 3 4 1 0) (vector 4 3 0 1 2))
+   (list (vector 2 3 4 0 1) (vector 3 4 0 1 2))
+   (list (vector 1 0 4 3 2) (vector 1 0 4 3 2))
+   (list (vector 1 0 4 2 3) (vector 1 0 3 4 2))
+   (list (vector 1 0 3 2 4) (vector 1 0 3 2 4))
+   (list (vector 1 0 3 4 2) (vector 1 0 4 2 3))
+   (list (vector 1 0 2 4 3) (vector 1 0 2 4 3))
+   (list (vector 1 0 2 3 4) (vector 1 0 2 3 4))
+   (list (vector 1 4 3 2 0) (vector 4 0 3 2 1))
+   (list (vector 1 4 3 0 2) (vector 3 0 4 2 1))
+   (list (vector 1 4 2 0 3) (vector 3 0 2 4 1))
+   (list (vector 1 4 2 3 0) (vector 4 0 2 3 1))
+   (list (vector 1 4 0 3 2) (vector 2 0 4 3 1))
+   (list (vector 1 4 0 2 3) (vector 2 0 3 4 1))
+   (list (vector 1 3 2 0 4) (vector 3 0 2 1 4))
+   (list (vector 1 3 2 4 0) (vector 4 0 2 1 3))
+   (list (vector 1 3 0 4 2) (vector 2 0 4 1 3))
+   (list (vector 1 3 0 2 4) (vector 2 0 3 1 4))
+   (list (vector 1 3 4 2 0) (vector 4 0 3 1 2))
+   (list (vector 1 3 4 0 2) (vector 3 0 4 1 2))
+   (list (vector 1 2 0 4 3) (vector 2 0 1 4 3))
+   (list (vector 1 2 0 3 4) (vector 2 0 1 3 4))
+   (list (vector 1 2 4 3 0) (vector 4 0 1 3 2))
+   (list (vector 1 2 4 0 3) (vector 3 0 1 4 2))
+   (list (vector 1 2 3 0 4) (vector 3 0 1 2 4))
+   (list (vector 1 2 3 4 0) (vector 4 0 1 2 3))
+   (list (vector 0 4 3 2 1) (vector 0 4 3 2 1))
+   (list (vector 0 4 3 1 2) (vector 0 3 4 2 1))
+   (list (vector 0 4 2 1 3) (vector 0 3 2 4 1))
+   (list (vector 0 4 2 3 1) (vector 0 4 2 3 1))
+   (list (vector 0 4 1 3 2) (vector 0 2 4 3 1))
+   (list (vector 0 4 1 2 3) (vector 0 2 3 4 1))
+   (list (vector 0 3 2 1 4) (vector 0 3 2 1 4))
+   (list (vector 0 3 2 4 1) (vector 0 4 2 1 3))
+   (list (vector 0 3 1 4 2) (vector 0 2 4 1 3))
+   (list (vector 0 3 1 2 4) (vector 0 2 3 1 4))
+   (list (vector 0 3 4 2 1) (vector 0 4 3 1 2))
+   (list (vector 0 3 4 1 2) (vector 0 3 4 1 2))
+   (list (vector 0 2 1 4 3) (vector 0 2 1 4 3))
+   (list (vector 0 2 1 3 4) (vector 0 2 1 3 4))
+   (list (vector 0 2 4 3 1) (vector 0 4 1 3 2))
+   (list (vector 0 2 4 1 3) (vector 0 3 1 4 2))
+   (list (vector 0 2 3 1 4) (vector 0 3 1 2 4))
+   (list (vector 0 2 3 4 1) (vector 0 4 1 2 3))
+   (list (vector 0 1 4 3 2) (vector 0 1 4 3 2))
+   (list (vector 0 1 4 2 3) (vector 0 1 3 4 2))
+   (list (vector 0 1 3 2 4) (vector 0 1 3 2 4))
+   (list (vector 0 1 3 4 2) (vector 0 1 4 2 3))
+   (list (vector 0 1 2 4 3) (vector 0 1 2 4 3))
+   (list (vector 0 1 2 3 4) (vector 0 1 2 3 4))))

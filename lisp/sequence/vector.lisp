@@ -83,22 +83,6 @@ vector."
        "Permutation matrix~A and vector(~D) are incompatible."
        (matrix-dimensions matrix) (length data))))
 
-(defmethod npermute ((data vector) (matrix permutation-matrix))
-  "Destructively permute the vector."
-  (if (= (length data) (matrix-row-dimension matrix))
-      (right-npermute-vector data (contents matrix))
-      (error
-       "Vector(~D) and permutation matrix~A are incompatible."
-       (length data) (matrix-dimensions matrix))))
-
-(defmethod npermute ((matrix permutation-matrix) (data vector))
-  "Destructively permute the list."
-  (if (= (length data) (matrix-column-dimension matrix))
-      (left-npermute-vector (contents (ntranspose matrix)) data)
-      (error
-       "Permutation matrix~A and vector(~D) are incompatible."
-       (matrix-dimensions matrix) (length data))))
-
 (defmethod scale ((scalar number) (data vector))
   "Return the vector scaled by scalar."
   (let ((result

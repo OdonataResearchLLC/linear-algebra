@@ -910,33 +910,6 @@
          (#C(1 -4) #C(2 -4) #C(3 -4) #C(4  0) #C(4  5)))
      (linear-algebra:permute pmat matrix))))
 
-(define-test npermute-hermitian-matrix
-  (:tag :hermitian-matrix :npermute)
-  (let ((matrix
-         (linear-algebra:make-matrix
-          5 5 :matrix-type 'linear-algebra:hermitian-matrix
-          :initial-contents
-          '((#C(1  0) #C(1  2) #C(1  3) #C(1  4) #C(1 5))
-            (#C(1 -2) #C(2  0) #C(2  3) #C(2  4) #C(2 5))
-            (#C(1 -3) #C(2 -3) #C(3  0) #C(3  4) #C(3 5))
-            (#C(1 -4) #C(2 -4) #C(3 -4) #C(4  0) #C(4 5))
-            (#C(1 -5) #C(2 -5) #C(3 -5) #C(4 -5) #C(5 0)))))
-        (pmat
-         (linear-algebra:make-matrix
-          5 5 :matrix-type 'linear-algebra:permutation-matrix
-          :initial-contents
-          '((0 0 1 0 0)
-            (0 0 0 0 1)
-            (1 0 0 0 0)
-            (0 1 0 0 0)
-            (0 0 0 1 0)))))
-    (assert-error
-     'error
-     (linear-algebra:npermute matrix pmat))
-    (assert-error
-     'error
-     (linear-algebra:npermute pmat matrix))))
-
 (define-test scale-hermitian-matrix
   (:tag :hermitian-matrix :scale)
   (assert-float-equal

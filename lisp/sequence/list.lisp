@@ -117,36 +117,6 @@ data."
        "Permutation matrix~A and list(~D) sizes are incompatible."
        (matrix-dimensions matrix) (length data))))
 
-(defmethod npermute ((data list) (matrix permutation-matrix))
-  "Destructively permute the list."
-  (if (= (length data) (matrix-row-dimension matrix))
-      (loop with mat = (contents matrix)
-            with end = (1- (length mat))
-            for row = 0 then (if (= row column) (1+ row) row)
-            as column = (aref mat row)
-            until (= row end) unless (= row column) do
-            (rotatef (nth row data) (nth column data))
-            (rotatef (aref mat row) (aref mat column))
-            finally (return data))
-      (error
-       "List(~D) and permutation~A matrix sizes are incompatible."
-       (length data) (matrix-dimensions matrix))))
-
-(defmethod npermute ((matrix permutation-matrix) (data list))
-  "Destructively permute the list."
-  (if (= (length data) (matrix-row-dimension matrix))
-      (loop with mat = (contents (ntranspose matrix))
-            with end = (1- (length mat))
-            for row = 0 then (if (= row column) (1+ row) row)
-            as column = (aref mat row)
-            until (= row end) unless (= row column) do
-            (rotatef (nth row data) (nth column data))
-            (rotatef (aref mat row) (aref mat column))
-            finally (return data))
-      (error
-       "Permutation matrix~A and list(~D) sizes are incompatible."
-       (matrix-dimensions matrix) (length data))))
-
 (defmethod scale ((scalar number) (data list))
   "Return the list scaled by scalar."
   (loop for item in data collect (* scalar item)))

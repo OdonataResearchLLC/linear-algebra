@@ -38,93 +38,59 @@
 ;;; Permute Vectors
 
 (defun right-permute-vector (vector permutation)
-  (loop with result =
-        (make-array
-         (length vector)
-         :element-type (array-element-type vector))
-        for row = 0 then (1+ row)
-        and column across permutation
-        do (setf (aref result column) (aref vector row))
-        finally (return result)))
+  "Permute the row vector to create a column vector."
+  (loop
+   with result =
+   (make-array
+    (length vector)
+    :element-type (array-element-type vector))
+   for column across permutation
+   and row = 0 then (1+ row)
+   do (setf (aref result column) (aref vector row))
+   finally return result))
 
 (defun left-permute-vector (permutation vector)
-  (loop with result =
-        (make-array
-         (length vector)
-         :element-type (array-element-type vector))
-        for row = 0 then (1+ row)
-        and column across permutation
-        do (setf (aref result row) (aref vector column))
-        finally (return result)))
-
-(defun right-npermute-vector (vector permutation)
-  (loop with end = (1- (length permutation))
-        for row = 0 then (if (= row column) (1+ row) row)
-        as column = (aref permutation row)
-        until (= row end) unless (= row column) do
-        (rotatef (aref vector row) (aref vector column))
-        (rotatef (aref permutation row) (aref permutation column))
-        finally (return vector)))
-
-(defun left-npermute-vector (permutation vector)
-  (loop with end = (1- (length permutation))
-        for row = 0 then (if (= row column) (1+ row) row)
-        as column = (aref permutation row)
-        until (= row end) unless (= row column) do
-        (rotatef (aref vector row) (aref vector column))
-        (rotatef (aref permutation row) (aref permutation column))
-        finally (return vector)))
+  "Permute the column vector to create a row vector."
+  (loop
+   with result =
+   (make-array
+    (length vector)
+    :element-type (array-element-type vector))
+   for column across permutation
+   and row = 0 then (1+ row)
+   do (setf (aref result row) (aref vector column))
+   finally return result))
 
 ;;; Permute Arrays
 
 (defun right-permute-array (array permutation)
-  (loop with m-rows = (array-dimension array 0)
-        with result =
-        (make-array
-         (array-dimensions array)
-         :element-type (array-element-type array))
-        for row = 0 then (1+ row)
-        and column across permutation
-        do (loop for irow below m-rows do
-                 (setf
-                  (aref result irow column)
-                  (aref array irow row)))
-        finally (return result)))
+  "Permute the columns of the array."
+  (loop
+   with m-rows = (array-dimension array 0)
+   with result =
+   (make-array
+    (array-dimensions array)
+    :element-type (array-element-type array))
+   for column across permutation
+   and row = 0 then (1+ row)
+   do
+   (loop
+    for irow below m-rows do
+    (setf (aref result irow column) (aref array irow row)))
+   finally return result))
 
 (defun left-permute-array (permutation array)
-  (loop with n-columns = (array-dimension array 1)
-        with result =
-        (make-array
-         (array-dimensions array)
-         :element-type (array-element-type array))
-        for row = 0 then (1+ row)
-        and column across permutation
-        do (loop for icol below n-columns do
-                 (setf
-                  (aref result row icol)
-                  (aref array column icol)))
-        finally (return result)))
-
-(defun right-npermute-array (array permutation)
-  (loop with m-rows = (array-dimension array 0)
-        with end = (1- (length permutation))
-        for row = 0 then (if (= row column) (1+ row) row)
-        as column = (aref permutation row)
-        until (= row end) unless (= row column) do
-        (loop for irow below m-rows do
-              (rotatef (aref array irow row) (aref array irow column)))
-        (rotatef (aref permutation row) (aref permutation column))
-        finally (return array)))
-
-(defun left-npermute-array (permutation array)
-  (loop with n-columns = (array-dimension array 1)
-        with end = (1- (length permutation))
-        for row = 0 then (if (= row column) (1+ row) row)
-        as column = (aref permutation row)
-        until (= row end) unless (= row column) do
-        (loop for icolumn below n-columns do
-              (rotatef
-               (aref array row icolumn)
-               (aref array column icolumn)))
-        (rotatef (aref permutation row) (aref permutation column))
-        finally (return array)))
+  "Permute the rows of the array."
+  (loop
+   with n-columns = (array-dimension array 1)
+   with result =
+   (make-array
+    (array-dimensions array)
+    :element-type (array-element-type array))
+   for column across permutation
+   and row = 0 then (1+ row)
+   do
+   (loop
+    for icol below n-columns do
+    (setf (aref result row icol) (aref array column icol)))
+   finally return result))

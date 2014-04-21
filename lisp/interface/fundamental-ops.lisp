@@ -61,10 +61,6 @@
   (:documentation
    "Permute the vector or matrix."))
 
-(defgeneric npermute (vector-or-matrix-1 vector-or-matrix-2)
-  (:documentation
-   "Destructively permute the vector or matrix."))
-
 (defgeneric scale (scalar vector-or-matrix)
   (:documentation
    "Scale each element by the scalar."))

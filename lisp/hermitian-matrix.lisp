@@ -394,15 +394,3 @@ matrix2."
        "Permutation matrix~A and dense matrix~A sizes incompatible."
        (matrix-dimensions matrix)
        (matrix-dimensions permutation))))
-
-(defmethod npermute ((matrix hermitian-matrix)
-                     (permutation permutation-matrix))
-  "Destructively permute the array."
-  (error "Permutation of a ~A matrix results in a square matrix."
-         (class-name (class-of matrix))))
-
-(defmethod npermute ((permutation permutation-matrix)
-                     (matrix hermitian-matrix))
-  "Destructively permute the array."
-  (error "Permutation of a ~A matrix results in a square matrix."
-         (class-name (class-of matrix))))

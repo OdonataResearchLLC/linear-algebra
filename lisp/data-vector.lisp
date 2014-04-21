@@ -331,30 +331,6 @@ applying the function to each element of the vectors."
    :contents
    (left-permute-vector (contents matrix) (contents vector))))
 
-(defmethod npermute :before ((vector row-vector)
-                             (matrix permutation-matrix))
-  "Verify that the dimensions are compatible."
-  (unless (= (vector-length vector) (matrix-row-dimension matrix))
-    (error "Vector and permutation matrix sizes incompatible.")))
-
-(defmethod npermute ((vector row-vector) (matrix permutation-matrix))
-  "Destructively permute the row vector."
-  (right-npermute-vector (contents vector) (contents matrix))
-  ;; Return permutation
-  vector)
-
-(defmethod npermute :before ((matrix permutation-matrix)
-                             (vector column-vector))
-  "Verify that the dimensions are compatible."
-  (unless (= (vector-length vector) (matrix-column-dimension matrix))
-    (error "Vector and permutation matrix sizes incompatible.")))
-
-(defmethod npermute ((matrix permutation-matrix) (vector column-vector))
-  "Destructively permute the column vector."
-  (left-npermute-vector (contents matrix) (contents vector))
-  ;; Return permutation
-  vector)
-
 (defmethod scale ((scalar number) (vector data-vector))
   "Return the vector scaled by scalar."
   (make-instance

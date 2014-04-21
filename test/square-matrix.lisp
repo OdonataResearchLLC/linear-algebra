@@ -789,65 +789,6 @@
          (4.0 4.1 4.2 4.3 4.4))
      (linear-algebra:permute pmat matrix))))
 
-(define-test npermute-square-matrix
-  (:tag :square-matrix :npermute)
-  (let ((matrix
-         (linear-algebra:make-matrix
-          5 5 :matrix-type 'linear-algebra:square-matrix
-          :initial-contents
-          (make-array
-           '(5 5) :initial-contents
-           '((1.0 1.1 1.2 1.3 1.4)
-             (2.0 2.1 2.2 2.3 2.4)
-             (3.0 3.1 3.2 3.3 3.4)
-             (4.0 4.1 4.2 4.3 4.4)
-             (5.0 5.1 5.2 5.3 5.4)))))
-        (pmat
-         (linear-algebra:make-matrix
-          5 5 :matrix-type 'linear-algebra:permutation-matrix
-          :initial-contents
-          '((0 0 1 0 0)
-            (0 0 0 0 1)
-            (1 0 0 0 0)
-            (0 1 0 0 0)
-            (0 0 0 1 0)))))
-    (assert-eq matrix (linear-algebra:npermute matrix pmat))
-    (assert-float-equal
-     #2A((1.2 1.3 1.0 1.4 1.1)
-         (2.2 2.3 2.0 2.4 2.1)
-         (3.2 3.3 3.0 3.4 3.1)
-         (4.2 4.3 4.0 4.4 4.1)
-         (5.2 5.3 5.0 5.4 5.1))
-     matrix))
-  (let ((matrix
-         (linear-algebra:make-matrix
-          5 5 :matrix-type 'linear-algebra:square-matrix
-          :initial-contents
-          (make-array
-           '(5 5) :initial-contents
-           '((1.0 1.1 1.2 1.3 1.4)
-             (2.0 2.1 2.2 2.3 2.4)
-             (3.0 3.1 3.2 3.3 3.4)
-             (4.0 4.1 4.2 4.3 4.4)
-             (5.0 5.1 5.2 5.3 5.4)))))
-        (pmat
-         (linear-algebra:make-matrix
-          5 5 :matrix-type 'linear-algebra:permutation-matrix
-          :initial-contents
-          '((0 0 1 0 0)
-            (0 0 0 0 1)
-            (1 0 0 0 0)
-            (0 1 0 0 0)
-            (0 0 0 1 0)))))
-    (assert-eq matrix (linear-algebra:npermute pmat matrix))
-    (assert-float-equal
-     #2A((3.0 3.1 3.2 3.3 3.4)
-         (5.0 5.1 5.2 5.3 5.4)
-         (1.0 1.1 1.2 1.3 1.4)
-         (2.0 2.1 2.2 2.3 2.4)
-         (4.0 4.1 4.2 4.3 4.4))
-     matrix)))
-
 (define-test scale-square-matrix
   (:tag :square-matrix :scale)
   (assert-float-equal
