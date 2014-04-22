@@ -106,6 +106,15 @@
     (assert-float-equal 4.5 scale)
     (assert-float-equal 6.540154 sump)))
 
+;;; Norm & supporting functions
+
+(define-test %abs-vector
+  (:tag :unary :norm)
+  (assert-rational-equal
+   #(6 5 4 3 2 1 0 1 2 3 4 5)
+   (linear-algebra-kernel::%abs-vector
+    #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5))))
+
 ;;; Taxicab norm
 
 (define-test unary-norm-1-vector
