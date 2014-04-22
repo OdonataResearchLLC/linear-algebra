@@ -73,10 +73,9 @@
     :element-type (array-element-type array))
    for column across permutation
    and row = 0 then (1+ row)
-   do
-   (loop
-    for irow below m-rows do
-    (setf (aref result irow column) (aref array irow row)))
+   do (loop
+       for irow below m-rows do
+       (setf (aref result irow column) (aref array irow row)))
    finally return result))
 
 (defun left-permute-array (permutation array)
@@ -89,8 +88,7 @@
     :element-type (array-element-type array))
    for column across permutation
    and row = 0 then (1+ row)
-   do
-   (loop
-    for icol below n-columns do
-    (setf (aref result row icol) (aref array column icol)))
+   do (loop
+       for icol below n-columns do
+       (setf (aref result row icol) (aref array column icol)))
    finally return result))

@@ -115,11 +115,12 @@ MATRIX."))
   (:documentation
    "Set the submatrix of the matrix."))
 
-(defgeneric replace-matrix (matrix1 matrix2 &key
-                            start-row1 end-row1
-                            start-column1 end-column1
-                            start-row2 end-row2
-                            start-column2 end-column2)
+(defgeneric replace-matrix
+    (matrix1 matrix2 &key
+     start-row1 end-row1
+     start-column1 end-column1
+     start-row2 end-row2
+     start-column2 end-column2)
   (:documentation
    "Destructively replace elements of matrix1 with matrix2."))
 

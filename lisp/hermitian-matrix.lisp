@@ -50,11 +50,12 @@
        (matrix data rows columns element-type)
   "Initialize and validate a Hermitian matrix with a sequence."
   (let ((contents
-         (setf (contents matrix)
-               (make-array
-                (list rows columns)
-                :element-type element-type
-                :initial-contents data))))
+         (setf
+          (contents matrix)
+          (make-array
+           (list rows columns)
+           :element-type element-type
+           :initial-contents data))))
     (dotimes (i0 rows matrix)
       (if (zerop (imagpart (aref contents i0 i0)))
           (dotimes (i1 i0)
@@ -65,38 +66,39 @@
               (error "The data is not Hermitian.")))
           (error "The data is not Hermitian.")))))
 
-(defmethod initialize-matrix ((matrix hermitian-matrix) (data complex)
-                              (rows integer) (columns integer)
-                              element-type)
+(defmethod initialize-matrix
+    ((matrix hermitian-matrix) (data complex)
+     (rows integer) (columns integer) element-type)
   "It is an error to initialize a Hermitian matrix with a complex
 element."
   (declare (ignore data rows columns element-type))
   (error
    "The initial element for a ~A must be real." (type-of matrix)))
 
-(defmethod initialize-matrix ((matrix hermitian-matrix) (data list)
-                              (rows integer) (columns integer)
-                              element-type)
+(defmethod initialize-matrix
+    ((matrix hermitian-matrix) (data list)
+     (rows integer) (columns integer) element-type)
   "Initialize the Hermitian matrix with a nested sequence."
   (%initialize-hermitian-matrix-with-seq
    matrix data rows columns element-type))
 
-(defmethod initialize-matrix ((matrix hermitian-matrix) (data vector)
-                              (rows integer) (columns integer)
-                              element-type)
+(defmethod initialize-matrix
+    ((matrix hermitian-matrix) (data vector)
+     (rows integer) (columns integer) element-type)
   "Initialize the Hermitian matrix with a nested sequence."
   (%initialize-hermitian-matrix-with-seq
    matrix data rows columns element-type))
 
-(defmethod initialize-matrix ((matrix hermitian-matrix) (data array)
-                              (rows integer) (columns integer)
-                              element-type)
+(defmethod initialize-matrix
+    ((matrix hermitian-matrix) (data array)
+     (rows integer) (columns integer) element-type)
   "Initialize the Hermitian matrix with a 2D array."
   (let ((contents
-         (setf (contents matrix)
-               (make-array
-                (list rows columns)
-                :element-type element-type))))
+         (setf
+          (contents matrix)
+          (make-array
+           (list rows columns)
+           :element-type element-type))))
     (dotimes (i0 rows matrix)
       (if (zerop
            (imagpart
@@ -114,8 +116,9 @@ element."
               (error "The data is not Hermitian.")))
           (error "The data is not Hermitian.")))))
 
-(defmethod (setf mref) ((data number) (matrix hermitian-matrix)
-                        (row integer) (column integer))
+(defmethod (setf mref)
+    ((data number) (matrix hermitian-matrix)
+     (row integer) (column integer))
   "Set the element at row,column of matrix to data."
   (if (= row column)
       (unless
@@ -157,9 +160,10 @@ element."
          (aref mat mi0 mi1) (aref dat di0 di1)
          (aref mat mi1 mi0) (conjugate (aref dat di0 di1)))))))
 
-(defmethod submatrix ((matrix hermitian-matrix)
-                      (start-row integer) (start-column integer)
-                      &key end-row end-column)
+(defmethod submatrix
+    ((matrix hermitian-matrix)
+     (start-row integer) (start-column integer)
+     &key end-row end-column)
   "Return a matrix created from the submatrix of matrix."
   (multiple-value-bind (start-row start-column end-row end-column)
       (matrix-validated-range
@@ -186,11 +190,10 @@ element."
             (aref original (+ start-row row)
                   (+ start-column column)))))))))
 
-(defmethod (setf submatrix) ((data hermitian-matrix)
-                             (matrix hermitian-matrix)
-                             (start-row integer)
-                             (start-column integer)
-                             &key end-row end-column)
+(defmethod (setf submatrix)
+    ((data hermitian-matrix) (matrix hermitian-matrix)
+     (start-row integer) (start-column integer)
+     &key end-row end-column)
   "Set a submatrix of the matrix."
   (multiple-value-bind (start-row start-column end-row end-column)
       (matrix-validated-range
@@ -216,11 +219,10 @@ element."
           "Range(~D:~D,~D:~D) results in a non-Hermitian matrix."
           start-row end-row start-column end-column))))))
 
-(defmethod (setf submatrix) ((data dense-matrix)
-                             (matrix hermitian-matrix)
-                             (start-row integer)
-                             (start-column integer)
-                             &key end-row end-column)
+(defmethod (setf submatrix)
+    ((data dense-matrix) (matrix hermitian-matrix)
+     (start-row integer) (start-column integer)
+     &key end-row end-column)
   "Set a submatrix of the matrix."
   (multiple-value-bind (start-row start-column end-row end-column)
       (matrix-validated-range
@@ -280,12 +282,12 @@ matrix2."
          (aref contents1 m1-i1 m1-i0)
          (conjugate (aref contents2 m2-i0 m2-i1)))))))
 
-(defmethod replace-matrix ((matrix1 hermitian-matrix)
-                           (matrix2 hermitian-matrix)
-                           &key (start-row1 0) end-row1
-                           (start-column1 0) end-column1
-                           (start-row2 0) end-row2
-                           (start-column2 0) end-column2)
+(defmethod replace-matrix
+    ((matrix1 hermitian-matrix) (matrix2 hermitian-matrix)
+     &key (start-row1 0) end-row1
+     (start-column1 0) end-column1
+     (start-row2 0) end-row2
+     (start-column2 0) end-column2)
   "Replace the elements of matrix1 with matrix2."
   (multiple-value-bind (start-row1 start-column1 end-row1 end-column1)
       (matrix-validated-range
@@ -324,12 +326,12 @@ matrix2."
             start-row1 (+ start-row1 m-rows -1)
             start-column1 (+ start-column1 n-columns -1))))))))
 
-(defmethod replace-matrix ((matrix1 hermitian-matrix)
-                           (matrix2 dense-matrix)
-                           &key (start-row1 0) end-row1
-                           (start-column1 0) end-column1
-                           (start-row2 0) end-row2
-                           (start-column2 0) end-column2)
+(defmethod replace-matrix
+    ((matrix1 hermitian-matrix) (matrix2 dense-matrix)
+     &key (start-row1 0) end-row1
+     (start-column1 0) end-column1
+     (start-row2 0) end-row2
+     (start-column2 0) end-column2)
   "Replace the elements of matrix1 with matrix2."
   (multiple-value-bind (start-row1 start-column1 end-row1 end-column1)
       (matrix-validated-range
@@ -369,8 +371,8 @@ matrix2."
   (declare (ignore conjugate))
   matrix)
 
-(defmethod permute ((matrix hermitian-matrix)
-                    (permutation permutation-matrix))
+(defmethod permute
+    ((matrix hermitian-matrix) (permutation permutation-matrix))
   (if (every
        #'= (matrix-dimensions matrix) (matrix-dimensions permutation))
       (make-instance
@@ -382,8 +384,8 @@ matrix2."
        (matrix-dimensions matrix)
        (matrix-dimensions permutation))))
 
-(defmethod permute ((permutation permutation-matrix)
-                    (matrix hermitian-matrix))
+(defmethod permute
+    ((permutation permutation-matrix) (matrix hermitian-matrix))
   (if (every
        #'= (matrix-dimensions permutation) (matrix-dimensions matrix))
       (make-instance

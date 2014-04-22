@@ -53,11 +53,12 @@
   "Return true if object is an identity-matrix."
   (typep object 'identity-matrix))
 
-(defmethod initialize-matrix ((matrix identity-matrix)
-                              (data number)
-                              (rows integer)
-                              (columns integer)
-                              element-type)
+(defmethod initialize-matrix
+    ((matrix identity-matrix)
+     (data number)
+     (rows integer)
+     (columns integer)
+     element-type)
   "Initialize the identity matrix.."
   (cond
     ((not (zerop data))
@@ -68,15 +69,15 @@
      (setf
       (slot-value matrix 'size) rows
       (slot-value matrix 'contents)
-           (make-array 2 :element-type element-type
-                       :initial-contents
-                       (list (coerce 0 element-type)
-                             (coerce 1 element-type))))
+      (make-array
+       2 :element-type element-type
+       :initial-contents
+       (list (coerce 0 element-type) (coerce 1 element-type))))
      ;; Return the matrix
      matrix)))
 
-(defmethod matrix-in-bounds-p ((matrix identity-matrix)
-                               (row integer) (column integer))
+(defmethod matrix-in-bounds-p
+    ((matrix identity-matrix) (row integer) (column integer))
   "Return true if row and column do not exceed the dimensions of matrix."
   (and
    (<= 0 row)    (< row    (size matrix))
@@ -90,8 +91,8 @@
   "Return the number of rows and columns in matrix."
   (list (size matrix) (size matrix)))
 
-(defmethod mref ((matrix identity-matrix)
-                 (row integer) (column integer))
+(defmethod mref
+    ((matrix identity-matrix) (row integer) (column integer))
   "Return the element of the matrix at row,column."
   (if (= row column)
       (aref (contents matrix) 1)
@@ -107,13 +108,12 @@
      (make-array
       2 :element-type element-type
       :initial-contents
-      (list (coerce 0 element-type)
-            (coerce 1 element-type))))))
+      (list (coerce 0 element-type) (coerce 1 element-type))))))
 
-(defmethod submatrix ((matrix identity-matrix)
-                      (start-row integer)
-                      (start-column integer)
-                      &key end-row end-column)
+(defmethod submatrix
+    ((matrix identity-matrix)
+     (start-row integer) (start-column integer)
+     &key end-row end-column)
   "Return a matrix created from the submatrix of matrix."
   (multiple-value-bind (start-row start-column end-row end-column)
       (matrix-validated-range
@@ -130,8 +130,7 @@
           (make-array
            2 :element-type element-type
            :initial-contents
-           (list (coerce 0 element-type)
-                 (coerce 1 element-type)))))
+           (list (coerce 0 element-type) (coerce 1 element-type)))))
         ;; Intersects the diagonal
         ((and (<= start-row end-column) (<= start-column end-row))
          (multiple-value-bind (r0 c0 size)

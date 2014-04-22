@@ -50,10 +50,11 @@
           (matrix-type &optional
            (initial-contents nil initial-contents-p))
   (let ((mat (gensym "MATRIX-")))
-    `(let ((,mat (linear-algebra:make-matrix
-                  10 10 :matrix-type ,matrix-type
-                  ,@(when initial-contents-p
-                          `(:initial-contents ,initial-contents)))))
+    `(let ((,mat
+            (linear-algebra:make-matrix
+             10 10 :matrix-type ,matrix-type
+             ,@(when initial-contents-p
+                 `(:initial-contents ,initial-contents)))))
       (assert-true
        (linear-algebra:matrix-in-bounds-p
         ,mat (random 10) (random 10)))
@@ -144,8 +145,9 @@
         (row2 (gensym "ROW2-"))
         (col1 (gensym "COL1-"))
         (col2 (gensym "COL2-")))
-    `(let ((,matrix (linear-algebra:make-matrix
-                     ,rows ,columns :matrix-type ,matrix-type))
+    `(let ((,matrix
+            (linear-algebra:make-matrix
+             ,rows ,columns :matrix-type ,matrix-type))
            (,row1 (random ,rows))
            (,row2 (random ,rows))
            (,col1 (random ,columns))

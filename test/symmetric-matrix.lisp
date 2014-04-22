@@ -44,133 +44,151 @@
 (define-test make-symmetric-matrix
   (:tag :symmetric-matrix :make-matrix)
   ;; A default symmetric matrix
-  (let ((matrix (linear-algebra:make-matrix
-                 10 10
-                 :matrix-type 'linear-algebra:symmetric-matrix)))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          10 10 :matrix-type 'linear-algebra:symmetric-matrix)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:symmetric-matrix))
     (assert-rational-equal
      (make-array '(10 10) :initial-element 0)
      matrix))
   ;; Specify the symmetric matrix element type
-  (let ((matrix (linear-algebra:make-matrix
-                 10 10
-                 :matrix-type 'linear-algebra:symmetric-matrix
-                 :element-type 'single-float)))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          10 10
+          :matrix-type 'linear-algebra:symmetric-matrix
+          :element-type 'single-float)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:symmetric-matrix))
-    (assert-eq (array-element-type
-                (linear-algebra::contents matrix))
-               (array-element-type
-                (make-array '(10 10) :element-type 'single-float)))
+    (assert-eq
+     (array-element-type
+      (linear-algebra::contents matrix))
+     (array-element-type
+      (make-array '(10 10) :element-type 'single-float)))
     (assert-float-equal
      (make-array '(10 10) :initial-element 0.0
                  :element-type 'single-float)
      matrix))
   ;; Specify the symmetric matrix initial element
-  (let ((matrix (linear-algebra:make-matrix
-                 10 10
-                 :matrix-type 'linear-algebra:symmetric-matrix
-                 :initial-element 1.0)))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          10 10
+          :matrix-type 'linear-algebra:symmetric-matrix
+          :initial-element 1.0)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:symmetric-matrix))
     (assert-float-equal
      (make-array '(10 10) :initial-element 1.0)
      matrix))
   ;; Specify the symmetric matrix contents - Nested list
-  (let* ((data '((1.1 1.2 1.3 1.4)
-                 (1.2 2.2 2.3 2.4)
-                 (1.3 2.3 3.3 3.4)
-                 (1.4 2.4 3.4 4.4))) 
-         (matrix (linear-algebra:make-matrix
-                  4 4
-                  :matrix-type 'linear-algebra:symmetric-matrix
-                  :initial-contents data)))
+  (let* ((data
+          '((1.1 1.2 1.3 1.4)
+            (1.2 2.2 2.3 2.4)
+            (1.3 2.3 3.3 3.4)
+            (1.4 2.4 3.4 4.4))) 
+         (matrix
+          (linear-algebra:make-matrix
+           4 4
+           :matrix-type 'linear-algebra:symmetric-matrix
+           :initial-contents data)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:symmetric-matrix))
     (assert-float-equal
      (make-array '(4 4) :initial-contents data)
      matrix))
   ;; Specify the symmetric matrix contents - Nested vector
-  (let* ((data #(#(1.1 1.2 1.3 1.4)
-                 #(1.2 2.2 2.3 2.4)
-                 #(1.3 2.3 3.3 3.4)
-                 #(1.4 2.4 3.4 4.4)))
-         (matrix (linear-algebra:make-matrix
-                  4 4
-                  :matrix-type 'linear-algebra:symmetric-matrix
-                  :initial-contents data)))
+  (let* ((data
+          #(#(1.1 1.2 1.3 1.4)
+            #(1.2 2.2 2.3 2.4)
+            #(1.3 2.3 3.3 3.4)
+            #(1.4 2.4 3.4 4.4)))
+         (matrix
+          (linear-algebra:make-matrix
+           4 4
+           :matrix-type 'linear-algebra:symmetric-matrix
+           :initial-contents data)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:symmetric-matrix))
     (assert-float-equal
      (make-array '(4 4) :initial-contents data)
      matrix))
   ;; Specify the symmetric matrix contents - 2D array
-  (let* ((data (make-array '(4 4) :initial-contents
-                           '((1.1 1.2 1.3 1.4)
-                             (1.2 2.2 2.3 2.4)
-                             (1.3 2.3 3.3 3.4)
-                             (1.4 2.4 3.4 4.4))))
-         (matrix (linear-algebra:make-matrix
-                  4 4
-                  :matrix-type 'linear-algebra:symmetric-matrix
-                  :initial-contents data)))
+  (let* ((data
+          (make-array
+           '(4 4) :initial-contents
+           '((1.1 1.2 1.3 1.4)
+             (1.2 2.2 2.3 2.4)
+             (1.3 2.3 3.3 3.4)
+             (1.4 2.4 3.4 4.4))))
+         (matrix
+          (linear-algebra:make-matrix
+           4 4
+           :matrix-type 'linear-algebra:symmetric-matrix
+           :initial-contents data)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:symmetric-matrix))
     (assert-float-equal data matrix))
   ;; Erroneous 2D array input data
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 4 4
-                 :matrix-type 'linear-algebra:symmetric-matrix
-                 :initial-contents
-                 #3A(((1.1 1.2) (2.1 2.2))
-                     ((3.1 3.2) (4.1 4.2))
-                     ((5.1 5.2) (6.1 6.2)))))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 3 4
-                 :matrix-type 'linear-algebra:symmetric-matrix
-                 :initial-contents
-                 (symmetric-array 0 4)))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 4 3
-                 :matrix-type 'linear-algebra:symmetric-matrix
-                 :initial-contents
-                 (symmetric-array 0 4)))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 3 3 :element-type 'single-float
-                 :matrix-type 'linear-algebra:symmetric-matrix
-                 :initial-contents
-                 '((1.0 2.0 3.0) (4 5 6) (7 8 9))))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 3 3 :element-type 'single-float
-                 :matrix-type 'linear-algebra:symmetric-matrix
-                 :initial-contents
-                 #(#(1.0 2.0 3.0) #(4 5 6) #(7 8 9))))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 3 3 :element-type 'single-float
-                 :matrix-type 'linear-algebra:symmetric-matrix
-                 :initial-contents
-                 #2A((1.0 2.0 3.0) (4 5 6) (7 8 9))))
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type 'linear-algebra:symmetric-matrix
-                 :initial-contents
-                 (coordinate-array 0 0 5 5)))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    4 4
+    :matrix-type 'linear-algebra:symmetric-matrix
+    :initial-contents
+    #3A(((1.1 1.2) (2.1 2.2))
+        ((3.1 3.2) (4.1 4.2))
+        ((5.1 5.2) (6.1 6.2)))))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    3 4
+    :matrix-type 'linear-algebra:symmetric-matrix
+    :initial-contents
+    (symmetric-array 0 4)))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    4 3
+    :matrix-type 'linear-algebra:symmetric-matrix
+    :initial-contents
+    (symmetric-array 0 4)))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    3 3 :element-type 'single-float
+    :matrix-type 'linear-algebra:symmetric-matrix
+    :initial-contents
+    '((1.0 2.0 3.0) (4 5 6) (7 8 9))))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    3 3 :element-type 'single-float
+    :matrix-type 'linear-algebra:symmetric-matrix
+    :initial-contents
+    #(#(1.0 2.0 3.0) #(4 5 6) #(7 8 9))))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    3 3 :element-type 'single-float
+    :matrix-type 'linear-algebra:symmetric-matrix
+    :initial-contents
+    #2A((1.0 2.0 3.0) (4 5 6) (7 8 9))))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    5 5
+    :matrix-type 'linear-algebra:symmetric-matrix
+    :initial-contents
+    (coordinate-array 0 0 5 5)))
   ;; Specify initial element and initial contents
-  (assert-error 'error
-                (linear-algebra:make-matrix
-                 4 4
-                 :matrix-type 'linear-algebra:symmetric-matrix
-                 :initial-element 1.1
-                 :initial-contents
-                 (symmetric-array 0 4))))
+  (assert-error
+   'error
+   (linear-algebra:make-matrix
+    4 4
+    :matrix-type 'linear-algebra:symmetric-matrix
+    :initial-element 1.1
+    :initial-contents
+    (symmetric-array 0 4))))
 
 ;;; Test the symmetric matrix predicate
 (define-test symmetric-matrix-predicate
@@ -219,19 +237,22 @@
          (rows 5) (columns 5)
          (rend (1- rows)) (cend (1- columns))
          (rowi (random-interior-index rows))
-         (coli (do ((i0 (random-interior-index columns)
-                        (random-interior-index columns)))
-                   ((/= i0 rowi) i0)))
-         (data (make-array
-                (list rows columns)
-                :initial-contents
-                initial-contents))
-         (matrix (linear-algebra:make-matrix
-                  rows columns
-                  :matrix-type
-                  'linear-algebra:symmetric-matrix
-                  :initial-contents
-                  initial-contents)))
+         (coli
+          (do ((i0 (random-interior-index columns)
+                   (random-interior-index columns)))
+              ((/= i0 rowi) i0)))
+         (data
+          (make-array
+           (list rows columns)
+           :initial-contents
+           initial-contents))
+         (matrix
+          (linear-algebra:make-matrix
+           rows columns
+           :matrix-type
+           'linear-algebra:symmetric-matrix
+           :initial-contents
+           initial-contents)))
     (assert-float-equal
      (aref data 0 0)
      (linear-algebra:mref matrix 0 0))
@@ -260,18 +281,20 @@
   (let* ((rows 5) (columns 5)
          (rend (1- rows)) (cend (1- columns))
          (rowi (random-interior-index rows))
-         (coli (do ((i0 (random-interior-index columns)
-                        (random-interior-index columns)))
-                   ((/= i0 rowi) i0)))
-         (matrix (linear-algebra:make-matrix
-                  rows columns
-                  :matrix-type 'linear-algebra:symmetric-matrix
-                  :initial-contents
-                  '((1.1 1.2 1.3 1.4 1.5)
-                    (1.2 2.2 2.3 2.4 2.5)
-                    (1.3 2.3 3.3 3.4 3.5)
-                    (1.4 2.4 3.4 4.4 4.5)
-                    (1.5 2.5 3.5 4.5 5.5)))))
+         (coli
+          (do ((i0 (random-interior-index columns)
+                   (random-interior-index columns)))
+              ((/= i0 rowi) i0)))
+         (matrix
+          (linear-algebra:make-matrix
+           rows columns
+           :matrix-type 'linear-algebra:symmetric-matrix
+           :initial-contents
+           '((1.1 1.2 1.3 1.4 1.5)
+             (1.2 2.2 2.3 2.4 2.5)
+             (1.3 2.3 3.3 3.4 3.5)
+             (1.4 2.4 3.4 4.4 4.5)
+             (1.5 2.5 3.5 4.5 5.5)))))
     (destructuring-bind (val1 val2 val3 val4)
         (make-random-list 4 1.0)
       (setf (linear-algebra:mref matrix 0 0)       val1)
@@ -309,14 +332,16 @@
 ;;; Test the submatrix of a symmetric matrix
 (define-test symmetric-submatrix
   (:tag :symmetric-matrix :submatrix)
-  (let ((matrix (linear-algebra:make-matrix
-                 10 10
-                 :matrix-type 'linear-algebra:symmetric-matrix
-                 :initial-contents (symmetric-array)))
-        (submat (linear-algebra:make-matrix
-                 10 10
-                 :matrix-type 'linear-algebra:dense-matrix
-                 :initial-contents (symmetric-array))))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          10 10
+          :matrix-type 'linear-algebra:symmetric-matrix
+          :initial-contents (symmetric-array)))
+        (submat
+         (linear-algebra:make-matrix
+          10 10
+          :matrix-type 'linear-algebra:dense-matrix
+          :initial-contents (symmetric-array))))
     ;; The entire matrix
     (assert-float-equal
      (symmetric-array)
@@ -332,20 +357,23 @@
       matrix 3 3 :end-row 5 :end-column 5))
     ;; Submatrix is a general matrix
     (assert-true
-     (typep (linear-algebra:submatrix matrix 1 2)
-            'linear-algebra:dense-matrix))
+     (typep
+      (linear-algebra:submatrix matrix 1 2)
+      'linear-algebra:dense-matrix))
     (assert-float-equal
      (linear-algebra:submatrix submat 1 2)
      (linear-algebra:submatrix matrix 1 2))
     (assert-true
-     (typep (linear-algebra:submatrix matrix 1 1 :end-row 5)
-            'linear-algebra:dense-matrix))
+     (typep
+      (linear-algebra:submatrix matrix 1 1 :end-row 5)
+      'linear-algebra:dense-matrix))
     (assert-float-equal
      (linear-algebra:submatrix submat 1 1 :end-row 5)
      (linear-algebra:submatrix matrix 1 1 :end-row 5))
     (assert-true
-     (typep (linear-algebra:submatrix matrix 1 1 :end-column 8)
-            'linear-algebra:dense-matrix))
+     (typep
+      (linear-algebra:submatrix matrix 1 1 :end-column 8)
+      'linear-algebra:dense-matrix))
     (assert-float-equal
      (linear-algebra:submatrix submat 1 1 :end-column 8)
      (linear-algebra:submatrix matrix 1 1 :end-column 8))
@@ -372,13 +400,14 @@
 (define-test setf-symmetric-submatrix
   (:tag :symmetric-matrix :setf-submatrix)
   ;; Upper left submatrix
-  (let ((array-ul (make-array
-                   '(5 5) :initial-contents
-                   '((0.0 1.0 2.0 0.0 0.0)
-                     (1.0 1.1 2.1 0.0 0.0)
-                     (2.0 2.1 2.2 0.0 0.0)
-                     (0.0 0.0 0.0 0.0 0.0)
-                     (0.0 0.0 0.0 0.0 0.0)))))
+  (let ((array-ul
+         (make-array
+          '(5 5) :initial-contents
+          '((0.0 1.0 2.0 0.0 0.0)
+            (1.0 1.1 2.1 0.0 0.0)
+            (2.0 2.1 2.2 0.0 0.0)
+            (0.0 0.0 0.0 0.0 0.0)
+            (0.0 0.0 0.0 0.0 0.0)))))
     (assert-float-equal
      array-ul
      (setf-submatrix
@@ -405,13 +434,14 @@
     (linear-algebra:submatrix matrix 2 2)
     (symmetric-matrix)))
   ;; Middle submatrix
-  (let ((array-mid (make-array
-                    '(5 5) :initial-contents
-                    '((0.0 0.0 0.0 0.0 0.0)
-                      (0.0 1.1 2.1 3.1 0.0)
-                      (0.0 2.1 2.2 3.2 0.0)
-                      (0.0 3.1 3.2 3.3 0.0)
-                      (0.0 0.0 0.0 0.0 0.0)))))
+  (let ((array-mid
+         (make-array
+          '(5 5) :initial-contents
+          '((0.0 0.0 0.0 0.0 0.0)
+            (0.0 1.1 2.1 3.1 0.0)
+            (0.0 2.1 2.2 3.2 0.0)
+            (0.0 3.1 3.2 3.3 0.0)
+            (0.0 0.0 0.0 0.0 0.0)))))
     (assert-float-equal
      array-mid
      (setf-submatrix
@@ -425,13 +455,14 @@
       (linear-algebra:submatrix matrix 1 1 :end-row 4 :end-column 4)
       (symmetric-matrix 1))))
   ;; Off diagonal submatrix
-  (let ((array-off (make-array
-                    '(5 5) :initial-contents
-                    '((0.0 0.0 0.0 1.0 2.0)
-                      (0.0 0.0 1.0 1.1 2.1)
-                      (0.0 1.0 2.0 2.1 2.2)
-                      (1.0 1.1 2.1 0.0 0.0)
-                      (2.0 2.1 2.2 0.0 0.0)))))
+  (let ((array-off
+         (make-array
+          '(5 5) :initial-contents
+          '((0.0 0.0 0.0 1.0 2.0)
+            (0.0 0.0 1.0 1.1 2.1)
+            (0.0 1.0 2.0 2.1 2.2)
+            (1.0 1.1 2.1 0.0 0.0)
+            (2.0 2.1 2.2 0.0 0.0)))))
     (assert-float-equal
      array-off
      (setf-submatrix
@@ -444,20 +475,21 @@
       5 5 'linear-algebra:symmetric-matrix
       (linear-algebra:submatrix matrix 0 2 :end-row 3)
       (symmetric-matrix))))
-  (let ((array-off (make-array
-                    '(5 5) :initial-contents
-                    '((0.0 0.0 0.0 0.0 0.0)
-                      (0.0 0.0 0.0 1.0 2.0)
-                      (0.0 0.0 1.0 1.1 2.1)
-                      (0.0 1.0 1.1 0.0 0.0)
-                      (0.0 2.0 2.1 0.0 0.0)))))
+  (let ((array-off
+         (make-array
+          '(5 5) :initial-contents
+          '((0.0 0.0 0.0 0.0 0.0)
+            (0.0 0.0 0.0 1.0 2.0)
+            (0.0 0.0 1.0 1.1 2.1)
+            (0.0 1.0 1.1 0.0 0.0)
+            (0.0 2.0 2.1 0.0 0.0)))))
     (assert-float-equal
      array-off
      (setf-submatrix
       5 5 'linear-algebra:symmetric-matrix
       (linear-algebra:submatrix matrix 1 2)
-      (linear-algebra:submatrix (symmetric-matrix 0 3)
-                                0 0 :end-row 2)))
+      (linear-algebra:submatrix
+       (symmetric-matrix 0 3) 0 0 :end-row 2)))
     (assert-float-equal
      array-off
      (setf-submatrix
@@ -467,10 +499,11 @@
   ;; Asymmetric subsets
   (assert-error
    'error
-   (setf (linear-algebra:submatrix
-          (zero-matrix 5 5 :matrix-type
-                       'linear-algebra:symmetric-matrix) 0 1)
-         (unit-matrix 5 3))))
+   (setf
+    (linear-algebra:submatrix
+     (zero-matrix 5 5 :matrix-type 'linear-algebra:symmetric-matrix)
+     0 1)
+    (unit-matrix 5 3))))
 
 ;;; Replace all or part of a symmetric matrix
 (define-test symmetric-matrix-replace

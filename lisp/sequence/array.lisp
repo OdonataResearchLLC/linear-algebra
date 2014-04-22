@@ -75,8 +75,9 @@ matrix."
     (if (= m-rows n-columns)
         (dotimes (row m-rows data)
           ;; FIXME : Conjugate on the diagonal may not be correct.
-          (setf (aref data row row)
-                (funcall op (aref data row row)))
+          (setf
+           (aref data row row)
+           (funcall op (aref data row row)))
           (do ((column (1+ row) (1+ column)))
               ((>= column n-columns))
             (psetf

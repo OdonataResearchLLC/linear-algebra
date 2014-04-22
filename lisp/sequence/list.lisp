@@ -84,8 +84,9 @@ data."
 
 (defmethod transpose ((data list) &key conjugate)
   "Return a row vector."
-  (loop with op = (if conjugate #'conjugate #'identity)
-        for val in data collect (funcall op val)))
+  (loop
+   with op = (if conjugate #'conjugate #'identity)
+   for val in data collect (funcall op val)))
 
 (defmethod ntranspose ((data list) &key conjugate)
   "Return a row vector destructively."
@@ -96,11 +97,12 @@ data."
 (defmethod permute ((data list) (matrix permutation-matrix))
   "Return the permutation of the list."
   (if (= (length data) (matrix-row-dimension matrix))
-      (loop with permuted = (make-list (length data))
-            for column across (contents matrix)
-            and row = 0 then (1+ row)
-            do (setf (nth column permuted) (nth row data))
-            finally (return permuted))
+      (loop
+       with permuted = (make-list (length data))
+       for column across (contents matrix)
+       and row = 0 then (1+ row)
+       do (setf (nth column permuted) (nth row data))
+       finally (return permuted))
       (error
        "List(~D) and permutation~A matrix sizes are incompatible."
        (length data) (matrix-dimensions matrix))))
@@ -108,11 +110,12 @@ data."
 (defmethod permute ((matrix permutation-matrix) (data list))
   "Return the permutation of the list."
   (if (= (length data) (matrix-row-dimension matrix))
-      (loop with permuted = (make-list (length data))
-            for column across (contents matrix)
-            and row = 0 then (1+ row)
-            do (setf (nth row permuted) (nth column data))
-            finally (return permuted))
+      (loop
+       with permuted = (make-list (length data))
+       for column across (contents matrix)
+       and row = 0 then (1+ row)
+       do (setf (nth row permuted) (nth column data))
+       finally (return permuted))
       (error
        "Permutation matrix~A and list(~D) sizes are incompatible."
        (matrix-dimensions matrix) (length data))))
@@ -128,10 +131,11 @@ data."
 (defmethod add ((list1 list) (list2 list) &key scalar1 scalar2)
   "Return the addition of scalar1*list1 with scalar2*list2"
   (if (= (length list1) (length list2))
-      (loop with op = (scaled-binary-op #'+ scalar1 scalar2)
-            for item1 in list1
-            and item2 in list2
-            collect (funcall op item1 item2))
+      (loop
+       with op = (scaled-binary-op #'+ scalar1 scalar2)
+       for item1 in list1
+       and item2 in list2
+       collect (funcall op item1 item2))
       (error "LIST1(~D) and LIST2(~D) are not of equal length."
              (length list1) (length list2))))
 
@@ -147,10 +151,11 @@ data."
 (defmethod subtract ((list1 list) (list2 list) &key scalar1 scalar2)
   "Return the subraction of scalar2*list2 from scalar1*list1."
   (if (= (length list1) (length list2))
-      (loop with op = (scaled-binary-op #'- scalar1 scalar2)
-            for item1 in list1
-            and item2 in list2
-            collect (funcall op item1 item2))
+      (loop
+       with op = (scaled-binary-op #'- scalar1 scalar2)
+       for item1 in list1
+       and item2 in list2
+       collect (funcall op item1 item2))
       (error "LIST1(~D) and LIST2(~D) are not of equal length."
              (length list1) (length list2))))
 
@@ -167,14 +172,15 @@ data."
                     &key (scalar nil scalarp) conjugate)
   "Return the dot product of list1 and list2."
   (if (= (length list1) (length list2))
-      (loop with op =
-            (if conjugate
-                (lambda (x y) (* (conjugate x) y))
-                #'*)
-            for element1 in list1
-            and element2 in list2
-            sum (funcall op element1 element2) into result
-            finally
-            (return (if scalarp (* scalar result) result)))
+      (loop
+       with op =
+       (if conjugate
+           (lambda (x y) (* (conjugate x) y))
+           #'*)
+       for element1 in list1
+       and element2 in list2
+       sum (funcall op element1 element2) into result
+       finally
+       (return (if scalarp (* scalar result) result)))
       (error "LIST1(~D) and LIST2(~D) are not of equal length."
              (length list1) (length list2))))

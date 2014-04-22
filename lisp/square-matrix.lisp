@@ -54,9 +54,10 @@
   (unless (= rows columns)
     (error "Number of rows must equal the number of columns.")))
 
-(defmethod submatrix ((matrix square-matrix)
-                      (start-row integer) (start-column integer)
-                      &key end-row end-column)
+(defmethod submatrix
+    ((matrix square-matrix)
+     (start-row integer) (start-column integer)
+     &key end-row end-column)
   "Return a matrix created from the submatrix of matrix."
   (multiple-value-bind (start-row start-column end-row end-column)
       (matrix-validated-range

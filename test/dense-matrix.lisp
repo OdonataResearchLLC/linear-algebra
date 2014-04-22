@@ -207,16 +207,18 @@
          (rend (1- rows)) (cend (1- columns))
          (rowi (random-interior-index rows))
          (coli (random-interior-index columns))
-         (data (make-array
-                (list rows columns)
-                :initial-contents
-                initial-contents))
-         (matrix (linear-algebra:make-matrix
-                  rows columns
-                  :matrix-type
-                  'linear-algebra:dense-matrix
-                  :initial-contents
-                  initial-contents)))
+         (data
+          (make-array
+           (list rows columns)
+           :initial-contents
+           initial-contents))
+         (matrix
+          (linear-algebra:make-matrix
+           rows columns
+           :matrix-type
+           'linear-algebra:dense-matrix
+           :initial-contents
+           initial-contents)))
     (assert-float-equal
      (aref data 0 0)
      (linear-algebra:mref matrix 0 0))
@@ -404,13 +406,14 @@
       (linear-algebra:submatrix
        (unit-matrix 5 5) 2 2 :end-row 4 :end-column 4))))
   ;; Lower left submatrix
-  (let ((array-ll (make-array
-                   '(5 5) :initial-contents
-                   '((0 0 0 0 0)
-                     (0 0 0 0 0)
-                     (0 0 0 0 0)
-                     (1 1 0 0 0)
-                     (1 1 0 0 0)))))
+  (let ((array-ll
+         (make-array
+          '(5 5) :initial-contents
+          '((0 0 0 0 0)
+            (0 0 0 0 0)
+            (0 0 0 0 0)
+            (1 1 0 0 0)
+            (1 1 0 0 0)))))
     (assert-rational-equal
      array-ll
      (setf-submatrix
@@ -438,14 +441,15 @@
       (linear-algebra:submatrix
        (unit-matrix 5 5) 2 2 :end-row 4 :end-column 4))))
   ;; Lower right submatrix
-  (let ((array-lr (make-array
-                   '(5 5)
-                   :initial-contents
-                   '((0 0 0 0 0)
-                     (0 0 0 0 0)
-                     (0 0 0 0 0)
-                     (0 0 0 1 1)
-                     (0 0 0 1 1)))))
+  (let ((array-lr
+         (make-array
+          '(5 5)
+          :initial-contents
+          '((0 0 0 0 0)
+            (0 0 0 0 0)
+            (0 0 0 0 0)
+            (0 0 0 1 1)
+            (0 0 0 1 1)))))
     (assert-rational-equal
      array-lr
      (setf-submatrix
@@ -473,14 +477,15 @@
       (linear-algebra:submatrix
        (unit-matrix 5 5) 2 2 :end-row 4 :end-column 4))))
   ;; Middle submatrix
-  (let ((array-mid (make-array
-                    '(5 5)
-                    :initial-contents
-                    '((0 0 0 0 0)
-                      (0 1 1 1 0)
-                      (0 1 1 1 0)
-                      (0 1 1 1 0)
-                      (0 0 0 0 0)))))
+  (let ((array-mid
+         (make-array
+          '(5 5)
+          :initial-contents
+          '((0 0 0 0 0)
+            (0 1 1 1 0)
+            (0 1 1 1 0)
+            (0 1 1 1 0)
+            (0 0 0 0 0)))))
     (assert-rational-equal
      array-mid
      (setf-submatrix
@@ -518,14 +523,15 @@
    (linear-algebra:replace-matrix
     (zero-matrix 5 5) (unit-matrix 5 5)))
   ;; Replace the first 2 rows
-  (let ((result (make-array
-                 '(5 5)
-                 :initial-contents
-                 '((1 1 1 1 1)
-                   (1 1 1 1 1)
-                   (0 0 0 0 0)
-                   (0 0 0 0 0)
-                   (0 0 0 0 0)))))
+  (let ((result
+         (make-array
+          '(5 5)
+          :initial-contents
+          '((1 1 1 1 1)
+            (1 1 1 1 1)
+            (0 0 0 0 0)
+            (0 0 0 0 0)
+            (0 0 0 0 0)))))
     (assert-rational-equal
      result
      (linear-algebra:replace-matrix
@@ -552,14 +558,15 @@
       (zero-matrix 5 5)
       (unit-matrix 5 5) :end-row2 2)))
   ;; Replace the first 3 columns
-  (let ((result (make-array
-                 '(5 5)
-                 :initial-contents
-                 '((1 1 1 0 0)
-                   (1 1 1 0 0)
-                   (1 1 1 0 0)
-                   (1 1 1 0 0)
-                   (1 1 1 0 0)))))
+  (let ((result
+         (make-array
+          '(5 5)
+          :initial-contents
+          '((1 1 1 0 0)
+            (1 1 1 0 0)
+            (1 1 1 0 0)
+            (1 1 1 0 0)
+            (1 1 1 0 0)))))
     (assert-rational-equal
      result
      (linear-algebra:replace-matrix
@@ -586,14 +593,15 @@
       (zero-matrix 5 5)
       (unit-matrix 5 5) :end-column2 3)))
   ;; Replace the center
-  (let ((result (make-array
-                 '(5 5)
-                 :initial-contents
-                 '((0 0 0 0 0)
-                   (0 1 1 1 0)
-                   (0 1 1 1 0)
-                   (0 1 1 1 0)
-                   (0 0 0 0 0)))))
+  (let ((result
+         (make-array
+          '(5 5)
+          :initial-contents
+          '((0 0 0 0 0)
+            (0 1 1 1 0)
+            (0 1 1 1 0)
+            (0 1 1 1 0)
+            (0 0 0 0 0)))))
     (assert-rational-equal
      result
      (linear-algebra:replace-matrix

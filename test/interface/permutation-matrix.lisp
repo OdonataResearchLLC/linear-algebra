@@ -152,19 +152,21 @@
 ;;; Test the permutation matrix element type
 (define-test permutation-matrix-element-type
   (:tag :matrix :permutation-matrix :matrix-element-type)
-  (assert-eq 'fixnum
-             (linear-algebra:matrix-element-type
-              (linear-algebra:make-matrix
-               5 5
-               :matrix-type 'linear-algebra:permutation-matrix)))
+  (assert-eq
+   'fixnum
+   (linear-algebra:matrix-element-type
+    (linear-algebra:make-matrix
+     5 5
+     :matrix-type 'linear-algebra:permutation-matrix)))
   (dolist (element-type '(single-float double-float))
-    (assert-error 'error
-                  (linear-algebra:matrix-element-type
-                   (linear-algebra:make-matrix
-                    5 5
-                    :element-type element-type
-                    :matrix-type
-                    'linear-algebra:permutation-matrix)))))
+    (assert-error
+     'error
+     (linear-algebra:matrix-element-type
+      (linear-algebra:make-matrix
+       5 5
+       :element-type element-type
+       :matrix-type
+       'linear-algebra:permutation-matrix)))))
 
 ;;; Test the permutation matrix dimensions
 (define-test permutation-matrix-dimensions
@@ -186,16 +188,17 @@
 (define-test permutation-matrix-mref
   (:tag :matrix :permutation-matrix :mref)
   (let ((pvec #(2 3 4 0 1))
-        (matrix (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type
-                 'linear-algebra:permutation-matrix
-                 :initial-contents
-                 '((0 0 1 0 0)
-                   (0 0 0 1 0)
-                   (0 0 0 0 1)
-                   (1 0 0 0 0)
-                   (0 1 0 0 0)))))
+        (matrix
+         (linear-algebra:make-matrix
+          5 5
+          :matrix-type
+          'linear-algebra:permutation-matrix
+          :initial-contents
+          '((0 0 1 0 0)
+            (0 0 0 1 0)
+            (0 0 0 0 1)
+            (1 0 0 0 0)
+            (0 1 0 0 0)))))
     (do ((i0 0 (1+ i0)))
         ((>= i0 5))
       (do ((i1 0 (1+ i1)))
@@ -209,12 +212,13 @@
 ;;; Set permutation matrix elements
 (define-test permutation-matrix-setf-mref
   (:tag :matrix :permutation-matrix :setf-mref)
-  (let ((matrix (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type
-                 'linear-algebra:permutation-matrix
-                 :initial-contents
-                 (random-permutation-array 5))))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          5 5
+          :matrix-type
+          'linear-algebra:permutation-matrix
+          :initial-contents
+          (random-permutation-array 5))))
     (dotimes (i0 5)
       (dotimes (i1 5)
         (setf (linear-algebra:mref matrix i0 i1) 1)
@@ -227,11 +231,12 @@
 ;;; Copy the permutation matrix
 (define-test copy-permutation-matrix
   (:tag :matrix :permutation-matrix :copy-matrix)
-  (let ((matrix (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type 'linear-algebra:permutation-matrix
-                 :initial-contents
-                 (random-permutation-array 5))))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          5 5
+          :matrix-type 'linear-algebra:permutation-matrix
+          :initial-contents
+          (random-permutation-array 5))))
     (assert-true
      (linear-algebra:permutation-matrix-p
       (linear-algebra:copy-matrix matrix)))
@@ -249,16 +254,17 @@
 ;;; Test the submatrix of a permutation matrix
 (define-test permutation-matrix-submatrix
   (:tag :matrix :permutation-matrix :submatrix)
-  (let ((matrix (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type
-                 'linear-algebra:permutation-matrix
-                 :initial-contents
-                 '((0 0 0 0 1)
-                   (0 0 0 1 0)
-                   (0 0 1 0 0)
-                   (1 0 0 0 0)
-                   (0 1 0 0 0)))))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          5 5
+          :matrix-type
+          'linear-algebra:permutation-matrix
+          :initial-contents
+          '((0 0 0 0 1)
+            (0 0 0 1 0)
+            (0 0 1 0 0)
+            (1 0 0 0 0)
+            (0 1 0 0 0)))))
     ;; The entire matrix
     (assert-rational-equal
      #2A((0 0 0 0 1)
@@ -300,15 +306,14 @@
   (:tag :matrix :permutation-matrix :transpose)
   (loop
    for (permutation transpose) in (validated-permutation-transpose)
-   do
-   (assert-rational-equal
-    transpose
-    (linear-algebra::contents
-     (linear-algebra:transpose
-      (make-instance
-       'linear-algebra:permutation-matrix
-       :contents permutation)))
-    permutation)))
+   do (assert-rational-equal
+       transpose
+       (linear-algebra::contents
+        (linear-algebra:transpose
+         (make-instance
+          'linear-algebra:permutation-matrix
+          :contents permutation)))
+       permutation)))
 
 ;;; Validate a range for a permutation matrix.
 

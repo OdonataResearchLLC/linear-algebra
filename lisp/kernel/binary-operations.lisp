@@ -139,24 +139,25 @@ the operation."))
 
 (defun inner-product-vector (vector1 vector2 scalar conjugate)
   "Return the vector inner product."
-  (loop with op = (scaled-binary-op #'* nil conjugate)
-        for element1 across vector1
-        and element2 across vector2
-        sum (funcall op element1 element2) into result
-        finally
-        (return (if scalar (* scalar result) result))))
+  (loop
+   with op = (scaled-binary-op #'* nil conjugate)
+   for element1 across vector1
+   and element2 across vector2
+   sum (funcall op element1 element2) into result
+   finally
+   (return (if scalar (* scalar result) result))))
 
 ;;; Binary array/vector operations
 
 (defmethod compatible-dimensions-p
-           ((operation (eql :product)) (vector vector) (array array))
+    ((operation (eql :product)) (vector vector) (array array))
   "Return true if the array dimensions are compatible for product."
   (and
    (= 2 (array-rank array))
    (= (length vector) (array-dimension array 0))))
 
 (defmethod compatible-dimensions-p
-           ((operation (eql :product)) (array array) (vector vector))
+    ((operation (eql :product)) (array array) (vector vector))
   "Return true if the array dimensions are compatible for product."
   (and
    (= 2 (array-rank array))
@@ -286,7 +287,7 @@ scaled."
                   (aref array2 row column)))))))
 
 (defmethod compatible-dimensions-p
-           ((operation (eql :add)) (array1 array) (array2 array))
+    ((operation (eql :add)) (array1 array) (array2 array))
   "Return true if the array dimensions are compatible for an
 addition."
   (and
@@ -319,7 +320,7 @@ addition."
    array1 array2))
 
 (defmethod compatible-dimensions-p
-           ((operation (eql :product)) (array1 array) (array2 array))
+    ((operation (eql :product)) (array1 array) (array2 array))
   "Return true if the array dimensions are compatible for product."
   (and
    (= 2 (array-rank array1) (array-rank array2))

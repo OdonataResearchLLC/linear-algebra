@@ -55,10 +55,11 @@
           :element-type 'single-float)))
     (assert-true (linear-algebra:matrixp matrix))
     (assert-true (typep matrix 'linear-algebra:identity-matrix))
-    (assert-eq (array-element-type
-                (linear-algebra::contents matrix))
-               (array-element-type
-                (make-array '(10 10) :element-type 'single-float)))
+    (assert-eq
+     (array-element-type
+      (linear-algebra::contents matrix))
+     (array-element-type
+      (make-array '(10 10) :element-type 'single-float)))
     (assert-true (zerop (aref (linear-algebra::contents matrix) 0)))
     (assert-float-equal
      1.0 (aref (linear-algebra::contents matrix) 1)))
@@ -152,15 +153,15 @@
   (let* ((rows 5) (columns 5)
          (rend (1- rows)) (cend (1- columns))
          (rowi (random-interior-index rows))
-         (coli (do ((i0 (random-interior-index columns)
-                        (random-interior-index columns)))
-                   ((/= i0 rowi) i0)))
-         (matrix (linear-algebra:make-matrix
-                  rows columns
-                  :matrix-type
-                  'linear-algebra:identity-matrix
-                  :element-type
-                  'single-float)))
+         (coli
+          (do ((i0 (random-interior-index columns)
+                   (random-interior-index columns)))
+              ((/= i0 rowi) i0)))
+         (matrix
+          (linear-algebra:make-matrix
+           rows columns
+           :matrix-type 'linear-algebra:identity-matrix
+           :element-type 'single-float)))
     (assert-float-equal
      1.0 (linear-algebra:mref matrix 0 0))
     (assert-float-equal
@@ -181,66 +182,75 @@
   (:tag :matrix :identity-matrix :setf-mref)
   (assert-error
    'error
-   (setf (linear-algebra:mref
-          (linear-algebra:make-matrix
-           10 10 :matrix-type
-           'linear-algebra:identity-matrix)
-          (random 10) (random 10))
-         1.0)))
+   (setf
+    (linear-algebra:mref
+     (linear-algebra:make-matrix
+      10 10 :matrix-type
+      'linear-algebra:identity-matrix)
+     (random 10) (random 10))
+    1.0)))
 
 ;;; Copy the identity matrix
 (define-test copy-identity-matrix
   (:tag :matrix :identity-matrix :copy-matrix)
-  (let ((matrix (linear-algebra:make-matrix
-                 5 5
-                 :matrix-type
-                 'linear-algebra:identity-matrix)))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          5 5
+          :matrix-type
+          'linear-algebra:identity-matrix)))
     (assert-true
      (linear-algebra:identity-matrix-p
       (linear-algebra:copy-matrix matrix)))
     (assert-false
      (eq matrix (linear-algebra:copy-matrix matrix)))
     (assert-false
-     (eq (linear-algebra::contents matrix)
-         (linear-algebra::contents
-          (linear-algebra:copy-matrix matrix))))))
+     (eq
+      (linear-algebra::contents matrix)
+      (linear-algebra::contents
+       (linear-algebra:copy-matrix matrix))))))
 
 ;;; Test the submatrix of a identity matrix
 (define-test identity-submatrix
   (:tag :matrix :identity-matrix :submatrix)
-  (let ((matrix (linear-algebra:make-matrix
-                 10 10
-                 :matrix-type
-                 'linear-algebra:identity-matrix
-                 :element-type 'single-float)))
+  (let ((matrix
+         (linear-algebra:make-matrix
+          10 10
+          :matrix-type
+          'linear-algebra:identity-matrix
+          :element-type 'single-float)))
     ;; The entire matrix
     (assert-true
-     (typep (linear-algebra:submatrix matrix 0 0)
-            'linear-algebra:identity-matrix))
+     (typep
+      (linear-algebra:submatrix matrix 0 0)
+      'linear-algebra:identity-matrix))
     (assert-rational-equal
      10 (slot-value (linear-algebra:submatrix matrix 0 0)
                     'linear-algebra::size))
     ;; Start row and column to the end
     (assert-true
-     (typep (linear-algebra:submatrix matrix 3 3)
-            'linear-algebra:identity-matrix))
+     (typep
+      (linear-algebra:submatrix matrix 3 3)
+      'linear-algebra:identity-matrix))
     (assert-rational-equal
      7 (slot-value (linear-algebra:submatrix matrix 3 3)
                    'linear-algebra::size))
     ;; End row and column
     (assert-true
-     (typep (linear-algebra:submatrix
-             matrix 2 2 :end-row 8 :end-column 8)
-            'linear-algebra:identity-matrix))
+     (typep
+      (linear-algebra:submatrix
+       matrix 2 2 :end-row 8 :end-column 8)
+      'linear-algebra:identity-matrix))
     (assert-rational-equal
-     6 (slot-value (linear-algebra:submatrix
-                    matrix 2 2 :end-row 8 :end-column 8)
-                   'linear-algebra::size))
+     6 (slot-value
+        (linear-algebra:submatrix
+         matrix 2 2 :end-row 8 :end-column 8)
+        'linear-algebra::size))
     ;; Dense matrix
     (assert-true
-     (typep (linear-algebra:submatrix
-             matrix 2 2 :end-row 4 :end-column 6)
-            'linear-algebra:dense-matrix))
+     (typep
+      (linear-algebra:submatrix
+       matrix 2 2 :end-row 4 :end-column 6)
+      'linear-algebra:dense-matrix))
     (assert-float-equal
      #2A((1.0 0.0 0.0 0.0)
          (0.0 1.0 0.0 0.0))
@@ -248,9 +258,10 @@
       matrix 2 2 :end-row 4 :end-column 6))
     ;; Square matrix
     (assert-true
-     (typep (linear-algebra:submatrix
-             matrix 0 2 :end-row 3 :end-column 5)
-            'linear-algebra:square-matrix))
+     (typep
+      (linear-algebra:submatrix
+       matrix 0 2 :end-row 3 :end-column 5)
+      'linear-algebra:square-matrix))
     (assert-float-equal
      #2A((0.0 0.0 0.0)
          (0.0 0.0 0.0)
@@ -280,12 +291,13 @@
   (:tag :matrix :identity-matrix :setf-submatrix)
   (assert-error
    'error
-   (setf (linear-algebra:submatrix
-          (linear-algebra:make-matrix
-           10 10 :matrix-type
-           'linear-algebra:identity-matrix)
-          5 5)
-         (unit-matrix 5 5))))
+   (setf
+    (linear-algebra:submatrix
+     (linear-algebra:make-matrix
+      10 10 :matrix-type
+      'linear-algebra:identity-matrix)
+     5 5)
+    (unit-matrix 5 5))))
 
 (define-test identity-matrix-replace
   (:tag :matrix :identity-matrix :replace-matrix)

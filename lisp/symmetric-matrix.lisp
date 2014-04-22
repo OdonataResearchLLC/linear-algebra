@@ -62,23 +62,23 @@
                  (aref contents i1 i0))
           (error "The data is not symmetric."))))))
 
-(defmethod initialize-matrix ((matrix symmetric-matrix) (data list)
-                              (rows integer) (columns integer)
-                              element-type)
+(defmethod initialize-matrix
+    ((matrix symmetric-matrix) (data list)
+     (rows integer) (columns integer) element-type)
   "Initialize a symmetric matrix."
   (%initialize-symmetric-matrix-with-seq
    matrix data rows columns element-type))
 
-(defmethod initialize-matrix ((matrix symmetric-matrix) (data vector)
-                              (rows integer) (columns integer)
-                              element-type)
+(defmethod initialize-matrix
+    ((matrix symmetric-matrix) (data vector)
+     (rows integer) (columns integer) element-type)
   "Initialize a symmetric matrix."
   (%initialize-symmetric-matrix-with-seq
    matrix data rows columns element-type))
 
-(defmethod initialize-matrix ((matrix symmetric-matrix) (data array)
-                              (rows integer) (columns integer)
-                              element-type)
+(defmethod initialize-matrix
+    ((matrix symmetric-matrix) (data array)
+     (rows integer) (columns integer) element-type)
   "Initialize a symmetric matrix."
   (let ((contents
          (setf (contents matrix)
@@ -88,13 +88,15 @@
     (dotimes (i0 rows matrix)
       (setf (aref contents i0 i0) (aref data i0 i0))
       (dotimes (i1 i0)
-        (unless (number-equal
-                 (setf (aref contents i0 i1) (aref data i0 i1))
-                 (setf (aref contents i1 i0) (aref data i1 i0)))
+        (unless
+            (number-equal
+             (setf (aref contents i0 i1) (aref data i0 i1))
+             (setf (aref contents i1 i0) (aref data i1 i0)))
           (error "The data is not symmetric."))))))
 
-(defmethod (setf mref) ((data number) (matrix symmetric-matrix)
-                        (row integer) (column integer))
+(defmethod (setf mref)
+    ((data number) (matrix symmetric-matrix)
+     (row integer) (column integer))
   "Set the element of matrix at row,column."
   (setf
    (aref (contents matrix) row column) data
@@ -126,9 +128,10 @@
         (setf (aref mat mi0 mi1) (aref dat di0 di1)
               (aref mat mi1 mi0) (aref dat di0 di1))))))
 
-(defmethod submatrix ((matrix symmetric-matrix)
-                      (start-row integer) (start-column integer)
-                      &key end-row end-column)
+(defmethod submatrix
+    ((matrix symmetric-matrix)
+     (start-row integer) (start-column integer)
+     &key end-row end-column)
   "Return a matrix created from the submatrix of matrix."
   (multiple-value-bind (start-row start-column end-row end-column)
       (matrix-validated-range
@@ -156,11 +159,10 @@
             (aref original (+ start-row row)
                   (+ start-column column)))))))))
 
-(defmethod (setf submatrix) ((data symmetric-matrix)
-                             (matrix symmetric-matrix)
-                             (start-row integer)
-                             (start-column integer)
-                             &key end-row end-column)
+(defmethod (setf submatrix)
+    ((data symmetric-matrix) (matrix symmetric-matrix)
+     (start-row integer) (start-column integer)
+     &key end-row end-column)
   "Set a submatrix of the matrix."
   (multiple-value-bind (start-row start-column end-row end-column)
       (matrix-validated-range
@@ -187,11 +189,10 @@
           "Range(~D:~D,~D:~D) results in an asymmetric matrix."
           start-row end-row start-column end-column))))))
 
-(defmethod (setf submatrix) ((data dense-matrix)
-                             (matrix symmetric-matrix)
-                             (start-row integer)
-                             (start-column integer)
-                             &key end-row end-column)
+(defmethod (setf submatrix)
+    ((data dense-matrix) (matrix symmetric-matrix)
+     (start-row integer) (start-column integer)
+     &key end-row end-column)
   "Set a submatrix of MATRIX."
   (multiple-value-bind (start-row start-column end-row end-column)
       (matrix-validated-range
@@ -253,12 +254,12 @@ matrix2."
          (aref contents1 m1-i1 m1-i0)
          (aref contents2 m2-i0 m2-i1))))))
 
-(defmethod replace-matrix ((matrix1 symmetric-matrix)
-                           (matrix2 symmetric-matrix)
-                           &key (start-row1 0) end-row1
-                           (start-column1 0) end-column1
-                           (start-row2 0) end-row2
-                           (start-column2 0) end-column2)
+(defmethod replace-matrix
+    ((matrix1 symmetric-matrix) (matrix2 symmetric-matrix)
+     &key (start-row1 0) end-row1
+     (start-column1 0) end-column1
+     (start-row2 0) end-row2
+     (start-column2 0) end-column2)
   "Replace the elements of MATRIX1 with MATRIX2."
   (multiple-value-bind (start-row1 start-column1 end-row1 end-column1)
       (matrix-validated-range
@@ -299,12 +300,12 @@ matrix2."
            start-row1 (+ start-row1 m-rows -1)
            start-column1 (+ start-column1 n-columns -1))))))))
 
-(defmethod replace-matrix ((matrix1 symmetric-matrix)
-                           (matrix2 dense-matrix)
-                           &key (start-row1 0) end-row1
-                           (start-column1 0) end-column1
-                           (start-row2 0) end-row2
-                           (start-column2 0) end-column2)
+(defmethod replace-matrix
+    ((matrix1 symmetric-matrix) (matrix2 dense-matrix)
+     &key (start-row1 0) end-row1
+     (start-column1 0) end-column1
+     (start-row2 0) end-row2
+     (start-column2 0) end-column2)
   "Replace the elements of MATRIX1 with MATRIX2."
   (multiple-value-bind (start-row1 start-column1 end-row1 end-column1)
       (matrix-validated-range

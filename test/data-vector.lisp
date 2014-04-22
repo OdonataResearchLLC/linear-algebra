@@ -39,23 +39,27 @@
   (:tag :data-vector :make-vector)
   ;; A default vector.
   (assert-true
-   (typep (linear-algebra:make-vector 10)
-          'linear-algebra:data-vector))
+   (typep
+    (linear-algebra:make-vector 10)
+    'linear-algebra:data-vector))
   (assert-true
-   (typep (linear-algebra:make-vector 10)
-          'linear-algebra:column-vector))
+   (typep
+    (linear-algebra:make-vector 10)
+    'linear-algebra:column-vector))
   (assert-rational-equal
    (vector 0 0 0 0 0 0 0 0 0 0)
    (linear-algebra:make-vector 10))
   ;; Specify the vector type
   (assert-true
-   (typep (linear-algebra:make-vector
-           10 :vector-type 'linear-algebra:column-vector)
-          'linear-algebra:column-vector))
+   (typep
+    (linear-algebra:make-vector
+     10 :vector-type 'linear-algebra:column-vector)
+    'linear-algebra:column-vector))
   (assert-true
-   (typep (linear-algebra:make-vector
-           10 :vector-type 'linear-algebra:row-vector)
-          'linear-algebra:row-vector))
+   (typep
+    (linear-algebra:make-vector
+     10 :vector-type 'linear-algebra:row-vector)
+    'linear-algebra:row-vector))
   ;; Specify the element type.
   (assert-true
    (subtypep
@@ -76,8 +80,8 @@
    (vector 1.0 1.0 1.0 1.0 1.0)
    (linear-algebra:make-vector 5 :initial-element 1.0))
   (assert-float-equal
-   (vector #C(1.0 2.0) #C(1.0 2.0)
-           #C(1.0 2.0) #C(1.0 2.0))
+   (vector
+    #C(1.0 2.0) #C(1.0 2.0) #C(1.0 2.0) #C(1.0 2.0))
    (linear-algebra:make-vector 4 :initial-element #C(1.0 2.0)))
   ;; Specify the initial contents.
   (let ((data (make-random-list 100 1.0)))
@@ -95,8 +99,9 @@
   (:tag :data-vector :column-vector)
   ;; Column vector
   (assert-true
-   (typep (linear-algebra:column-vector 1.0 2.0 3.0 4.0 5.0)
-          'linear-algebra:column-vector))
+   (typep
+    (linear-algebra:column-vector 1.0 2.0 3.0 4.0 5.0)
+    'linear-algebra:column-vector))
   ;; Contents
   (assert-float-equal
    (vector 1.0 2.0 3.0 4.0 5.0)
@@ -106,8 +111,9 @@
   (:tag :data-vector :row-vector)
   ;; row vector
   (assert-true
-   (typep (linear-algebra:row-vector 1.0 2.0 3.0 4.0 5.0)
-          'linear-algebra:row-vector))
+   (typep
+    (linear-algebra:row-vector 1.0 2.0 3.0 4.0 5.0)
+    'linear-algebra:row-vector))
   ;; Contents
   (assert-float-equal
    (vector 1.0 2.0 3.0 4.0 5.0)
@@ -189,8 +195,9 @@
          (index (random-interior-index size))
          (end   (1- size))
          (list   (make-random-list size 100.0))
-         (vector (linear-algebra:make-vector
-                  size :initial-contents list)))
+         (vector
+          (linear-algebra:make-vector
+           size :initial-contents list)))
     (assert-float-equal
      (nth 0 list) (linear-algebra:vref vector 0))
     (assert-float-equal
@@ -205,8 +212,9 @@
          (index (random-interior-index size))
          (end   (1- size))
          (list   (make-random-list size 100.0))
-         (vector (linear-algebra:make-vector
-                  size :initial-contents list)))
+         (vector
+          (linear-algebra:make-vector
+           size :initial-contents list)))
     (setf (linear-algebra:vref vector 0)     val0)
     (setf (linear-algebra:vref vector index) vali)
     (setf (linear-algebra:vref vector end)   valn)
@@ -231,29 +239,32 @@
          (new (linear-algebra:copy-vector vec)))
     (assert-true (subtypep (type-of new) (type-of vec)))
     (assert-false (eq vec new))
-    (assert-false (eq (linear-algebra::contents vec)
-                      (linear-algebra::contents new)))
+    (assert-false
+     (eq (linear-algebra::contents vec)
+         (linear-algebra::contents new)))
     (assert-rational-equal vec new))
   ;; Row vector
   (let* ((vec (linear-algebra:row-vector 1 2 3 4 5))
          (new (linear-algebra:copy-vector vec)))
     (assert-true (subtypep (type-of new) (type-of vec)))
     (assert-false (eq vec new))
-    (assert-false (eq (linear-algebra::contents vec)
-                      (linear-algebra::contents new)))
+    (assert-false
+     (eq (linear-algebra::contents vec)
+         (linear-algebra::contents new)))
     (assert-rational-equal vec new)))
 
 (define-test data-subvector
   (:tag :data-vector :subvector)
   ;; Get subvectors
   (let* ((data (list 0 1 2 3 4 5 6 7 8 9))
-         (vec  (linear-algebra:column-vector
-                0 1 2 3 4 5 6 7 8 9))
+         (vec
+          (linear-algebra:column-vector
+           0 1 2 3 4 5 6 7 8 9))
          (index (random-interior-index 10))
-         (subvec0 (linear-algebra:subvector
-                   vec index))
-         (subvec1 (linear-algebra:subvector
-                   vec 0 index)))
+         (subvec0
+          (linear-algebra:subvector vec index))
+         (subvec1
+          (linear-algebra:subvector vec 0 index)))
     (assert-true
      (subtypep (type-of vec) (type-of subvec0)))
     (assert-true
@@ -264,8 +275,9 @@
      (subseq data 0 index) subvec1))
   ;; Set subvectors
   (let ((vec (linear-algebra:make-vector 10))
-        (data (linear-algebra:make-vector
-               5 :initial-element 1)))
+        (data
+         (linear-algebra:make-vector
+          5 :initial-element 1)))
     (assert-rational-equal
      #(1 1 1 1 1)
      (setf (linear-algebra:subvector vec 7) data))
@@ -275,72 +287,77 @@
 (define-test replace-data-vector
   (:tag :data-vector :replace-vector)
   (flet ((zero-vector () (linear-algebra:make-vector 10)))
-    (let ((data (linear-algebra:make-vector
-                 5 :initial-element 1)))
+    (let ((data
+           (linear-algebra:make-vector
+            5 :initial-element 1)))
       (assert-rational-equal
        #(1 1 1 1 1 0 0 0 0 0)
         (linear-algebra:replace-vector (zero-vector) data))
       (assert-rational-equal
        #(0 0 1 1 1 1 1 0 0 0)
-       (linear-algebra:replace-vector (zero-vector) data
-                                      :start1 2))
+       (linear-algebra:replace-vector
+        (zero-vector) data :start1 2))
       (assert-rational-equal
        #(0 0 0 0 0 0 0 0 1 1)
-       (linear-algebra:replace-vector (zero-vector) data
-                                      :start1 8))
+       (linear-algebra:replace-vector
+        (zero-vector) data :start1 8))
       (assert-rational-equal
        #(1 1 1 0 0 0 0 0 0 0)
-       (linear-algebra:replace-vector (zero-vector) data
-                                      :end1 3))
+       (linear-algebra:replace-vector
+        (zero-vector) data :end1 3))
       (assert-rational-equal
        #(0 0 1 1 0 0 0 0 0 0)
-       (linear-algebra:replace-vector (zero-vector) data
-                                      :start1 2 :end1 4))
+       (linear-algebra:replace-vector
+        (zero-vector) data :start1 2 :end1 4))
       (assert-rational-equal
        #(1 1 1 0 0 0 0 0 0 0)
-       (linear-algebra:replace-vector (zero-vector) data
-                                      :start2 2))
+       (linear-algebra:replace-vector
+        (zero-vector) data :start2 2))
       (assert-rational-equal
        #(1 1 0 0 0 0 0 0 0 0)
-       (linear-algebra:replace-vector (zero-vector) data
-                                      :end2 2))
+       (linear-algebra:replace-vector
+        (zero-vector) data :end2 2))
       (assert-rational-equal
        #(1 1 1 0 0 0 0 0 0 0)
-       (linear-algebra:replace-vector (zero-vector) data
-                                      :start2 1 :end2 4))
+       (linear-algebra:replace-vector
+        (zero-vector) data :start2 1 :end2 4))
       (assert-rational-equal
        #(0 0 1 1 1 0 0 0 0 0)
-       (linear-algebra:replace-vector (zero-vector) data
-                                      :start1 2 :start2 2))
+       (linear-algebra:replace-vector
+        (zero-vector) data :start1 2 :start2 2))
       (assert-rational-equal
        #(0 0 1 1 1 0 0 0 0 0)
-       (linear-algebra:replace-vector (zero-vector) data
-                                      :start1 2 :end2 3)))))
+       (linear-algebra:replace-vector
+        (zero-vector) data :start1 2 :end2 3)))))
 
 (define-test %map-data-vector
   (:tag :data-vector :map-vector)
   (let ((col-data (linear-algebra:column-vector 1 1 1 1 1))
         (row-data (linear-algebra:row-vector 1 1 1 1 1)))
     (assert-true
-     (typep (linear-algebra::%map-data-vector
-             'linear-algebra:column-vector
-             #'identity col-data)
-            'linear-algebra:column-vector))
+     (typep
+      (linear-algebra::%map-data-vector
+       'linear-algebra:column-vector
+       #'identity col-data)
+      'linear-algebra:column-vector))
     (assert-true
-     (typep (linear-algebra::%map-data-vector
-             'linear-algebra:row-vector
-             #'identity col-data)
-            'linear-algebra:row-vector))
+     (typep
+      (linear-algebra::%map-data-vector
+       'linear-algebra:row-vector
+       #'identity col-data)
+      'linear-algebra:row-vector))
     (assert-true
-     (typep (linear-algebra::%map-data-vector
-             'linear-algebra:column-vector
-             #'identity row-data)
-            'linear-algebra:column-vector))
+     (typep
+      (linear-algebra::%map-data-vector
+       'linear-algebra:column-vector
+       #'identity row-data)
+      'linear-algebra:column-vector))
     (assert-true
-     (typep (linear-algebra::%map-data-vector
-             'linear-algebra:row-vector
-             #'identity row-data)
-            'linear-algebra:row-vector))
+     (typep
+      (linear-algebra::%map-data-vector
+       'linear-algebra:row-vector
+       #'identity row-data)
+      'linear-algebra:row-vector))
     (assert-rational-equal
      '(3 3 3 3 3)
      (linear-algebra::%map-data-vector
@@ -361,12 +378,12 @@
   (:tag :data-vector :map-vector)
   (let ((col-data (linear-algebra:column-vector 1 1 1 1 1))
         (row-data (linear-algebra:row-vector 1 1 1 1 1)))
-    (assert-error 'error (linear-algebra:map-vector
-                          'vector #'identity col-data))
-    (assert-error 'error (linear-algebra:map-vector
-                          'linear-algebra:column-vector
-                          #'identity col-data
-                          #(2 2 2 2 2)))
+    (assert-error
+     'error (linear-algebra:map-vector 'vector #'identity col-data))
+    (assert-error
+     'error
+     (linear-algebra:map-vector
+      'linear-algebra:column-vector #'identity col-data #(2 2 2 2 2)))
     (assert-rational-equal
      '(3 3 3 3 3)
      (linear-algebra:map-vector
@@ -378,21 +395,25 @@
   (let ((col-data (linear-algebra:column-vector 1 1 1 1 1))
         (row-data (linear-algebra:row-vector 1 1 1 1 1)))
     (assert-true
-     (typep (linear-algebra::%map-into-data-vector
-             col-data #'identity col-data)
-            'linear-algebra:column-vector))
+     (typep
+      (linear-algebra::%map-into-data-vector
+       col-data #'identity col-data)
+      'linear-algebra:column-vector))
     (assert-true
-     (typep (linear-algebra::%map-into-data-vector
-             row-data #'identity col-data)
-            'linear-algebra:row-vector))
+     (typep
+      (linear-algebra::%map-into-data-vector
+       row-data #'identity col-data)
+      'linear-algebra:row-vector))
     (assert-true
-     (typep (linear-algebra::%map-into-data-vector
-             col-data #'identity row-data)
-            'linear-algebra:column-vector))
+     (typep
+      (linear-algebra::%map-into-data-vector
+       col-data #'identity row-data)
+      'linear-algebra:column-vector))
     (assert-true
-     (typep (linear-algebra::%map-into-data-vector
-             row-data #'identity row-data)
-            'linear-algebra:row-vector))
+     (typep
+      (linear-algebra::%map-into-data-vector
+       row-data #'identity row-data)
+      'linear-algebra:row-vector))
     (assert-rational-equal
      '(3 3 3 3 3)
      (linear-algebra::%map-into-data-vector
@@ -412,11 +433,14 @@
   (:tag :data-vector :map-into-vector)
   (let ((col-data (linear-algebra:column-vector 1 1 1 1 1))
         (row-data (linear-algebra:row-vector 1 1 1 1 1)))
-    (assert-error 'error (linear-algebra:map-into-vector
-                          #(0 0 0 0 0) #'identity col-data))
-    (assert-error 'error (linear-algebra:map-vector
-                          (linear-algebra:column-vector 0 0 0 0 0)
-                          #'identity col-data))
+    (assert-error
+     'error
+     (linear-algebra:map-into-vector
+      #(0 0 0 0 0) #'identity col-data))
+    (assert-error
+     'error
+     (linear-algebra:map-vector
+      (linear-algebra:column-vector 0 0 0 0 0) #'identity col-data))
     (assert-rational-equal
      '(3 3 3 3 3)
      (linear-algebra:map-into-vector
@@ -492,12 +516,14 @@
         (assert-float-equal
          #(-1.4630839 -1.6459692 -1.1495662 -1.8549814 0.0) rvec2))))
   ;; Complex
-  (let ((vec1 (linear-algebra:make-vector
-               2 :element-type '(complex single-float)
-               :initial-contents #(#C(3.0 5.0) #C(7.0 11.0))))
-        (vec2 (linear-algebra:make-vector
-               2 :element-type '(complex single-float)
-               :initial-contents #(#C(4.0 9.0) #C(16.0 25.0)))))
+  (let ((vec1
+         (linear-algebra:make-vector
+          2 :element-type '(complex single-float)
+          :initial-contents #(#C(3.0 5.0) #C(7.0 11.0))))
+        (vec2
+         (linear-algebra:make-vector
+          2 :element-type '(complex single-float)
+          :initial-contents #(#C(4.0 9.0) #C(16.0 25.0)))))
     ;; Position 0
     (multiple-value-bind (cc ss rr)
         (linear-algebra-kernel:givens-rotation
@@ -529,12 +555,14 @@
 (define-test napply-rotation-data-vector
   (:tag :data-vector :napply-rotation)
   ;; Float, position 0
-  (let ((vec1 (linear-algebra:make-vector
-               5 :element-type 'single-float
-               :initial-contents #(3.0 5.0 7.0 11.0 13.0)))
-        (vec2 (linear-algebra:make-vector
-               5 :element-type 'single-float
-               :initial-contents #(4.0 9.0 16.0 25.0 36.0))))
+  (let ((vec1
+         (linear-algebra:make-vector
+          5 :element-type 'single-float
+          :initial-contents #(3.0 5.0 7.0 11.0 13.0)))
+        (vec2
+         (linear-algebra:make-vector
+          5 :element-type 'single-float
+          :initial-contents #(4.0 9.0 16.0 25.0 36.0))))
     (multiple-value-bind (cc ss rr)
         (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 0) (linear-algebra:vref vec2 0))
@@ -548,12 +576,14 @@
         (assert-float-equal
          #(0.0 1.4000001 4.0000005 6.200001 11.2) vec2))))
   ;; Float, position 1
-  (let ((vec1 (linear-algebra:make-vector
-               5 :element-type 'single-float
-               :initial-contents #(3.0 5.0 7.0 11.0 13.0)))
-        (vec2 (linear-algebra:make-vector
-               5 :element-type 'single-float
-               :initial-contents #(4.0 9.0 16.0 25.0 36.0))))
+  (let ((vec1
+         (linear-algebra:make-vector
+          5 :element-type 'single-float
+          :initial-contents #(3.0 5.0 7.0 11.0 13.0)))
+        (vec2
+         (linear-algebra:make-vector
+          5 :element-type 'single-float
+          :initial-contents #(4.0 9.0 16.0 25.0 36.0))))
     (multiple-value-bind (cc ss rr)
         (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 1) (linear-algebra:vref vec2 1))
@@ -567,12 +597,14 @@
         (assert-float-equal
          #(-0.67990017 0.0 1.651186 2.525344 6.1191006) vec2))))
   ;; Float, position 2
-  (let ((vec1 (linear-algebra:make-vector
-               5 :element-type 'single-float
-               :initial-contents #(3.0 5.0 7.0 11.0 13.0)))
-        (vec2 (linear-algebra:make-vector
-               5 :element-type 'single-float
-               :initial-contents #(4.0 9.0 16.0 25.0 36.0))))
+  (let ((vec1
+         (linear-algebra:make-vector
+          5 :element-type 'single-float
+          :initial-contents #(3.0 5.0 7.0 11.0 13.0)))
+        (vec2
+         (linear-algebra:make-vector
+          5 :element-type 'single-float
+          :initial-contents #(4.0 9.0 16.0 25.0 36.0))))
     (multiple-value-bind (cc ss rr)
         (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 2) (linear-algebra:vref vec2 2))
@@ -586,12 +618,14 @@
         (assert-float-equal
          #(-1.1451968 -0.97341704 0.0 -0.05725956 2.519433) vec2))))
   ;; Float, position 3
-  (let ((vec1 (linear-algebra:make-vector
-               5 :element-type 'single-float
-               :initial-contents #(3.0 5.0 7.0 11.0 13.0)))
-        (vec2 (linear-algebra:make-vector
-               5 :element-type 'single-float
-               :initial-contents #(4.0 9.0 16.0 25.0 36.0))))
+  (let ((vec1
+         (linear-algebra:make-vector
+          5 :element-type 'single-float
+          :initial-contents #(3.0 5.0 7.0 11.0 13.0)))
+        (vec2
+         (linear-algebra:make-vector
+          5 :element-type 'single-float
+          :initial-contents #(4.0 9.0 16.0 25.0 36.0))))
     (multiple-value-bind (cc ss rr)
         (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 3) (linear-algebra:vref vec2 3))
@@ -605,12 +639,14 @@
         (assert-float-equal
          #(-1.1349905 -0.95192766 0.036612988 9.536743e-7 2.599495) vec2))))
   ;; Float, position 4
-  (let ((vec1 (linear-algebra:make-vector
-               5 :element-type 'single-float
-               :initial-contents #(3.0 5.0 7.0 11.0 13.0)))
-        (vec2 (linear-algebra:make-vector
-               5 :element-type 'single-float
-               :initial-contents #(4.0 9.0 16.0 25.0 36.0))))
+  (let ((vec1
+         (linear-algebra:make-vector
+          5 :element-type 'single-float
+          :initial-contents #(3.0 5.0 7.0 11.0 13.0)))
+        (vec2
+         (linear-algebra:make-vector
+          5 :element-type 'single-float
+          :initial-contents #(4.0 9.0 16.0 25.0 36.0))))
     (multiple-value-bind (cc ss rr)
         (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 4) (linear-algebra:vref vec2 4))
@@ -624,12 +660,14 @@
         (assert-float-equal
          #(-1.4630839 -1.6459692 -1.1495662 -1.8549814 0.0) vec2))))
   ;; Complex, position 0
-  (let ((vec1 (linear-algebra:make-vector
-               2 :element-type '(complex single-float)
-               :initial-contents #(#C(3.0 5.0) #C(7.0 11.0))))
-        (vec2 (linear-algebra:make-vector
-               2 :element-type '(complex single-float)
-               :initial-contents #(#C(4.0 9.0) #C(16.0 25.0)))))
+  (let ((vec1
+         (linear-algebra:make-vector
+          2 :element-type '(complex single-float)
+          :initial-contents #(#C(3.0 5.0) #C(7.0 11.0))))
+        (vec2
+         (linear-algebra:make-vector
+          2 :element-type '(complex single-float)
+          :initial-contents #(#C(4.0 9.0) #C(16.0 25.0)))))
     (multiple-value-bind (cc ss rr)
         (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 0) (linear-algebra:vref vec2 0))
@@ -643,12 +681,14 @@
         (assert-float-equal
          #(#C(-4.7683716e-7 -4.7683716e-7) #C(3.326425 2.6071978)) vec2))))
   ;; Complex, position 1
-  (let ((vec1 (linear-algebra:make-vector
-               2 :element-type '(complex single-float)
-               :initial-contents #(#C(3.0 5.0) #C(7.0 11.0))))
-        (vec2 (linear-algebra:make-vector
-               2 :element-type '(complex single-float)
-               :initial-contents #(#C(4.0 9.0) #C(16.0 25.0)))))
+  (let ((vec1
+         (linear-algebra:make-vector
+          2 :element-type '(complex single-float)
+          :initial-contents #(#C(3.0 5.0) #C(7.0 11.0))))
+        (vec2
+         (linear-algebra:make-vector
+          2 :element-type '(complex single-float)
+          :initial-contents #(#C(4.0 9.0) #C(16.0 25.0)))))
     (multiple-value-bind (cc ss rr)
         (linear-algebra-kernel:givens-rotation
          (linear-algebra:vref vec1 1) (linear-algebra:vref vec2 1))
@@ -669,10 +709,12 @@
 (define-test sumsq-data-vector
   (:tag :data-vector :sumsq)
   ;; Real
-  (let ((col-data (linear-algebra:column-vector
-                   -6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
-        (row-data (linear-algebra:row-vector
-                   -6 -5 -4 -3 -2 -1 0 1 2 3 4 5)))
+  (let ((col-data
+         (linear-algebra:column-vector
+          -6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
+        (row-data
+         (linear-algebra:row-vector
+          -6 -5 -4 -3 -2 -1 0 1 2 3 4 5)))
     (multiple-value-bind (scale sumsq)
         (linear-algebra:sumsq col-data)
       (assert-rational-equal 6 scale)
@@ -682,12 +724,14 @@
       (assert-rational-equal 6 scale)
       (assert-rational-equal 73/18 sumsq)))
   ;; Complex
-  (let ((col-data (linear-algebra:column-vector
-                   #C(1 0) #C(3 1) #C(2 3) #C(0 4)
-                   #C(-2 3) #C(-3 1) #C(-1 0)))
-        (row-data (linear-algebra:row-vector
-                   #C(1 0) #C(3 1) #C(2 3) #C(0 4)
-                   #C(-2 3) #C(-3 1) #C(-1 0))))
+  (let ((col-data
+         (linear-algebra:column-vector
+          #C(1 0) #C(3 1) #C(2 3) #C(0 4)
+          #C(-2 3) #C(-3 1) #C(-1 0)))
+        (row-data
+         (linear-algebra:row-vector
+          #C(1 0) #C(3 1) #C(2 3) #C(0 4)
+          #C(-2 3) #C(-3 1) #C(-1 0))))
     (multiple-value-bind (scale sumsq)
         (linear-algebra:sumsq col-data)
       (assert-float-equal 4.0 scale)
@@ -700,10 +744,12 @@
 (define-test sump-data-vector
   (:tag :data-vector :sump)
   ;; Real
-  (let ((col-data (linear-algebra:column-vector
-                   -6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
-        (row-data (linear-algebra:row-vector
-                   -6 -5 -4 -3 -2 -1 0 1 2 3 4 5)))
+  (let ((col-data
+         (linear-algebra:column-vector
+          -6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
+        (row-data
+         (linear-algebra:row-vector
+          -6 -5 -4 -3 -2 -1 0 1 2 3 4 5)))
     (multiple-value-bind (scale sump)
         (linear-algebra:sump col-data 2)
       (assert-rational-equal 6 scale)
@@ -721,12 +767,14 @@
       (assert-rational-equal 6 scale)
       (assert-rational-equal 1 sump)))
   ;; Complex
-  (let ((col-data (linear-algebra:column-vector
-                   #C(1 0) #C(3 1) #C(2 3) #C(0 4)
-                   #C(-2 3) #C(-3 1) #C(-1 0)))
-        (row-data (linear-algebra:row-vector
-                   #C(1 0) #C(3 1) #C(2 3) #C(0 4)
-                   #C(-2 3) #C(-3 1) #C(-1 0))))
+  (let ((col-data
+         (linear-algebra:column-vector
+          #C(1 0) #C(3 1) #C(2 3) #C(0 4)
+          #C(-2 3) #C(-3 1) #C(-1 0)))
+        (row-data
+         (linear-algebra:row-vector
+          #C(1 0) #C(3 1) #C(2 3) #C(0 4)
+          #C(-2 3) #C(-3 1) #C(-1 0))))
     (multiple-value-bind (scale sump)
         (linear-algebra:sump col-data 2)
       (assert-float-equal 4.0 scale)
@@ -748,11 +796,13 @@
 
 (define-test norm-data-vector
   (:tag :data-vector :norm)
-  (let ((data (linear-algebra:column-vector
-               -6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
-        (zdata (linear-algebra:column-vector
-                #C(1 0) #C(3 1) #C(2 3) #C(0 4)
-                #C(-2 3) #C(-3 1) #C(-1 0))))
+  (let ((data
+         (linear-algebra:column-vector
+          -6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
+        (zdata
+         (linear-algebra:column-vector
+          #C(1 0) #C(3 1) #C(2 3) #C(0 4)
+          #C(-2 3) #C(-3 1) #C(-1 0))))
     ;; Taxicab norm
     (assert-rational-equal
      36 (linear-algebra:norm data))
@@ -778,16 +828,20 @@
 
 (define-test transpose-data-vector
   (:tag :data-vector :transpose)
-  (let ((col-data (linear-algebra:column-vector
-                   1.0 2.0 3.0 4.0 5.0))
-        (row-data (linear-algebra:row-vector
-                   1.0 2.0 3.0 4.0 5.0)))
+  (let ((col-data
+         (linear-algebra:column-vector
+          1.0 2.0 3.0 4.0 5.0))
+        (row-data
+         (linear-algebra:row-vector
+          1.0 2.0 3.0 4.0 5.0)))
     (assert-true
-     (typep (linear-algebra:transpose col-data)
-            'linear-algebra:row-vector))
+     (typep
+      (linear-algebra:transpose col-data)
+      'linear-algebra:row-vector))
     (assert-true
-     (typep (linear-algebra:transpose row-data)
-            'linear-algebra:column-vector))
+     (typep
+      (linear-algebra:transpose row-data)
+      'linear-algebra:column-vector))
     (assert-float-equal
      col-data (linear-algebra:transpose col-data))
     (assert-float-equal
@@ -795,21 +849,25 @@
 
 (define-test ntranspose-data-vector
   (:tag :data-vector :ntranspose)
-  (let ((col-data (linear-algebra:column-vector
-                   1.0 2.0 3.0 4.0 5.0))
-        (row-data (linear-algebra:row-vector
-                   1.0 2.0 3.0 4.0 5.0)))
+  (let ((col-data
+         (linear-algebra:column-vector
+          1.0 2.0 3.0 4.0 5.0))
+        (row-data
+         (linear-algebra:row-vector
+          1.0 2.0 3.0 4.0 5.0)))
     (assert-true
-     (typep (linear-algebra:ntranspose col-data)
-            'linear-algebra:row-vector))
+     (typep
+      (linear-algebra:ntranspose col-data)
+      'linear-algebra:row-vector))
     (assert-true
      (typep col-data 'linear-algebra:row-vector))
     (assert-float-equal
      #(1.0 2.0 3.0 4.0 5.0)
      (linear-algebra:transpose col-data))
     (assert-true
-     (typep (linear-algebra:ntranspose row-data)
-            'linear-algebra:column-vector))
+     (typep
+      (linear-algebra:ntranspose row-data)
+      'linear-algebra:column-vector))
     (assert-true
      (typep row-data 'linear-algebra:column-vector))
     (assert-float-equal
@@ -820,23 +878,28 @@
 
 (define-test permute-data-vector
   (:tag :data-vector :permute)
-  (let ((rvec (linear-algebra:row-vector
-               1.1 2.2 3.3 4.4 5.5))
-        (cvec (linear-algebra:column-vector
-               1.1 2.2 3.3 4.4 5.5))
-        (rerr (linear-algebra:row-vector
-               1.1 2.2 3.3 4.4 5.5 6.6))
-        (cerr (linear-algebra:column-vector
-               1.1 2.2 3.3 4.4 5.5 6.6))
-        (pmat (linear-algebra:make-matrix
-               5 5 :matrix-type
-               'linear-algebra:permutation-matrix
-               :initial-contents
-               '((0 0 1 0 0)
-                 (0 0 0 0 1)
-                 (1 0 0 0 0)
-                 (0 1 0 0 0)
-                 (0 0 0 1 0)))))
+  (let ((rvec
+         (linear-algebra:row-vector
+          1.1 2.2 3.3 4.4 5.5))
+        (cvec
+         (linear-algebra:column-vector
+          1.1 2.2 3.3 4.4 5.5))
+        (rerr
+         (linear-algebra:row-vector
+          1.1 2.2 3.3 4.4 5.5 6.6))
+        (cerr
+         (linear-algebra:column-vector
+          1.1 2.2 3.3 4.4 5.5 6.6))
+        (pmat
+         (linear-algebra:make-matrix
+          5 5 :matrix-type
+          'linear-algebra:permutation-matrix
+          :initial-contents
+          '((0 0 1 0 0)
+            (0 0 0 0 1)
+            (1 0 0 0 0)
+            (0 1 0 0 0)
+            (0 0 0 1 0)))))
     (assert-float-equal
      #(3.3 4.4 1.1 5.5 2.2)
      (linear-algebra:permute rvec pmat))

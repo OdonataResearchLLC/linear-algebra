@@ -64,8 +64,9 @@
       (assert-rational-equal 6 scale)
       (assert-rational-equal 1 sump)))
   ;; Complex
-  (let ((data '(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
-                #C(-2 3) #C(-3 1) #C(-1 0))))
+  (let ((data
+         '(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
+           #C(-2 3) #C(-3 1) #C(-1 0))))
     (multiple-value-bind (scale sump)
         (linear-algebra:sump data 2)
       (assert-float-equal 4.0 scale)
@@ -128,8 +129,9 @@
 (define-test %norm-p-list
   (:tag :list :norm)
   (let ((data '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
-        (zdata '(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
-                 #C(-2 3) #C(-3 1) #C(-1 0))))
+        (zdata
+         '(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
+           #C(-2 3) #C(-3 1) #C(-1 0))))
     (assert-float-equal
      8.732892 (linear-algebra::%norm data 3))
     (assert-float-equal
@@ -183,15 +185,16 @@
 (define-test permute-list
   (:tag :list :permute)
   (let ((list (list 1.1 2.2 3.3 4.4 5.5))
-        (pmat (linear-algebra:make-matrix
-               5 5 :matrix-type
-               'linear-algebra:permutation-matrix
-               :initial-contents
-               '((0 0 1 0 0)
-                 (0 0 0 0 1)
-                 (1 0 0 0 0)
-                 (0 1 0 0 0)
-                 (0 0 0 1 0)))))
+        (pmat
+         (linear-algebra:make-matrix
+          5 5 :matrix-type
+          'linear-algebra:permutation-matrix
+          :initial-contents
+          '((0 0 1 0 0)
+            (0 0 0 0 1)
+            (1 0 0 0 0)
+            (0 1 0 0 0)
+            (0 0 0 1 0)))))
     (assert-float-equal
      (list 3.3 4.4 1.1 5.5 2.2)
      (linear-algebra:permute list pmat))

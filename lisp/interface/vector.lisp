@@ -91,14 +91,15 @@
   (:documentation
    "Set the subvector of the vector."))
 
-(defgeneric replace-vector (vector1 vector2 &key
-                            start1 end1 start2 end2)
+(defgeneric replace-vector
+    (vector1 vector2 &key start1 end1 start2 end2)
   (:documentation
    "Destructively replace the elements of vector1 with vector2."))
 
 ;;; Vector iteration operations
 
-(defgeneric map-vector (result-type function first-vector &rest more-vectors)
+(defgeneric map-vector
+    (result-type function first-vector &rest more-vectors)
   (:documentation
    "Calls function on successive sets of vector objects."))
 
@@ -107,8 +108,7 @@
    "Destructively modifies the result vector with the result of
 applying the function to each element of the vectors."))
 
-(defmacro dovector ((element vector &optional result)
-                    &body body)
+(defmacro dovector ((element vector &optional result) &body body)
   "Iterate over vector returning result."
   (let ((pos (gensym "POS-"))
         (end (gensym "END-")))
