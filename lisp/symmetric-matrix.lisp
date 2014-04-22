@@ -334,3 +334,35 @@ matrix2."
              "Range(~D:~D,~D:~D) results in an asymmetric matrix."
              start-row1 (+ start-row1 m-rows -1)
              start-column1 (+ start-column1 n-columns -1)))))))
+
+(defmethod nadd
+    ((matrix1 symmetric-matrix) (matrix2 dense-matrix)
+     &key scalar1 scalar2)
+  "Generate an error if a non-symmetric matrix is destructively added
+to a symmetric matrix."
+  (declare (ignore scalar1 scalar2))
+  (error "NADD into a symmetric-matrix with a ~A is invalid."
+         (class-of matrix2)))
+
+(defmethod nadd
+    ((matrix1 symmetric-matrix) (matrix2 symmetric-matrix)
+     &key scalar1 scalar2)
+  (nadd-array
+   (contents matrix1) (contents matrix2) scalar1 scalar2)
+  matrix1)
+
+(defmethod nsubtract
+    ((matrix1 symmetric-matrix) (matrix2 dense-matrix)
+     &key scalar1 scalar2)
+  "Generate an error if a non-symmetric matrix is destructively
+subtracted to a symmetric matrix."
+  (declare (ignore scalar1 scalar2))
+  (error "NSUBTRACT into a symmetric-matrix with a ~A is invalid."
+         (class-of matrix2)))
+
+(defmethod nsubtract
+    ((matrix1 symmetric-matrix) (matrix2 symmetric-matrix)
+     &key scalar1 scalar2)
+  (nsubtract-array
+   (contents matrix1) (contents matrix2) scalar1 scalar2)
+  matrix1)
