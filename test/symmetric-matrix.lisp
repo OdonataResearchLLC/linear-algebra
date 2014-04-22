@@ -1120,3 +1120,156 @@
          (1.4 2.4 3.4 4.4))
      matrix1
      :scalar1-&-scalar2)))
+
+(define-test product-symmetric-matrix
+  (:tag :symmetric-matrix :product)
+  ;; Row vector - dense matrix
+  (assert-true
+   (typep
+    (linear-algebra:product
+     (linear-algebra:row-vector 1.0 2.0 3.0)
+     (linear-algebra:make-matrix
+      3 3 :matrix-type 'linear-algebra:symmetric-matrix
+      :initial-contents
+      #2A((1.1 1.2 1.3)
+          (1.2 2.2 2.3)
+          (1.3 2.3 3.3))))
+    'linear-algebra:row-vector))
+  (assert-float-equal
+   #(7.4 12.5 15.8)
+   (linear-algebra:product
+    (linear-algebra:row-vector 1.0 2.0 3.0)
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:symmetric-matrix
+     :initial-contents
+     #2A((1.1 1.2 1.3)
+         (1.2 2.2 2.3)
+         (1.3 2.3 3.3)))))
+  (let ((*epsilon* (* 4F0 single-float-epsilon)))
+    (assert-float-equal
+     #(15.54 26.25 33.18)
+     (linear-algebra:product
+      (linear-algebra:row-vector 1.0 2.0 3.0)
+      (linear-algebra:make-matrix
+       3 3 :matrix-type 'linear-algebra:symmetric-matrix
+       :initial-contents
+       #2A((1.1 1.2 1.3)
+           (1.2 2.2 2.3)
+           (1.3 2.3 3.3)))
+      :scalar 2.1)))
+  (assert-error
+   'error
+   (linear-algebra:product
+    (linear-algebra:row-vector 1.0 2.0 3.0 4.0 5.0 6.0)
+    (linear-algebra:make-matrix
+     3 3 :initial-element 1.0
+     :matrix-type 'linear-algebra:symmetric-matrix)))
+  ;; Dense matrix - column vector
+  (assert-true
+   (typep
+    (linear-algebra:product
+     (linear-algebra:make-matrix
+      3 3 :matrix-type 'linear-algebra:symmetric-matrix
+      :initial-contents
+      #2A((1.1 1.2 1.3)
+          (1.2 2.2 2.3)
+          (1.3 2.3 3.3)))
+     (linear-algebra:column-vector 1.0 2.0 3.0))
+    'linear-algebra:column-vector))
+  (assert-float-equal
+   #(7.4 12.5 15.8)
+   (linear-algebra:product
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:symmetric-matrix
+     :initial-contents
+     #2A((1.1 1.2 1.3)
+         (1.2 2.2 2.3)
+         (1.3 2.3 3.3)))
+    (linear-algebra:column-vector 1.0 2.0 3.0)))
+  (let ((*epsilon* (* 4F0 single-float-epsilon)))
+    (assert-float-equal
+     #(15.54 26.25 33.18)
+     (linear-algebra:product
+      (linear-algebra:make-matrix
+       3 3 :matrix-type 'linear-algebra:symmetric-matrix
+       :initial-contents
+       #2A((1.1 1.2 1.3)
+           (1.2 2.2 2.3)
+           (1.3 2.3 3.3)))
+      (linear-algebra:column-vector 1.0 2.0 3.0)
+      :scalar 2.1)))
+  (assert-error
+   'error
+   (linear-algebra:product
+    (linear-algebra:make-matrix
+     3 3 :initial-element 1.0
+     :matrix-type 'linear-algebra:square-matrix)
+    (linear-algebra:column-vector 1.0 2.0 3.0 4.0 5.0 6.0)))
+  ;; Dense matrix - matrix
+  (assert-true
+   (typep
+    (linear-algebra:product
+     (linear-algebra:make-matrix
+      3 3 :matrix-type 'linear-algebra:symmetric-matrix
+      :initial-contents
+      #2A((1.1 1.2 1.3)
+          (1.2 2.2 2.3)
+          (1.3 2.3 3.3)))
+     (linear-algebra:make-matrix
+      3 3 :matrix-type 'linear-algebra:symmetric-matrix
+      :initial-contents
+      #2A((1.1 1.2 1.3)
+          (1.2 2.2 2.3)
+          (1.3 2.3 3.3))))
+    'linear-algebra:symmetric-matrix))
+  (assert-true
+   (typep
+    (linear-algebra:product
+     (linear-algebra:make-matrix
+      3 3 :matrix-type 'linear-algebra:symmetric-matrix
+      :initial-contents
+      #2A((1.1 1.2 1.3)
+          (1.2 2.2 2.3)
+          (1.3 2.3 3.3)))
+     (linear-algebra:make-matrix
+      3 3 :matrix-type 'linear-algebra:square-matrix
+      :initial-contents
+      #2A((1.0 1.0 1.0)
+          (2.0 2.0 2.0)
+          (3.0 3.0 3.0))))
+    'linear-algebra:square-matrix))
+  (assert-float-equal
+   #2A((4.34  6.95      8.48)
+       (6.95 11.57     14.209999)
+       (8.48 14.209999 17.869999))
+   (linear-algebra:product
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:symmetric-matrix
+     :initial-contents
+     #2A((1.1 1.2 1.3)
+         (1.2 2.2 2.3)
+         (1.3 2.3 3.3)))
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:symmetric-matrix
+     :initial-contents
+     #2A((1.1 1.2 1.3)
+         (1.2 2.2 2.3)
+         (1.3 2.3 3.3)))))
+  (assert-float-equal
+   #2A(( 9.114    14.594999 17.807999)
+       (14.594999 24.296999 29.840996)
+       (17.807999 29.840996 37.526997))
+   (linear-algebra:product
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:symmetric-matrix
+     :initial-contents
+     #2A((1.1 1.2 1.3)
+         (1.2 2.2 2.3)
+         (1.3 2.3 3.3)))
+    (linear-algebra:make-matrix
+     3 3 :matrix-type 'linear-algebra:symmetric-matrix
+     :initial-contents
+     #2A((1.1 1.2 1.3)
+         (1.2 2.2 2.3)
+         (1.3 2.3 3.3)))
+    :scalar 2.1)))
