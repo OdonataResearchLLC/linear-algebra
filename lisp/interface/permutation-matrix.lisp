@@ -174,32 +174,6 @@ columns."
    'permutation-matrix
    :contents (copy-seq (contents matrix))))
 
-(defmethod submatrix
-    ((matrix permutation-matrix)
-     (start-row integer) (start-column integer)
-     &key end-row end-column)
-  (multiple-value-bind (start-row start-column end-row end-column)
-      (matrix-validated-range
-       matrix start-row start-column end-row end-column)
-    (let* ((m-rows (- end-row start-row))
-           (n-columns (- end-column start-column))
-           (permute  (contents matrix))
-           (contents
-            (make-array
-             (list m-rows n-columns)
-             :element-type 'fixnum
-             :initial-element 0)))
-      (make-instance
-       (if (= m-rows n-columns) 'square-matrix 'dense-matrix)
-       :contents
-       (do ((i0 0 (1+ i0))
-            (i1 start-row (1+ i1)))
-           ((>= i0 m-rows) contents)
-         (when (< (1- start-column) (aref permute i1) end-column)
-           (setf
-            (aref contents i0 (- (aref permute i1) start-column))
-            1)))))))
-
 (defmethod transpose ((matrix permutation-matrix) &key conjugate)
   "Transpose the permutation matrix."
   (declare (ignore conjugate))

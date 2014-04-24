@@ -203,80 +203,13 @@
 ;;; Test the submatrix of a identity matrix
 (define-test identity-submatrix
   (:tag :matrix :identity-matrix :submatrix)
-  (let ((matrix
-         (linear-algebra:make-matrix
-          10 10
-          :matrix-type
-          'linear-algebra:identity-matrix
-          :element-type 'single-float)))
-    ;; The entire matrix
-    (assert-true
-     (typep
-      (linear-algebra:submatrix matrix 0 0)
-      'linear-algebra:identity-matrix))
-    (assert-rational-equal
-     10 (slot-value (linear-algebra:submatrix matrix 0 0)
-                    'linear-algebra::size))
-    ;; Start row and column to the end
-    (assert-true
-     (typep
-      (linear-algebra:submatrix matrix 3 3)
-      'linear-algebra:identity-matrix))
-    (assert-rational-equal
-     7 (slot-value (linear-algebra:submatrix matrix 3 3)
-                   'linear-algebra::size))
-    ;; End row and column
-    (assert-true
-     (typep
-      (linear-algebra:submatrix
-       matrix 2 2 :end-row 8 :end-column 8)
-      'linear-algebra:identity-matrix))
-    (assert-rational-equal
-     6 (slot-value
-        (linear-algebra:submatrix
-         matrix 2 2 :end-row 8 :end-column 8)
-        'linear-algebra::size))
-    ;; Dense matrix
-    (assert-true
-     (typep
-      (linear-algebra:submatrix
-       matrix 2 2 :end-row 4 :end-column 6)
-      'linear-algebra:dense-matrix))
-    (assert-float-equal
-     #2A((1.0 0.0 0.0 0.0)
-         (0.0 1.0 0.0 0.0))
-     (linear-algebra:submatrix
-      matrix 2 2 :end-row 4 :end-column 6))
-    ;; Square matrix
-    (assert-true
-     (typep
-      (linear-algebra:submatrix
-       matrix 0 2 :end-row 3 :end-column 5)
-      'linear-algebra:square-matrix))
-    (assert-float-equal
-     #2A((0.0 0.0 0.0)
-         (0.0 0.0 0.0)
-         (1.0 0.0 0.0))
-     (linear-algebra:submatrix
-      matrix 0 2 :end-row 3 :end-column 5))
-    ;; Start row exceeds dimensions
-    (assert-error
-     'error (linear-algebra:submatrix matrix 11 5))
-    ;; Start column exceeds dimensions
-    (assert-error
-     'error (linear-algebra:submatrix matrix 5 11))
-    ;; End row exceeds dimensions
-    (assert-error
-     'error (linear-algebra:submatrix matrix 5 5 :end-row 11))
-    ;; End column exceeds dimensions
-    (assert-error
-     'error (linear-algebra:submatrix matrix 5 5 :end-column 11))
-    ;; Start row exceeds end row
-    (assert-error
-     'error (linear-algebra:submatrix matrix 7 7 :end-row 6))
-    ;; Start column exceeds end column
-    (assert-error
-     'error (linear-algebra:submatrix matrix 7 7 :end-column 6))))
+  (assert-error
+   'error
+   (linear-algebra:submatrix
+    (linear-algebra:make-matrix
+     10 10 :matrix-type
+     'linear-algebra:identity-matrix)
+    5 5)))
 
 (define-test setf-identity-submatrix
   (:tag :matrix :identity-matrix :setf-submatrix)
