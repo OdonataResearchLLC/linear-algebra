@@ -29,12 +29,12 @@
 (defmethod sumsq ((data array))
   "Return the scaling parameter and the sum of the squares of the
 array."
-  (sumsq-array data 1 0))
+  (sumsq-array data))
 
 (defmethod sump ((data array) (p number))
   "Return the scaling parameter and the sum of the P powers of the
 matrix."
-  (sump-array data p 1 0))
+  (sump-array data p))
 
 (defmethod norm ((data array) &key (measure 1))
   "Return the norm of the array."

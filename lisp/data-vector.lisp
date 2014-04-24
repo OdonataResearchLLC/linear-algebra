@@ -258,11 +258,11 @@ applying the function to each element of the vectors."
 
 (defmethod sumsq ((vector data-vector))
   "Return the scaling parameter and the sum of the squares of vector."
-  (sumsq-vector (contents vector) 1 0))
+  (sumsq-vector (contents vector)))
 
 (defmethod sump ((vector data-vector) (p number))
   "Return the scaling parameter and the sum of the P powers of vector."
-  (sump-vector (contents vector) p 1 0))
+  (sump-vector (contents vector) p))
 
 (defmethod norm ((vector data-vector) &key (measure 1))
   "Return the p-norm of the vector."

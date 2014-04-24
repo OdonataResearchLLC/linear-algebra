@@ -47,7 +47,7 @@
          (z/w (/ abs-z w)))
     (* w (sqrt (+ (* x/w x/w) (* y/w y/w) (* z/w z/w))))))
 
-(defun sumsq-vector (vector scale sumsq)
+(defun sumsq-vector (vector &optional (scale 1) (sumsq 0))
   "Return the scaling parameter and the sum of the squares of the
 vector."
   (let ((abs-val))
@@ -61,7 +61,7 @@ vector."
              sumsq
              (+ sumsq (expt (/ (aref vector index) scale) 2))))))))
 
-(defun sumsq-array (array scale sumsq)
+(defun sumsq-array (array &optional (scale 1) (sumsq 0))
     "Return the scaling parameter and the sum of the squares of the
 array."
   (let ((m-rows (array-dimension array 0))
@@ -76,7 +76,7 @@ array."
                scale abs-val)
               (setq sumsq (+ sumsq (expt (/ abs-val scale) 2)))))))))
 
-(defun sump-vector (vector p scale sump)
+(defun sump-vector (vector p &optional (scale 1) (sump 0))
   "Return the scaling parameter and the sum of the powers of p of the
 vector."
   (let ((abs-val))
@@ -90,7 +90,7 @@ vector."
              sump
              (+ sump (expt (/ (aref vector index) scale) p))))))))
 
-(defun sump-array (array p scale sump)
+(defun sump-array (array p &optional (scale 1) (sump 0))
   "Return the scaling parameter and the sum of the P powers of the
 matrix."
   (unless (plusp p) (error "The power(~A) must be positive." p))
@@ -135,13 +135,13 @@ matrix."
 (defmethod norm-vector ((data vector) (measure (eql 2)))
   "Return the Euclidean norm of the vector."
   (multiple-value-bind (scale sumsq)
-      (sumsq-vector (%abs-vector data) 0 1)
+      (sumsq-vector (%abs-vector data))
     (* scale (sqrt sumsq))))
 
 (defmethod norm-vector ((data vector) (measure integer))
   "Return the p-norm of the vector."
   (multiple-value-bind (scale sump)
-      (sump-vector (%abs-vector data) measure 0 1)
+      (sump-vector (%abs-vector data) measure)
     (* scale (expt sump (/ measure)))))
 
 (defmethod norm-vector ((data vector) (measure (eql :infinity)))
@@ -172,7 +172,7 @@ matrix."
 (defmethod norm-array ((data array) (measure (eql :frobenius)))
   "Return the Frobenius norm of the array."
   (multiple-value-bind (scale sumsq)
-      (sumsq-array data 0 1)
+      (sumsq-array data)
     (* scale (sqrt sumsq))))
 
 (defmethod norm-array ((data array) (measure (eql :infinity)))

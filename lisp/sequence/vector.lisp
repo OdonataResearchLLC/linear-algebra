@@ -29,12 +29,12 @@
 (defmethod sumsq ((data vector))
   "Return the scaling parameter and the sum of the squares of the
 vector."
-  (sumsq-vector data 1 0))
+  (sumsq-vector data))
 
 (defmethod sump ((data vector) (p real))
   "Return the scaling parameter and the sum of the powers of p of the
 vector."
-  (sump-vector data p 1 0))
+  (sump-vector data p))
 
 (defmethod norm ((data vector) &key (measure 1))
   (norm-vector data measure))

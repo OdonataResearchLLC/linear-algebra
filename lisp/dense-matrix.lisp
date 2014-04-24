@@ -250,11 +250,11 @@
 
 (defmethod sumsq ((matrix dense-matrix))
   "Return the scaling parameter and the sum of the squares of the matrix."
-  (sumsq-array (contents matrix) 1 0))
+  (sumsq-array (contents matrix)))
 
 (defmethod sump ((matrix dense-matrix) (p number))
   "Return the scaling parameter and the sum of the P powers of the matrix."
-  (sump-array (contents matrix) p 1 0))
+  (sump-array (contents matrix) p))
 
 (defmethod norm ((matrix dense-matrix) &key (measure 1))
   "Return the norm of the matrix."
