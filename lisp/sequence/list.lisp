@@ -77,13 +77,13 @@ data."
 (defmethod norm ((data list) &optional (measure 1))
   (%norm data measure))
 
-(defmethod transpose ((data list) &key conjugate)
+(defmethod transpose ((data list) &optional conjugate)
   "Return a row vector."
   (loop
    with op = (if conjugate #'conjugate #'identity)
    for val in data collect (funcall op val)))
 
-(defmethod ntranspose ((data list) &key conjugate)
+(defmethod ntranspose ((data list) &optional conjugate)
   "Return a row vector destructively."
   (if conjugate
       (map-into data #'conjugate data)

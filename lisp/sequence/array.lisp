@@ -43,7 +43,7 @@ matrix."
       (error "Array rank(~D) must be 2."
              (array-rank data))))
 
-(defmethod transpose ((data array) &key conjugate)
+(defmethod transpose ((data array) &optional conjugate)
   "Return the transpose of the array."
   (let* ((op (if conjugate #'conjugate #'identity))
          (m-rows (array-dimension data 0))
@@ -58,7 +58,7 @@ matrix."
          (aref result column row)
          (funcall op (aref data row column)))))))
 
-(defmethod ntranspose ((data array) &key conjugate)
+(defmethod ntranspose ((data array) &optional conjugate)
   "Replace the contents of the array with the transpose."
   (let ((m-rows (array-dimension data 0))
         (n-columns (array-dimension data 1))

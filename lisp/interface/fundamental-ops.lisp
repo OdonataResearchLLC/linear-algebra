@@ -40,11 +40,11 @@
   (:documentation
    "Return the norm according to measure."))
 
-(defgeneric transpose (vector-or-matrix &key conjugate)
+(defgeneric transpose (vector-or-matrix &optional conjugate)
   (:documentation
    "Transpose the vector or matrix."))
 
-(defgeneric ntranspose (vector-or-matrix &key conjugate)
+(defgeneric ntranspose (vector-or-matrix &optional conjugate)
   (:documentation
    "Destructively transpose the vector or matrix."))
 

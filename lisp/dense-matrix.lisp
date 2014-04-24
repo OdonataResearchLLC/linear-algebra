@@ -260,7 +260,7 @@
   "Return the norm of the matrix."
   (norm-array (contents matrix) measure))
 
-(defmethod transpose ((matrix dense-matrix) &key conjugate)
+(defmethod transpose ((matrix dense-matrix) &optional conjugate)
   "Return the transpose of the matrix."
   (make-instance
    (class-of matrix)
@@ -279,7 +279,7 @@
          (setf (aref tcontents column row)
                (funcall op (aref contents row column))))))))
 
-(defmethod ntranspose ((matrix dense-matrix) &key conjugate)
+(defmethod ntranspose ((matrix dense-matrix) &optional conjugate)
   "Replace the contents of the dense matrix with the transpose."
   (let ((m-rows (matrix-row-dimension matrix))
         (n-columns (matrix-column-dimension matrix)))

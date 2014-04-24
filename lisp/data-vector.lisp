@@ -268,28 +268,28 @@ applying the function to each element of the vectors."
   "Return the p-norm of the vector."
   (norm-vector (contents vector) measure))
 
-(defmethod transpose ((vector column-vector) &key conjugate)
+(defmethod transpose ((vector column-vector) &optional conjugate)
   "Return a row vector."
   (make-instance
    'row-vector
    :contents
-   (transpose (contents vector) :conjugate conjugate)))
+   (transpose (contents vector) conjugate)))
 
-(defmethod transpose ((vector row-vector) &key conjugate)
+(defmethod transpose ((vector row-vector) &optional conjugate)
   "Return a column vector."
   (make-instance
    'column-vector
    :contents
-   (transpose (contents vector) :conjugate conjugate)))
+   (transpose (contents vector) conjugate)))
 
-(defmethod ntranspose ((vector column-vector) &key conjugate)
+(defmethod ntranspose ((vector column-vector) &optional conjugate)
   "Return a row vector destructively."
-  (ntranspose (contents vector) :conjugate conjugate)
+  (ntranspose (contents vector) conjugate)
   (change-class vector 'row-vector))
 
-(defmethod ntranspose ((vector row-vector) &key conjugate)
+(defmethod ntranspose ((vector row-vector) &optional conjugate)
   "Return a column vector destructively."
-  (ntranspose (contents vector) :conjugate conjugate)
+  (ntranspose (contents vector) conjugate)
   (change-class vector 'column-vector))
 
 (defmethod permute :before

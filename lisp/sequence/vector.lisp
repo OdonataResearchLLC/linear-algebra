@@ -39,7 +39,7 @@ vector."
 (defmethod norm ((data vector) &optional (measure 1))
   (norm-vector data measure))
 
-(defmethod transpose ((data vector) &key conjugate)
+(defmethod transpose ((data vector) &optional conjugate)
   "Return a row vector."
   (let ((result
          (make-array
@@ -51,7 +51,7 @@ vector."
         (dotimes (index (length data) result)
           (setf (aref result index) (conjugate (aref data index)))))))
 
-(defmethod ntranspose ((data vector) &key conjugate)
+(defmethod ntranspose ((data vector) &optional conjugate)
   "Return a row vector destructively."
   (if conjugate
       (dotimes (index (length data) data)
