@@ -36,9 +36,8 @@
     ((zerop f)
      (values 0 (signum (conjugate g)) (abs g)))
     (t
-     (let* ((abs-f (abs f))
-            (abs-g (abs g))
-            (sqrtfg (sqrt (+ (* abs-f abs-f) (* abs-g abs-g)))))
+     (let ((abs-f (abs f))
+           (sqrtfg (sumsq2 f g)))
        (values
         (/ abs-f sqrtfg)
         (/ (* (signum f) (conjugate g)) sqrtfg)
