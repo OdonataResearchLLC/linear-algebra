@@ -1,114 +1,30 @@
 #|
 
- Linear Algebra in Common Lisp
+  Linear Algebra in Common Lisp
 
- Copyright (c) 2011-2012, Thomas M. Hermann
- All rights reserved.
+  Copyright (c) 2011-2014, Odonata Research LLC
 
- Redistribution and  use  in  source  and  binary  forms, with or without
- modification, are permitted  provided  that the following conditions are
- met:
+  Permission is hereby granted, free  of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction,  including without limitation the rights
+  to use, copy, modify,  merge,  publish,  distribute,  sublicense, and/or sell
+  copies of the  Software,  and  to  permit  persons  to  whom  the Software is
+  furnished to do so, subject to the following conditions:
 
-   o  Redistributions of  source  code  must  retain  the above copyright
-      notice, this list of conditions and the following disclaimer.
-   o  Redistributions in binary  form  must reproduce the above copyright
-      notice, this list of  conditions  and  the  following disclaimer in
-      the  documentation  and/or   other   materials  provided  with  the
-      distribution.
-   o  The names of the contributors may not be used to endorse or promote
-      products derived from this software without  specific prior written
-      permission.
+  The above copyright notice and  this  permission  notice shall be included in
+  all copies or substantial portions of the Software.
 
- THIS SOFTWARE IS  PROVIDED  BY  THE  COPYRIGHT  HOLDERS AND CONTRIBUTORS
- "AS IS"  AND  ANY  EXPRESS  OR  IMPLIED  WARRANTIES, INCLUDING,  BUT NOT
- LIMITED TO, THE IMPLIED WARRANTIES  OF MERCHANTABILITY AND FITNESS FOR A
- PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
- OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- EXEMPLARY, OR  CONSEQUENTIAL  DAMAGES  (INCLUDING,  BUT  NOT LIMITED TO,
- PROCUREMENT OF  SUBSTITUTE  GOODS  OR  SERVICES;  LOSS  OF USE, DATA, OR
- PROFITS; OR BUSINESS INTERRUPTION)  HOWEVER  CAUSED AND ON ANY THEORY OF
- LIABILITY, WHETHER  IN  CONTRACT,  STRICT  LIABILITY, OR TORT (INCLUDING
- NEGLIGENCE OR  OTHERWISE)  ARISING  IN  ANY  WAY  OUT OF THE USE OF THIS
- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  THE SOFTWARE IS PROVIDED  "AS IS",  WITHOUT  WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT  NOT  LIMITED  TO  THE  WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE  AND  NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY  CLAIM,  DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
 
 |#
 
 (in-package :linear-algebra-kernel)
-
-;;; Squared sums
-
-(defun sumsq2 (x y)
-  "Return the square root of |x|^2 + |y|^2."
-  (let* ((abs-x (abs x))
-         (abs-y (abs y))
-         (w (max abs-x abs-y))
-         (v/w (/ (min abs-x abs-y) w)))
-    (* w (sqrt (+ 1 (* v/w v/w))))))
-
-(defun sumsq3 (x y z)
-  "Return the square root of |x|^2 + |y|^2 + |z|^2."
-  (let* ((abs-x (abs x))
-         (abs-y (abs y))
-         (abs-z (abs z))
-         (w (max abs-x abs-y abs-z))
-         (x/w (/ abs-x w))
-         (y/w (/ abs-y w))
-         (z/w (/ abs-z w)))
-    (* w (sqrt (+ (* x/w x/w) (* y/w y/w) (* z/w z/w))))))
-
-;;; Rotations
-
-(defun givens-rotation (f g)
-  "Return c,s,r defined from the Givens rotation."
-  (cond
-    ((zerop g)
-     (values 1 0 f))
-    ((zerop f)
-     (values 0 (signum (conjugate g)) (abs g)))
-    (t
-     (let* ((abs-f (abs f))
-            (abs-g (abs g))
-            (sqrtfg (sqrt (+ (* abs-f abs-f) (* abs-g abs-g)))))
-       (values
-        (/ abs-f sqrtfg)
-        (/ (* (signum f) (conjugate g)) sqrtfg)
-        (* (signum f) sqrtfg))))))
-
-(defun jacobi-rotation (x y z)
-  "Return a, b, cos(theta) and sin(theta) terms from the Jacobi rotation."
-  (let* ((yabs (abs y))
-         (tau  (/ (- x z) 2.0 yabs))
-         (tee  (/ (float-sign tau)
-                  (+ (abs tau) (sqrt (+ 1.0 (expt tau 2))))))
-         (cos-theta (/ (sqrt (+ 1.0 (expt tee 2))))) ; Invert sqrt
-         (sin-theta (* cos-theta tee)))
-    (values
-     ;; a : first eigenvalue
-     (+ (* cos-theta cos-theta x)
-        (* 2.0 cos-theta sin-theta yabs)
-        (* sin-theta sin-theta z))
-     ;; b : second eigenvalue
-     (+ (* sin-theta sin-theta x)
-        (* -2.0 cos-theta sin-theta yabs)
-        (* cos-theta cos-theta z))
-     ;; Cosine theta
-     cos-theta
-     ;; Sine theta
-     (* (conjugate (signum y)) sin-theta))))
-
-(defun householder-reflection (alpha vector)
-  "Return Beta, Tau and the Householder vector."
-  (let* ((beta
-          (- (float-sign
-              (realpart alpha)
-              (sumsq2 alpha (norm-vector vector 2)))))
-         (tau  (- 1 (/ alpha beta))))
-    (values
-     beta tau
-     (dotimes (index (length vector) vector)
-       (setf
-        (aref vector index)
-        (/ (aref vector index) alpha))))))
 
 ;;; Class and type utilities
 

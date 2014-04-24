@@ -1,41 +1,74 @@
 #|
 
- Linear Algebra in Common Lisp Unit Tests
+  Linear Algebra in Common Lisp Unit Tests
 
- Copyright (c) 2011-2012, Odonata Research LLC
- All rights reserved.
+  Copyright (c) 2011-2014, Odonata Research LLC
 
- Redistribution and  use  in  source  and  binary  forms, with or without
- modification, are permitted  provided  that the following conditions are
- met:
+  Permission is hereby granted, free  of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction,  including without limitation the rights
+  to use, copy, modify,  merge,  publish,  distribute,  sublicense, and/or sell
+  copies of the  Software,  and  to  permit  persons  to  whom  the Software is
+  furnished to do so, subject to the following conditions:
 
-   o  Redistributions of  source  code  must  retain  the above copyright
-      notice, this list of conditions and the following disclaimer.
-   o  Redistributions in binary  form  must reproduce the above copyright
-      notice, this list of  conditions  and  the  following disclaimer in
-      the  documentation  and/or   other   materials  provided  with  the
-      distribution.
-   o  The names of the contributors may not be used to endorse or promote
-      products derived from this software without  specific prior written
-      permission.
+  The above copyright notice and  this  permission  notice shall be included in
+  all copies or substantial portions of the Software.
 
- THIS SOFTWARE IS  PROVIDED  BY  THE  COPYRIGHT  HOLDERS AND CONTRIBUTORS
- "AS IS"  AND  ANY  EXPRESS  OR  IMPLIED  WARRANTIES, INCLUDING,  BUT NOT
- LIMITED TO, THE IMPLIED WARRANTIES  OF MERCHANTABILITY AND FITNESS FOR A
- PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
- OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- EXEMPLARY, OR  CONSEQUENTIAL  DAMAGES  (INCLUDING,  BUT  NOT LIMITED TO,
- PROCUREMENT OF  SUBSTITUTE  GOODS  OR  SERVICES;  LOSS  OF USE, DATA, OR
- PROFITS; OR BUSINESS INTERRUPTION)  HOWEVER  CAUSED AND ON ANY THEORY OF
- LIABILITY, WHETHER  IN  CONTRACT,  STRICT  LIABILITY, OR TORT (INCLUDING
- NEGLIGENCE OR  OTHERWISE)  ARISING  IN  ANY  WAY  OUT OF THE USE OF THIS
- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  THE SOFTWARE IS PROVIDED  "AS IS",  WITHOUT  WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT  NOT  LIMITED  TO  THE  WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE  AND  NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY  CLAIM,  DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
 
 |#
 
 (in-package :linear-algebra-test)
 
-;;; Scaled binary operations
+(define-test sumsq2
+  "sqrt |x|^2 + |y|^2"
+  (:tag :unary :sumsq2)
+  ;; Real values
+  (dolist (args (cartesian-product '(-3.0 3.0) '(-4.0 4.0)))
+    (assert-float-equal
+     5.0 (apply #'linear-algebra-kernel:sumsq2 args)))
+  ;; Complex values
+  (let ((args1
+         (mapcar
+          (lambda (x) (apply #'complex x))
+          (cartesian-product '(-1.1 1.1) '(-2.2 2.2))))
+        (args2
+         (mapcar
+          (lambda (x) (apply #'complex x))
+          (cartesian-product '(-3.3 3.3) '(-4.4 4.4)))))
+    (dolist (args (cartesian-product args1 args2))
+      (assert-float-equal
+       6.024948 (apply #'linear-algebra-kernel:sumsq2 args)))))
+
+(define-test sumsq3
+  "sqrt |x|^2 + |y|^2 + |z|^2"
+  (:tag :unary :sumsq2)
+  ;; Real values
+  (dolist (args (nary-product '(-2.0 2.0) '(-3.0 3.0) '(-4.0 4.0)))
+    (assert-float-equal
+     5.3851647 (apply #'linear-algebra-kernel:sumsq3 args)))
+  ;; Complex values
+  (let ((args1
+         (mapcar
+          (lambda (x) (apply #'complex x))
+          (cartesian-product '(-1.1 1.1) '(-2.2 2.2))))
+        (args2
+         (mapcar
+          (lambda (x) (apply #'complex x))
+          (cartesian-product '(-3.3 3.3) '(-4.4 4.4))))
+        (args3
+         (mapcar
+          (lambda (x) (apply #'complex x))
+          (cartesian-product '(-5.5 5.5) '(-6.6 6.6)))))
+    (dolist (args (nary-product args1 args2 args3))
+      (assert-float-equal
+       10.49333 (apply #'linear-algebra-kernel:sumsq3 args)))))
 
 (define-test unary-sumsq-vector
   (:tag :unary :sumsq)
