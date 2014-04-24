@@ -28,11 +28,11 @@
 
 ;;; External Interface
 
-(defgeneric sumsq (vector-or-matrix &key scale sumsq)
+(defgeneric sumsq (vector-or-matrix)
   (:documentation
    "Return the scaling parameter and the sum of the squares."))
 
-(defgeneric sump (vector-or-matrix p &key scale sump)
+(defgeneric sump (vector-or-matrix p)
   (:documentation
    "Return the scaling parameter and the sum of the P powers."))
 
@@ -87,7 +87,7 @@
 
 ;;; Checks
 
-(defmethod sump :before (v-or-m (p number) &key scale sump)
+(defmethod sump :before (v-or-m (p number))
   "The power must be positive."
   (declare (ignore scale sump))
   (unless (plusp p) (error "power(~A) must be positive." p)))

@@ -26,15 +26,15 @@
 
 (in-package :linear-algebra)
 
-(defmethod sumsq ((data vector) &key (scale 0) (sumsq 1))
+(defmethod sumsq ((data vector))
   "Return the scaling parameter and the sum of the squares of the
 vector."
-  (sumsq-vector data scale sumsq))
+  (sumsq-vector data 1 0))
 
-(defmethod sump ((data vector) (p real) &key (scale 0) (sump 1))
+(defmethod sump ((data vector) (p real))
   "Return the scaling parameter and the sum of the powers of p of the
 vector."
-  (sump-vector data p scale sump))
+  (sump-vector data p 1 0))
 
 (defmethod norm ((data vector) &key (measure 1))
   (norm-vector data measure))

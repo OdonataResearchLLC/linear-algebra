@@ -26,15 +26,15 @@
 
 (in-package :linear-algebra)
 
-(defmethod sumsq ((data array) &key (scale 0) (sumsq 1))
+(defmethod sumsq ((data array))
   "Return the scaling parameter and the sum of the squares of the
 array."
-  (sumsq-array data scale sumsq))
+  (sumsq-array data 1 0))
 
-(defmethod sump ((data array) (p number) &key (scale 0) (sump 1))
+(defmethod sump ((data array) (p number))
   "Return the scaling parameter and the sum of the P powers of the
 matrix."
-  (sump-array data p scale sump))
+  (sump-array data p 1 0))
 
 (defmethod norm ((data array) &key (measure 1))
   "Return the norm of the array."

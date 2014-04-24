@@ -26,10 +26,12 @@
 
 (in-package :linear-algebra)
 
-(defmethod sumsq ((data list) &key (scale 0) (sumsq 1))
+(defmethod sumsq ((data list))
   "Return the scaling parameter and the sum of the squares of the
 list."
-  (let ((abs-val))
+  (let ((scale 1)
+        (sumsq 0)
+        (abs-val))
     (dolist (elm data (values scale sumsq))
       (when (plusp (setq abs-val (abs elm)))
         (if (< scale abs-val)
@@ -38,10 +40,12 @@ list."
              scale abs-val)
             (setq sumsq (+ sumsq (expt (/ elm scale) 2))))))))
 
-(defmethod sump ((data list) (p real) &key (scale 0) (sump 1))
+(defmethod sump ((data list) (p real))
   "Return the scaling parameter and the sum of the powers of p of the
 data."
-  (let ((abs-val nil))
+  (let ((scale 1)
+        (sump 0)
+        (abs-val))
     (dolist (elm data (values scale sump))
       (when (plusp (setq abs-val (abs elm)))
         (if (< scale abs-val)
