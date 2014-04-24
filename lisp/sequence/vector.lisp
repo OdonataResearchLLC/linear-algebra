@@ -36,7 +36,7 @@ vector."
 vector."
   (sump-vector data p))
 
-(defmethod norm ((data vector) &key (measure 1))
+(defmethod norm ((data vector) &optional (measure 1))
   (norm-vector data measure))
 
 (defmethod transpose ((data vector) &key conjugate)

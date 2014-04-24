@@ -36,7 +36,7 @@
   (:documentation
    "Return the scaling parameter and the sum of the P powers."))
 
-(defgeneric norm (vector-or-matrix &key measure)
+(defgeneric norm (vector-or-matrix &optional measure)
   (:documentation
    "Return the norm according to measure."))
 

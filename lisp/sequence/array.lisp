@@ -36,7 +36,7 @@ array."
 matrix."
   (sump-array data p))
 
-(defmethod norm ((data array) &key (measure 1))
+(defmethod norm ((data array) &optional (measure 1))
   "Return the norm of the array."
   (if (= 2 (array-rank data))
       (norm-array data measure)

@@ -76,7 +76,7 @@
        '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5) 1))
   (assert-rational-equal
    36 (linear-algebra:norm
-       '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5) :measure 1))
+       '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5) 1))
   (assert-float-equal
    19.535658
    (linear-algebra::%norm
@@ -88,7 +88,7 @@
    (linear-algebra:norm
     '(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
       #C(-2 3) #C(-3 1) #C(-1 0))
-    :measure 1)))
+    1)))
 
 ;;; Euclidean norm
 
@@ -102,7 +102,7 @@
    12.083046
    (linear-algebra:norm
     '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5)
-    :measure 2))
+    2))
   (assert-float-equal
    8.0
    (linear-algebra::%norm
@@ -113,7 +113,7 @@
    (linear-algebra:norm
     '(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
       #C(-2 3) #C(-3 1) #C(-1 0))
-    :measure 2)))
+    2)))
 
 ;;; P-norm
 
@@ -129,9 +129,9 @@
      6.064035 (linear-algebra::%norm zdata 3))
     ;; norm
     (assert-float-equal
-     8.732892 (linear-algebra:norm data :measure 3))
+     8.732892 (linear-algebra:norm data 3))
     (assert-float-equal
-     6.064035 (linear-algebra:norm zdata :measure 3))))
+     6.064035 (linear-algebra:norm zdata 3))))
 
 ;;; Infinity norm
 
@@ -144,7 +144,7 @@
   (assert-rational-equal
    6 (linear-algebra:norm
       '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5)
-      :measure :infinity))
+      :infinity))
   (assert-float-equal
    4.0 (linear-algebra::%norm
         '(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
@@ -154,7 +154,7 @@
    4.0 (linear-algebra:norm
         '(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
           #C(-2 3) #C(-3 1) #C(-1 0))
-        :measure :infinity)))
+        :infinity)))
 
 ;;; List transpose
 

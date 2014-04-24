@@ -74,7 +74,7 @@ data."
   "Return the infinity, or maximum, norm of vector."
   (loop for element in data maximize (abs element)))
 
-(defmethod norm ((data list) &key (measure 1))
+(defmethod norm ((data list) &optional (measure 1))
   (%norm data measure))
 
 (defmethod transpose ((data list) &key conjugate)

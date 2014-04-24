@@ -60,11 +60,11 @@
     (assert-float-equal
      17.0 (linear-algebra:norm array))
     (assert-float-equal
-     5.4 (linear-algebra:norm array :measure :max))
+     5.4 (linear-algebra:norm array :max))
     (assert-float-equal
-     15.858751 (linear-algebra:norm array :measure :frobenius))
+     15.858751 (linear-algebra:norm array :frobenius))
     (assert-float-equal
-     21.0 (linear-algebra:norm array :measure :infinity))))
+     21.0 (linear-algebra:norm array :infinity))))
 
 (define-test transpose-array
   (:tag :array :transpose)

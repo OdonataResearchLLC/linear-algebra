@@ -256,7 +256,7 @@
   "Return the scaling parameter and the sum of the P powers of the matrix."
   (sump-array (contents matrix) p))
 
-(defmethod norm ((matrix dense-matrix) &key (measure 1))
+(defmethod norm ((matrix dense-matrix) &optional (measure 1))
   "Return the norm of the matrix."
   (norm-array (contents matrix) measure))
 

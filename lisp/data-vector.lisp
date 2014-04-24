@@ -264,7 +264,7 @@ applying the function to each element of the vectors."
   "Return the scaling parameter and the sum of the P powers of vector."
   (sump-vector (contents vector) p))
 
-(defmethod norm ((vector data-vector) &key (measure 1))
+(defmethod norm ((vector data-vector) &optional (measure 1))
   "Return the p-norm of the vector."
   (norm-vector (contents vector) measure))
 

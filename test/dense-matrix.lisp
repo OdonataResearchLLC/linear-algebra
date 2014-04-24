@@ -680,16 +680,16 @@
     (assert-float-equal
      17.0 (linear-algebra:norm matrix))
     (assert-float-equal
-     17.0 (linear-algebra:norm matrix :measure 1))
+     17.0 (linear-algebra:norm matrix 1))
     (assert-float-equal
-     5.4 (linear-algebra:norm matrix :measure :max))
+     5.4 (linear-algebra:norm matrix :max))
     (assert-float-equal
-     15.858751 (linear-algebra:norm matrix :measure :frobenius))
+     15.858751 (linear-algebra:norm matrix :frobenius))
     (assert-float-equal
-     21.0 (linear-algebra:norm matrix :measure :infinity))
+     21.0 (linear-algebra:norm matrix :infinity))
     (assert-error
      'error
-     (linear-algebra:norm matrix :measure :unknown))))
+     (linear-algebra:norm matrix :unknown))))
 
 (define-test transpose-dense-matrix
   (:tag :dense-matrix :transpose)

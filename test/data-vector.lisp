@@ -806,19 +806,19 @@
      19.535658 (linear-algebra:norm zdata))
     ;; Euclidean norm
     (assert-float-equal
-     12.083046 (linear-algebra:norm data :measure 2))
+     12.083046 (linear-algebra:norm data 2))
     (assert-float-equal
-     8.0 (linear-algebra:norm zdata :measure 2))
+     8.0 (linear-algebra:norm zdata 2))
     ;; P-norm
     (assert-float-equal
-     8.732892 (linear-algebra:norm data :measure 3))
+     8.732892 (linear-algebra:norm data 3))
     (assert-float-equal
-     6.064035 (linear-algebra:norm zdata :measure 3))
+     6.064035 (linear-algebra:norm zdata 3))
     ;; Data vector Infinity norm
     (assert-rational-equal
-     6 (linear-algebra:norm data :measure :infinity))
+     6 (linear-algebra:norm data :infinity))
     (assert-float-equal
-     4.0 (linear-algebra:norm zdata :measure :infinity))))
+     4.0 (linear-algebra:norm zdata :infinity))))
 
 ;;; Data vector transpose
 
