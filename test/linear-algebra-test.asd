@@ -43,7 +43,8 @@
      (:file "permute")
      (:file "unary-operations")
      (:file "binary-operations")
-     (:file "rotation")))
+     (:file "rotation")
+     (:file "gauss")))
    ;; Linear algebra interface
    (:module interface
     :depends-on ("linear-algebra-test")

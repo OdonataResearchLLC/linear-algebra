@@ -45,7 +45,8 @@
       :depends-on ("linear-algebra-kernel"))
      (:file "binary-operations"
       :depends-on ("linear-algebra-kernel"))
-     (:file "rotation" :depends-on ("unary-operations"))))
+     (:file "rotation" :depends-on ("unary-operations"))
+     (:file "gauss" :depends-on ("linear-algebra-kernel"))))
    ;; Interface
    (:module interface
     :depends-on ("linear-algebra" "kernel")
