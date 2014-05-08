@@ -93,6 +93,7 @@
   (values array pivot-selection-vector))
 
 ;;; TODO: Replace or add an implicitly scaled pivot search
+;;; FIXME: Improve the accuracy of the factorization
 
 (defun factor-lr-array (array)
   "Return the LR factorization of the array."
@@ -103,3 +104,46 @@
    for column below (1- size) do
    (column-pivot-array array pivot-selection-vector column)
    finally return (values array pivot-selection-vector)))
+
+;;; Algorithm 4.23, pg. 75
+;;; Gauss algorithm with column pivot search
+
+(defun solve-linear-system (array vector)
+  "Gauss algorithm with column pivot search."
+  (let ((size (array-dimension array 0))
+        (solution
+         (make-array
+          (length vector)
+          :element-type (array-element-type vector)
+          :initial-element 0.0)))
+  ;; Step 1
+  (multiple-value-bind (lr-array pivot-selection-vector)
+      (factor-lr-array array)
+    ;; Step 2
+    (loop
+     initially
+     (setf
+      (aref solution 0)
+      (aref vector (svref pivot-selection-vector 0)))
+     for row from 1 below size do
+     (setf
+      (aref solution row)
+      (- (aref vector (svref pivot-selection-vector row))
+         (loop for col from 0 below row sum
+               (* (aref lr-array row col) (aref solution col))))))
+    ;; Step 3
+    (loop
+     with end = (1- size)
+     initially
+     (setf
+      (aref solution end)
+      (/ (aref solution end) (aref lr-array end end)))
+     for row downfrom (1- end) to 0 do
+     (setf
+      (aref solution row)
+      (/ (- (aref solution row)
+            (loop for col from (1+ row) below size sum
+                  (* (aref lr-array row col) (aref solution col))))
+         (aref lr-array row row))))
+    ;; Return the solution
+    solution)))

@@ -164,3 +164,24 @@
          (0.8571429 -0.6521726   0.8978266  2.3065224)
          (0.9285714 -0.78260816  0.8547211 -1.0736067))
      array)))
+
+(define-test solve-linear-system
+  (:tag :gauss)
+  (let ((*epsilon* (* 64 single-float-epsilon)))
+    ;; 2x2
+    (assert-float-equal
+     #(2.0 -1.0)
+     (linear-algebra-kernel::solve-linear-system
+      (make-array
+       '(2 2) :initial-contents
+       '((1.1 1.2) (2.1 2.2)))
+      (make-array 2 :initial-contents '(1.0 2.0))))
+    ;; 3x3
+    ;; Maxima : #(66.36628 -151.8314 85.6105)
+    (assert-float-equal
+     #(66.36775 -151.8342 85.6118)
+     (linear-algebra-kernel::solve-linear-system
+      (make-array
+       '(3 3) :initial-contents
+       '((1.15 1.26 1.37) (2.14 2.23 2.31) (3.13 3.22 3.31)))
+      (make-array 3 :initial-contents '(2.3 1.2 2.2))))))
