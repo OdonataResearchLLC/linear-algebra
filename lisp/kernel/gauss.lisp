@@ -41,7 +41,7 @@
     (dotimes (index size pivot-selection-vector)
       (setf (svref pivot-selection-vector index) index))))
 
-(defun pivot-search-array (array column)
+(defun column-pivot-search-array (array column)
   "Return the row index of the maximum value in the column."
   (loop
    with max-row = column
@@ -64,7 +64,7 @@
 (defun column-pivot-array (array pivot-selection-vector column)
   "Return the LR pivot of the array."
   ;; Step 2.1
-  (let ((i0 (pivot-search-array array column)))
+  (let ((i0 (column-pivot-search-array array column)))
     (unless (= i0 column)
       (rotatef
        (svref pivot-selection-vector i0)
