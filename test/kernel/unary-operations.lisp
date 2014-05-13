@@ -28,7 +28,7 @@
 
 (define-test sumsq2
   "sqrt |x|^2 + |y|^2"
-  (:tag :unary :sumsq2)
+  (:tag :kernel :unary :sumsq2)
   ;; Real values
   (dolist (args (cartesian-product '(-3.0 3.0) '(-4.0 4.0)))
     (assert-float-equal
@@ -48,7 +48,7 @@
 
 (define-test sumsq3
   "sqrt |x|^2 + |y|^2 + |z|^2"
-  (:tag :unary :sumsq2)
+  (:tag :kernel :unary :sumsq2)
   ;; Real values
   (dolist (args (nary-product '(-2.0 2.0) '(-3.0 3.0) '(-4.0 4.0)))
     (assert-float-equal
@@ -71,7 +71,7 @@
        10.49333 (apply #'linear-algebra-kernel:sumsq3 args)))))
 
 (define-test unary-sumsq-vector
-  (:tag :unary :sumsq)
+  (:tag :kernel :unary :sumsq)
   ;; Real
   (multiple-value-bind (scale sumsq)
       (linear-algebra-kernel:sumsq-vector
@@ -87,7 +87,7 @@
     (assert-float-equal #C (2.75 -1.125) sumsq)))
 
 (define-test unary-sumsq-array
-  (:tag :unary :sumsq)
+  (:tag :kernel :unary :sumsq)
   (multiple-value-bind (scale sumsq)
       (linear-algebra-kernel:sumsq-array
        #2A((1.1 1.2 1.3 1.4 1.5)
@@ -99,7 +99,7 @@
     (assert-float-equal 8.997532 sumsq)))
 
 (define-test unary-sump-vector
-  (:tag :unary :sump)
+  (:tag :kernel :unary :sump)
   ;; Real
   (multiple-value-bind (scale sump)
       (linear-algebra-kernel:sump-vector
@@ -128,7 +128,7 @@
     (assert-float-equal #C(2.6639833 0.54687494) sump)))
 
 (define-test unary-sumsq-array
-  (:tag :unary :sumsq)
+  (:tag :kernel :unary :sumsq)
   (multiple-value-bind (scale sumsq)
       (linear-algebra-kernel:sumsq-array
        #2A((1.1 1.2 1.3 1.4 1.5)
@@ -140,7 +140,7 @@
     (assert-float-equal 8.997532 sumsq)))
 
 (define-test unary-sump-array
-  (:tag :unary :sump)
+  (:tag :kernel :unary :sump)
   (multiple-value-bind (scale sump)
       (linear-algebra-kernel:sump-array
        #2A((1.1 1.2 1.3 1.4 1.5)
@@ -154,7 +154,7 @@
 ;;; Norm & supporting functions
 
 (define-test %abs-vector
-  (:tag :unary :norm)
+  (:tag :kernel :unary :norm)
   (assert-rational-equal
    #(6 5 4 3 2 1 0 1 2 3 4 5)
    (linear-algebra-kernel::%abs-vector
@@ -163,7 +163,7 @@
 ;;; Taxicab norm
 
 (define-test unary-norm-1-vector
-  (:tag :unary :norm)
+  (:tag :kernel :unary :norm)
   (assert-rational-equal
    36 (linear-algebra-kernel:norm-vector
        #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5) 1))
@@ -177,7 +177,7 @@
 ;;; Euclidean norm
 
 (define-test unary-norm-2-vector
-  (:tag :unary :norm)
+  (:tag :kernel :unary :norm)
   (assert-float-equal
    12.083046
    (linear-algebra-kernel:norm-vector
@@ -193,7 +193,7 @@
 ;;; P-norm
 
 (define-test unary-norm-p-vector
-  (:tag :unary :norm)
+  (:tag :kernel :unary :norm)
   (let ((data #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
         (zdata #(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
                  #C(-2 3) #C(-3 1) #C(-1 0))))
@@ -206,7 +206,7 @@
 ;;; Infinity norm
 
 (define-test unary-norm-infinity-vector
-  (:tag :unary :norm)
+  (:tag :kernel :unary :norm)
   (assert-rational-equal
    6 (linear-algebra-kernel:norm-vector
       #(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5)
@@ -218,7 +218,7 @@
         :infinity)))
 
 (define-test unary-norm-array
-  (:tag :unary :norm)
+  (:tag :kernel :unary :norm)
   (let ((array
          #2A((1.1 1.2 1.3 1.4)
              (2.1 2.2 2.3 2.4)

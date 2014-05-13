@@ -27,7 +27,7 @@
 (in-package :linear-algebra-test)
 
 (define-test common-class-of
-  (:tag :utility)
+  (:tag :kernel :utility)
   (let ((object-a (make-array '(3 3) :adjustable t))
         (object-v (make-array 3 :adjustable t))
         (object-l (make-list 3))
@@ -54,7 +54,7 @@
      (linear-algebra-kernel:common-class-of object-v object-l))))
 
 (define-test common-array-element-type
-  (:tag :utility)
+  (:tag :kernel :utility)
   (let ((array-s (make-array 0 :element-type 'single-float))
         (array-d (make-array 0 :element-type 'double-float)))
     (assert-eq
@@ -71,7 +71,7 @@
      (linear-algebra-kernel:common-array-element-type array-d array-d))))
 
 (define-test complex-equal
-  (:tag :utility :complex :equal)
+  (:tag :kernel :utility :complex :equal)
   ;; complex float
   (assert-true
    (linear-algebra-kernel:complex-equal #C(1.0 2.0) #C(1.0 2.0)))
@@ -93,7 +93,7 @@
   (assert-error 'error (linear-algebra-kernel:complex-equal 1 1)))
 
 (define-test number-equal
-  (:tag :utility :equal)
+  (:tag :kernel :utility :equal)
   ;; float
   (assert-true (linear-algebra-kernel:number-equal 2.2 2.2))
   (assert-true (linear-algebra-kernel:number-equal 2 2.0))

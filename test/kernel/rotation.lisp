@@ -29,7 +29,7 @@
 ;;; Givens Rotation
 
 (define-test givens-rotation
-  (:tag :rotation)
+  (:tag :kernel :rotation)
   ;; g = 0
   (multiple-value-bind (c s r)
       (linear-algebra-kernel:givens-rotation 0 0)
@@ -94,7 +94,7 @@
 ;;; Jacobi Rotation
 
 (define-test jacobi-rotation
-  (:tag :rotation)
+  (:tag :kernel :rotation)
   ;; Symmetric test
   (multiple-value-bind (a b c s)
       (linear-algebra-kernel:jacobi-rotation 1.1 3.3 5.5)
@@ -113,7 +113,7 @@
 ;;; Householder Reflection
 
 (define-test householder-reflection
-  (:tag :rotation)
+  (:tag :kernel :rotation)
   (multiple-value-bind (beta tau vector)
       (linear-algebra-kernel:householder-reflection
        #C(1.0 2.0) (vector 1.0 2.0 3.0 4.0 5.0))

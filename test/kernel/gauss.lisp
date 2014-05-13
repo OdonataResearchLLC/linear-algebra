@@ -27,13 +27,13 @@
 (in-package :linear-algebra-test)
 
 (define-test initialize-pivot-selection-vector
-  (:tag :gauss)
+  (:tag :kernel :gauss)
   (assert-rational-equal
    #(0 1 2 3 4 5)
    (linear-algebra-kernel::initialize-pivot-selection-vector 6)))
 
 (define-test column-pivot-search-array
-  (:tag :gauss)
+  (:tag :kernel :gauss)
   (assert-eq
    1 (linear-algebra-kernel::column-pivot-search-array
       #2A((1.1 1.4 1.3 1.2)
@@ -81,7 +81,7 @@
           (1.2 2.1  3.2 4.4)) 2)))
 
 (define-test swap-rows-array
-  (:tag :gauss)
+  (:tag :kernel :gauss)
   (assert-float-equal
    #2A((1.3 2.3 3.3 3.2)
        (1.4 2.2 2.3 2.1)
@@ -97,7 +97,7 @@
     0 2)))
 
 (define-test column-pivot-array
-  (:tag :gauss)
+  (:tag :kernel :gauss)
   (let ((psv
          (linear-algebra-kernel::initialize-pivot-selection-vector 4))
         (array
@@ -148,7 +148,7 @@
        array2))))
 
 (define-test factor-lr-array
-  (:tag :gauss)
+  (:tag :kernel :gauss)
   (multiple-value-bind (array psv)
       (linear-algebra-kernel::factor-lr-array
        (make-array
@@ -166,12 +166,12 @@
      array)))
 
 (define-test solve-linear-system
-  (:tag :gauss)
+  (:tag :kernel :gauss)
   (let ((*epsilon* (* 64 single-float-epsilon)))
     ;; 2x2
     (assert-float-equal
      #(2.0 -1.0)
-     (linear-algebra-kernel::solve-linear-system
+     (linear-algebra-kernel:solve-linear-system
       (make-array
        '(2 2) :initial-contents
        '((1.1 1.2) (2.1 2.2)))
@@ -180,17 +180,17 @@
     ;; Maxima : #(66.36628 -151.8314 85.6105)
     (assert-float-equal
      #(66.36775 -151.8342 85.6118)
-     (linear-algebra-kernel::solve-linear-system
+     (linear-algebra-kernel:solve-linear-system
       (make-array
        '(3 3) :initial-contents
        '((1.15 1.26 1.37) (2.14 2.23 2.31) (3.13 3.22 3.31)))
       (make-array 3 :initial-contents '(2.3 1.2 2.2))))))
 
 (define-test invert-array
-  (:tag :gauss)
+  (:tag :kernel :gauss)
   (assert-float-equal
    #2A((-22.000029 12.000016) (21.000027 -11.000015))
-   (linear-algebra-kernel::invert-array
+   (linear-algebra-kernel:invert-array
     (make-array
      '(2 2) :initial-contents
      '((1.1 1.2) (2.1 2.2)))))
@@ -198,7 +198,7 @@
    #2A((0.9272161 -0.04572601 -0.03333973)
        (-0.08021406 0.4631565 -0.029120658)
        (-0.07932379 -0.04061667 0.30898604))
-   (linear-algebra-kernel::invert-array
+   (linear-algebra-kernel:invert-array
     (make-array
      '(3 3) :initial-contents
      '((1.1 0.12 0.13)
@@ -209,7 +209,7 @@
        (-0.0010267387 0.050018318 -3.748202e-4 -2.9333035e-4)
        (-0.001011414 -5.216503e-4 0.033345684 -2.7676846e-4)
        (-0.0010037516 -5.135755e-4 -3.5018355e-4 0.02500957))
-   (linear-algebra-kernel::invert-array
+   (linear-algebra-kernel:invert-array
     (make-array
      '(4 4) :initial-contents
      '((10.0 0.12 0.13 0.14)

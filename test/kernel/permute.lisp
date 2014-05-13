@@ -29,7 +29,7 @@
 ;;; Vector permutation
 
 (define-test right-permute-vector
-  (:tag :permute)
+  (:tag :kernel :permute)
   (loop
    for (permutation right-permutation nil nil nil)
    in (validated-permutations)
@@ -41,7 +41,7 @@
     permutation)))
 
 (define-test left-permute-vector
-  (:tag :permute)
+  (:tag :kernel :permute)
   (loop
    for (permutation nil left-permutation nil nil)
    in (validated-permutations)
@@ -55,7 +55,7 @@
 ;;; Array permutation
 
 (define-test right-permute-array
-  (:tag :permute)
+  (:tag :kernel :permute)
   (loop
    for (permutation nil nil right-permutation nil)
    in (validated-permutations)
@@ -67,7 +67,7 @@
     permutation)))
 
 (define-test left-permute-array
-  (:tag :permute)
+  (:tag :kernel :permute)
   (loop
    for (permutation nil nil nil left-permutation)
    in (validated-permutations)
