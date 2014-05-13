@@ -58,4 +58,7 @@
   ;; Rotations
   (:export :givens-rotation
            :jacobi-rotation
-           :householder-reflection))
+           :householder-reflection)
+  ;; Gauss algorithm
+  (:export :solve-linear-system
+           :invert-array))
