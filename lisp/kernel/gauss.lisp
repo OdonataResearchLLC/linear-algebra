@@ -144,6 +144,62 @@
       (/ (- (aref solution row)
             (loop for col from (1+ row) below size sum
                   (* (aref lr-array row col) (aref solution col))))
-         (aref lr-array row row))))
-    ;; Return the solution
-    solution)))
+         (aref lr-array row row)))))
+  ;; Return the solution
+  solution))
+
+;;; Algorithm 4.25, pg. 77
+;;; Finding A^-1 via Gauss algorithm with partial column pivot search
+
+(defun unit-pivot-value
+       (pivot-selection-vector row column
+        &optional (array-type *read-default-float-format*))
+  "Return 1.0 if column equals the value at row of the pivot selection
+vector, otherwise 0.0."
+  (coerce
+   (if (= column (svref pivot-selection-vector row)) 1.0 0.0)
+   array-type))
+
+(defun invert-array (array)
+  "Find A^-1 via Gauss algorithm with partial column pivot search."
+  (let* ((size (array-dimension array 0))
+         (array-type (array-element-type array))
+         (solution
+          (make-array
+           (list size size)
+           :element-type array-type
+           :initial-element (coerce 0.0 array-type))))
+  ;; Step 1
+  (multiple-value-bind (lr-array pivot-selection-vector)
+      (factor-lr-array array)
+    ;; Step 2
+    (loop
+     for column below size do
+     (setf
+      (aref solution 0 column)
+      (unit-pivot-value pivot-selection-vector 0 column array-type))
+     (loop
+      for row from 1 below size do
+      (setf
+       (aref solution row column)
+       (- (unit-pivot-value
+           pivot-selection-vector row column array-type)
+          (loop for index from 0 below row sum
+                (* (aref lr-array row index) (aref solution index column)))))))
+    ;; Step 3
+    (loop
+     with end = (1- size)
+     for column below size do
+     (setf
+      (aref solution end column)
+      (/ (aref solution end column) (aref lr-array end end)))
+     (loop
+      for row downfrom (1- end) to 0 do
+      (setf
+       (aref solution row column)
+       (/ (- (aref solution row column)
+             (loop for index from (1+ row) below size sum
+                   (* (aref lr-array row index) (aref solution index column))))
+          (aref lr-array row row))))))
+  ;; Return the solution
+  solution))
