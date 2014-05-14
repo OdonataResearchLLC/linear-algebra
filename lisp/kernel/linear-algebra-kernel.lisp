@@ -35,10 +35,8 @@
            :complex-equal
            :number-equal)
   ;; Permutation
-  (:export :right-permute-vector
-           :left-permute-vector
-           :right-permute-array
-           :left-permute-array)
+  (:export :right-permute
+           :left-permute)
   ;; Unary operations
   (:export :sumsq2 :sumsq3
            :sumsq-vector :sump-vector

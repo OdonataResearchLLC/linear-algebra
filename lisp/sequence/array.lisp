@@ -69,13 +69,13 @@ matrix."
 
 (defmethod permute ((data array) (matrix permutation-matrix))
   (if (every #'= (array-dimensions data) (matrix-dimensions matrix))
-      (right-permute-array data (contents matrix))
+      (right-permute data (contents matrix))
       (error "Array~A and permutation matrix~A sizes incompatible."
              (array-dimensions data) (matrix-dimensions matrix))))
 
 (defmethod permute ((matrix permutation-matrix) (data array))
   (if (every #'= (array-dimensions data) (matrix-dimensions matrix))
-      (left-permute-array (contents matrix) data)
+      (left-permute (contents matrix) data)
       (error "Permutation matrix~A and array~A sizes incompatible."
              (matrix-dimensions matrix) (array-dimensions data))))
 

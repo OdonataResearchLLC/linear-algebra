@@ -296,8 +296,7 @@ applying the function to each element of the vectors."
   "Return the permutation of the row vector."
   (make-instance
    'row-vector
-   :contents
-   (right-permute-vector (contents vector) (contents matrix))))
+   :contents (right-permute (contents vector) (contents matrix))))
 
 (defmethod permute :before
   ((matrix permutation-matrix) (vector column-vector))
@@ -310,7 +309,7 @@ applying the function to each element of the vectors."
   (make-instance
    'row-vector
    :contents
-   (left-permute-vector (contents matrix) (contents vector))))
+   (left-permute (contents matrix) (contents vector))))
 
 (defmethod scale ((scalar number) (vector data-vector))
   "Return the vector scaled by scalar."

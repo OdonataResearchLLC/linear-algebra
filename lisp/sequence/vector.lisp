@@ -54,7 +54,7 @@ vector."
 (defmethod permute ((data vector) (matrix permutation-matrix))
   "Return the permutation of the list."
   (if (= (length data) (matrix-row-dimension matrix))
-      (right-permute-vector data (contents matrix))
+      (right-permute data (contents matrix))
       (error
        "Vector(~D) and permutation matrix~A are incompatible."
        (length data) (matrix-dimensions matrix))))
@@ -62,7 +62,7 @@ vector."
 (defmethod permute ((matrix permutation-matrix) (data vector))
   "Return the permutation of the list."
   (if (= (length data) (matrix-column-dimension matrix))
-      (left-permute-vector (contents matrix) data)
+      (left-permute (contents matrix) data)
       (error
        "Permutation matrix~A and vector(~D) are incompatible."
        (matrix-dimensions matrix) (length data))))

@@ -288,7 +288,7 @@
       (make-instance
        (class-of matrix)
        :contents
-       (right-permute-array (contents matrix) (contents permutation)))
+       (right-permute (contents matrix) (contents permutation)))
       (error
        "Dense matrix~A and permutation matrix~A sizes incompatible."
        (matrix-dimensions matrix)
@@ -301,7 +301,7 @@
       (make-instance
        (class-of matrix)
        :contents
-       (left-permute-array (contents permutation) (contents matrix)))
+       (left-permute (contents permutation) (contents matrix)))
       (error
        "Permutation matrix~A and dense matrix~A sizes incompatible."
        (matrix-dimensions matrix)

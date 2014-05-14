@@ -93,7 +93,7 @@ data."
        for column across (contents matrix)
        and row = 0 then (1+ row)
        do (setf (nth column permuted) (nth row data))
-       finally (return permuted))
+       finally return permuted)
       (error
        "List(~D) and permutation~A matrix sizes are incompatible."
        (length data) (matrix-dimensions matrix))))
@@ -106,7 +106,7 @@ data."
        for column across (contents matrix)
        and row = 0 then (1+ row)
        do (setf (nth row permuted) (nth column data))
-       finally (return permuted))
+       finally return permuted)
       (error
        "Permutation matrix~A and list(~D) sizes are incompatible."
        (matrix-dimensions matrix) (length data))))
