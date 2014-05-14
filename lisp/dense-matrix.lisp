@@ -84,16 +84,20 @@
    (rows integer) (columns integer) element-type)
   "Verify that the size of the data is valid."
   (when (vectorp data) (return-from initialize-matrix))
+  ;; Rank 2
   (unless (= 2 (array-rank data))
     (error "data rank(~D) must equal 2." (array-rank data)))
+  ;; Consistent number of rows
   (unless (= rows (array-dimension data 0))
     (error
      "data rows(~D) does not equal matrix rows(~D)."
      (array-dimension data 0) rows))
+  ;; Consistent number of columns
   (unless (= columns (array-dimension data 1))
     (error
      "data columns(~D) does not equal matrix columns(~D)."
      (array-dimension data 1) columns))
+  ;; Consistent type of data
   (unless (subtypep
            (array-element-type data)
            (upgraded-array-element-type element-type))
@@ -105,15 +109,9 @@
     ((matrix dense-matrix) (data array)
      (rows integer) (columns integer) element-type)
   "Initialize the dense matrix with a 2D array."
-  (let ((contents
-         (setf
-          (contents matrix)
-          (make-array
-           (list rows columns)
-           :element-type element-type))))
-    (dotimes (row rows matrix)
-      (dotimes (column columns)
-        (setf (aref contents row column) (aref data row column))))))
+  (setf (contents matrix) (copy-array data))
+  ;; Return the matrix
+  matrix)
 
 (defmethod matrix-in-bounds-p
     ((matrix dense-matrix) (row integer) (column integer))
