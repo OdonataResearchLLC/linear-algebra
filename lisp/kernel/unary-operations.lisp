@@ -109,6 +109,38 @@ matrix."
                (+ sump
                   (expt (/ (aref array row column) scale) p)))))))))
 
+(defun sumsq-row (array row &key (scale 1) (sumsq 0) start end)
+  "Return the scaling parameter and the sum of the squares of the
+array row."
+  (loop
+   with start = (or start 0)
+   and end = (or end (array-dimension array 1))
+   and abs-val = 0
+   for column from start below end
+   when (plusp (setq abs-val (abs (aref array row column)))) do
+   (if (< scale abs-val)
+       (setq
+        sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
+        scale abs-val)
+       (setq sumsq (+ sumsq (expt (/ abs-val scale) 2))))
+   finally return (values scale sumsq)))
+
+(defun sumsq-column (array column &key (scale 1) (sumsq 0) start end)
+  "Return the scaling parameter and the sum of the squares of the
+array column."
+  (loop
+   with start = (or start 0)
+   and end = (or end (array-dimension array 0))
+   and abs-val = 0
+   for row from start below end
+   when (plusp (setq abs-val (abs (aref array row column)))) do
+   (if (< scale abs-val)
+       (setq
+        sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
+        scale abs-val)
+       (setq sumsq (+ sumsq (expt (/ abs-val scale) 2))))
+   finally return (values scale sumsq)))
+
 ;;; Norm
 
 (defgeneric norm-vector (data measure)

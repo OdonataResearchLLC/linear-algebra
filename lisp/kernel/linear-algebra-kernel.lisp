@@ -41,6 +41,8 @@
   (:export :sumsq2 :sumsq3
            :sumsq-vector :sump-vector
            :sumsq-array :sump-array
+           :sumsq-row
+           :sumsq-column
            :norm-vector
            :norm-array)
   ;; Binary operations
