@@ -41,7 +41,7 @@
     (dotimes (index size pivot-selection-vector)
       (setf (svref pivot-selection-vector index) index))))
 
-(defun column-pivot-search-array (array column)
+(defun column-pivot-search (array column)
   "Return the row index of the maximum value in the column."
   (loop
    with max-row = column
@@ -54,22 +54,22 @@
     max-element element)
    finally return max-row))
 
-(defun swap-rows-array (array i0 jth)
+(defun swap-rows (array i0 jth)
   "Interchange the "
   (loop
    for column below (array-dimension array 1) do
    (rotatef (aref array i0 column) (aref array jth column))
    finally return array))
 
-(defun column-pivot-array (array pivot-selection-vector column)
+(defun column-pivot (array pivot-selection-vector column)
   "Return the LR pivot of the array."
   ;; Step 2.1
-  (let ((i0 (column-pivot-search-array array column)))
+  (let ((i0 (column-pivot-search array column)))
     (unless (= i0 column)
       (rotatef
        (svref pivot-selection-vector i0)
        (svref pivot-selection-vector column))
-      (swap-rows-array array i0 column)))
+      (swap-rows array i0 column)))
   ;; Check for a singular matrix
   (when (float-equal 0.0 (aref array column column))
     (error "~A is singular." array))
@@ -102,7 +102,7 @@
    with pivot-selection-vector =
    (initialize-pivot-selection-vector size)
    for column below (1- size) do
-   (column-pivot-array array pivot-selection-vector column)
+   (column-pivot array pivot-selection-vector column)
    finally return (values array pivot-selection-vector)))
 
 ;;; Algorithm 4.23, pg. 75

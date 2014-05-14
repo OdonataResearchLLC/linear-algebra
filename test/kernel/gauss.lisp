@@ -32,62 +32,62 @@
    #(0 1 2 3 4 5)
    (linear-algebra-kernel::initialize-pivot-selection-vector 6)))
 
-(define-test column-pivot-search-array
+(define-test column-pivot-search
   (:tag :kernel :gauss)
   (assert-eq
-   1 (linear-algebra-kernel::column-pivot-search-array
+   1 (linear-algebra-kernel::column-pivot-search
       #2A((1.1 1.4 1.3 1.2)
           (1.4 2.2 2.3 2.1)
           (1.3 2.3 3.3 3.2)
           (1.2 2.1 3.2 4.4)) 0))
   (assert-eq
-   2 (linear-algebra-kernel::column-pivot-search-array
+   2 (linear-algebra-kernel::column-pivot-search
       #2A((1.1 1.4 1.3 1.2)
           (1.4 2.2 2.3 2.1)
           (1.3 2.3 3.3 3.2)
           (1.2 2.1 3.2 4.4)) 1))
   (assert-eq
-   2 (linear-algebra-kernel::column-pivot-search-array
+   2 (linear-algebra-kernel::column-pivot-search
       #2A((1.1 1.4 1.3 1.2)
           (1.4 2.2 2.3 2.1)
           (1.3 2.3 3.3 3.2)
           (1.2 2.1 3.2 4.4)) 2))
   (assert-eq
-   3 (linear-algebra-kernel::column-pivot-search-array
+   3 (linear-algebra-kernel::column-pivot-search
       #2A((1.1 1.4 1.3 1.2)
           (1.4 2.2 2.3 2.1)
           (1.3 2.3 3.3 3.2)
           (1.2 2.1 3.2 4.4)) 3))
   (assert-eq
-   0 (linear-algebra-kernel::column-pivot-search-array
+   0 (linear-algebra-kernel::column-pivot-search
       #2A((2.2 1.1 1.1)
           (1.1 2.2 1.1)
           (1.1 1.1 2.2)) 0))
   (assert-eq
-   1 (linear-algebra-kernel::column-pivot-search-array
+   1 (linear-algebra-kernel::column-pivot-search
       #2A((2.2 1.1 1.1)
           (1.1 2.2 1.1)
           (1.1 1.1 2.2)) 1))
   (assert-eq
-   2 (linear-algebra-kernel::column-pivot-search-array
+   2 (linear-algebra-kernel::column-pivot-search
       #2A((2.2 1.1 1.1)
           (1.1 2.2 1.1)
           (1.1 1.1 2.2)) 2))
   (assert-eq
-   2 (linear-algebra-kernel::column-pivot-search-array
+   2 (linear-algebra-kernel::column-pivot-search
       #2A((1.1 1.4  1.3 1.2)
           (1.4 2.2  2.3 2.1)
           (1.3 2.3 -3.3 3.2)
           (1.2 2.1  3.2 4.4)) 2)))
 
-(define-test swap-rows-array
+(define-test swap-rows
   (:tag :kernel :gauss)
   (assert-float-equal
    #2A((1.3 2.3 3.3 3.2)
        (1.4 2.2 2.3 2.1)
        (1.1 1.4 1.3 1.2)
        (1.2 2.1 3.2 4.4))
-   (linear-algebra-kernel::swap-rows-array
+   (linear-algebra-kernel::swap-rows
     (make-array
      '(4 4) :initial-contents
      '((1.1 1.4 1.3 1.2)
@@ -96,7 +96,7 @@
        (1.2 2.1 3.2 4.4)))
     0 2)))
 
-(define-test column-pivot-array
+(define-test column-pivot
   (:tag :kernel :gauss)
   (let ((psv
          (linear-algebra-kernel::initialize-pivot-selection-vector 4))
@@ -109,7 +109,7 @@
             (1.2 2.1 3.2 4.4)))))
     ;;; Column 0
     (multiple-value-bind (array0 psv0)
-        (linear-algebra-kernel::column-pivot-array
+        (linear-algebra-kernel::column-pivot
          array psv 0)
       (assert-eq array array0)
       (assert-eq psv psv0)
@@ -122,7 +122,7 @@
        array0))
     ;;; Column 1
     (multiple-value-bind (array1 psv1)
-        (linear-algebra-kernel::column-pivot-array
+        (linear-algebra-kernel::column-pivot
          array psv 1)
       (assert-eq psv psv1)
       (assert-eq array array1)
@@ -135,7 +135,7 @@
        array1))
     ;;; Column 2
     (multiple-value-bind (array2 psv2)
-        (linear-algebra-kernel::column-pivot-array
+        (linear-algebra-kernel::column-pivot
          array psv 2)
       (assert-eq psv psv2)
       (assert-eq array array2)
