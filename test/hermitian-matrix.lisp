@@ -1279,7 +1279,7 @@
      #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0))
          (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0))
          (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0))))
-    :scalar 2.1))
+    2.1))
   (assert-error
    'error
    (linear-algebra:product
@@ -1312,7 +1312,7 @@
          (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0))
          (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0))))
     (linear-algebra:column-vector 1.0 2.0 3.0)
-    :scalar 2.1))
+    2.1))
   (assert-error
    'error
    (linear-algebra:product
@@ -1358,7 +1358,7 @@
      #2A((#C(1.0  0.0) #C(2.0  1.0) #C(3.0  1.0))
          (#C(2.0 -1.0) #C(2.0  0.0) #C(3.0  2.0))
          (#C(3.0 -1.0) #C(3.0 -2.0) #C(3.0  0.0))))
-    :scalar 2.1))
+    2.1))
   (assert-error
    'error
    (linear-algebra:product

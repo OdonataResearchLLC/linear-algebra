@@ -163,19 +163,15 @@ data."
       (error "LIST1(~D) and LIST2(~D) are not of equal length."
              (length list1) (length list2))))
 
-(defmethod product ((list1 list) (list2 list)
-                    &key (scalar nil scalarp) conjugate)
+(defmethod product
+    ((list1 list) (list2 list) &optional scalar)
   "Return the dot product of list1 and list2."
   (if (= (length list1) (length list2))
       (loop
-       with op =
-       (if conjugate
-           (lambda (x y) (* (conjugate x) y))
-           #'*)
        for element1 in list1
        and element2 in list2
-       sum (funcall op element1 element2) into result
+       sum (* element1 element2) into result
        finally
-       (return (if scalarp (* scalar result) result)))
+       (return (if scalar (* scalar result) result)))
       (error "LIST1(~D) and LIST2(~D) are not of equal length."
              (length list1) (length list2))))

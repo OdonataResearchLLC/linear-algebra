@@ -81,7 +81,7 @@
    "Destructive vector or matrix subtraction."))
 
 (defgeneric product
-    (vector-or-matrix-1 vector-or-matrix-2 &key scalar)
+    (vector-or-matrix-1 vector-or-matrix-2 &optional scalar)
   (:documentation
    "Return the vector-vector, matrix-vector or matrix-matrix product."))
 

@@ -1167,7 +1167,7 @@
      #2A((1.0 2.0 3.0)
          (1.0 2.0 3.0)
          (1.0 2.0 3.0)))
-    :scalar 2.1))
+    2.1))
   (assert-error
    'error
    (linear-algebra:product
@@ -1202,7 +1202,7 @@
          (2.0 2.0 2.0)
          (3.0 3.0 3.0)))
     (linear-algebra:column-vector 1.0 2.0 3.0)
-    :scalar 2.1))
+    2.1))
   (assert-error
    'error
    (linear-algebra:product
@@ -1251,7 +1251,7 @@
      #2A((1.0 1.0 1.0)
          (2.0 2.0 2.0)
          (3.0 3.0 3.0)))
-    :scalar 2.1))
+    2.1))
   (assert-error
    'error
    (linear-algebra:product

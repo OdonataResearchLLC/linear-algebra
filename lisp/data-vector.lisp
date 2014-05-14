@@ -439,16 +439,13 @@ applying the function to each element of the vectors."
   vector1)
 
 (defmethod product :before
-  ((vector1 row-vector) (vector2 column-vector)
-   &key scalar conjugate)
+  ((vector1 row-vector) (vector2 column-vector) &optional scalar)
   "Verify that the dimensions are equal."
-  (declare (ignore scalar conjugate))
+  (declare (ignore scalar))
   (unless (= (vector-length vector1) (vector-length vector2))
     (error "VECTOR1 and VECTOR2 are not of equal length.")))
 
 (defmethod product
-    ((vector1 row-vector) (vector2 column-vector)
-     &key scalar conjugate)
+    ((vector1 row-vector) (vector2 column-vector) &optional scalar)
   "Return the dot product of vector1 and vector2."
-  (inner-product-vector
-   (contents vector1) (contents vector2) scalar conjugate))
+  (inner-product-vector (contents vector1) (contents vector2) scalar))

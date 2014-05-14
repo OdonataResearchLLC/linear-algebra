@@ -120,10 +120,10 @@ vector."
       (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
              (length vector1) (length vector2))))
 
-(defmethod product ((vector1 vector) (vector2 vector)
-                    &key scalar conjugate)
+(defmethod product
+    ((vector1 vector) (vector2 vector) &optional scalar)
   "Return the dot product of vector1 and vector2."
   (if (= (length vector1) (length vector2))
-      (inner-product-vector vector1 vector2 scalar conjugate)
+      (inner-product-vector vector1 vector2 scalar)
       (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
              (length vector1) (length vector2))))

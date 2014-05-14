@@ -1169,7 +1169,7 @@
          (1.0 2.0 3.0)
          (1.0 2.0 3.0)
          (1.0 2.0 3.0)))
-    :scalar 2.1))
+    2.1))
   (assert-error
    'error
    (linear-algebra:product
@@ -1199,7 +1199,7 @@
          (2.0 2.0 2.0 2.0 2.0)
          (3.0 3.0 3.0 3.0 3.0)))
     (linear-algebra:column-vector 1.0 2.0 3.0 4.0 5.0)
-    :scalar 2.1))
+    2.1))
   (assert-error
    'error
    (linear-algebra:product
@@ -1244,7 +1244,7 @@
          (3.0 3.0 3.0 3.0)
          (4.0 4.0 4.0 4.0)
          (5.0 5.0 5.0 5.0)))
-    :scalar 2.1))
+    2.1))
   (assert-error
    'error
    (linear-algebra:product (unit-matrix 3 5) (unit-matrix 6 7))))

@@ -75,10 +75,6 @@ the operation."))
   "Return the scaled operation."
   (lambda (n1 n2) (- (* scalar1 n1) (* scalar2 n2))))
 
-(defmethod scaled-binary-op
-    ((op (eql #'*)) (scalar (eql nil)) (conjugate (eql t)))
-  (lambda (n1 n2) (* (conjugate n1) n2)))
-
 ;;; Binary vector operations
 
 (defun %vector<-vector1-op-vector2 (operation vector1 vector2)
@@ -128,13 +124,12 @@ the operation."))
    (scaled-binary-op #'- scalar1 scalar2)
    vector1 vector2))
 
-(defun inner-product-vector (vector1 vector2 scalar conjugate)
+(defun inner-product-vector (vector1 vector2 scalar)
   "Return the vector inner product."
   (loop
-   with op = (scaled-binary-op #'* nil conjugate)
    for element1 across vector1
    and element2 across vector2
-   sum (funcall op element1 element2) into result
+   sum (* element1 element2) into result
    finally
    (return (if scalar (* scalar result) result))))
 
