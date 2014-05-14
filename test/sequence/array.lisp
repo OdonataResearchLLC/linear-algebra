@@ -87,19 +87,7 @@
         (#C(2.1 2.2) #C(2.3 2.4))
         (#C(3.1 3.2) #C(3.3 3.4))
         (#C(4.1 4.2) #C(4.3 4.4))
-        (#C(5.1 5.2) #C(5.3 5.4)))))
-  (assert-float-equal
-   #2A((#C(1.1 -1.2) #C(2.1 -2.2) #C(3.1 -3.2)
-        #C(4.1 -4.2) #C(5.1 -5.2))
-       (#C(1.3 -1.4) #C(2.3 -2.4) #C(3.3 -3.4)
-        #C(4.3 -4.4) #C(5.3 -5.4)))
-   (linear-algebra:transpose
-    #2A((#C(1.1 1.2) #C(1.3 1.4))
-        (#C(2.1 2.2) #C(2.3 2.4))
-        (#C(3.1 3.2) #C(3.3 3.4))
-        (#C(4.1 4.2) #C(4.3 4.4))
-        (#C(5.1 5.2) #C(5.3 5.4)))
-    t)))
+        (#C(5.1 5.2) #C(5.3 5.4))))))
 
 (define-test ntranspose-array
   (:tag :array :ntranspose)
@@ -126,17 +114,6 @@
          #2A((#C(1.1 1.2) #C(2.1 2.2))
              (#C(1.3 1.4) #C(2.3 2.4)))))
     (assert-eq original (linear-algebra:ntranspose original))
-    (assert-float-equal transpose original))
-  (let ((original
-         (make-array
-          '(2 2) :initial-contents
-          '((#C(1.1 1.2) #C(1.3 1.4))
-            (#C(2.1 2.2) #C(2.3 2.4)))))
-        (transpose
-         #2A((#C(1.1 -1.2) #C(2.1 -2.2))
-             (#C(1.3 -1.4) #C(2.3 -2.4)))))
-    (assert-eq
-     original (linear-algebra:ntranspose original t))
     (assert-float-equal transpose original)))
 
 (define-test permute-array

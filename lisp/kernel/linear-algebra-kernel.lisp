@@ -29,7 +29,8 @@
 (defpackage :linear-algebra-kernel
   (:use :common-lisp :floating-point)
   ;; Utility functions
-  (:export :common-class-of
+  (:export :copy-array
+           :common-class-of
            :common-array-element-type
            :complex-equal
            :number-equal)

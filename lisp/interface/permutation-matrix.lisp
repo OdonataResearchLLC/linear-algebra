@@ -174,9 +174,8 @@ columns."
    'permutation-matrix
    :contents (copy-seq (contents matrix))))
 
-(defmethod transpose ((matrix permutation-matrix) &optional conjugate)
+(defmethod transpose ((matrix permutation-matrix))
   "Transpose the permutation matrix."
-  (declare (ignore conjugate))
   (make-instance
    'permutation-matrix
    :contents

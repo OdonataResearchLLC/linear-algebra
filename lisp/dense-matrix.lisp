@@ -148,21 +148,10 @@
 
 (defmethod copy-matrix ((matrix dense-matrix))
   "Return a copy of the dense matrix."
-  (let ((m-rows (matrix-row-dimension matrix))
-        (n-columns (matrix-column-dimension matrix))
-        (original (contents matrix))
-        (contents
-         (make-array
-          (matrix-dimensions matrix)
-          :element-type (matrix-element-type matrix))))
-    (make-instance
-     (class-of matrix)
-     :contents
-     (dotimes (row m-rows contents)
-       (dotimes (column n-columns)
-         (setf
-          (aref contents row column)
-          (aref original row column)))))))
+  (make-instance
+   (class-of matrix)
+   :contents
+   (copy-array (contents matrix))))
 
 (defmethod submatrix
     ((matrix dense-matrix)
@@ -260,44 +249,36 @@
   "Return the norm of the matrix."
   (norm-array (contents matrix) measure))
 
-(defmethod transpose ((matrix dense-matrix) &optional conjugate)
+(defmethod transpose ((matrix dense-matrix))
   "Return the transpose of the matrix."
   (make-instance
    (class-of matrix)
    :contents
    (let* ((m-rows (matrix-row-dimension matrix))
           (n-columns (matrix-column-dimension matrix))
-          (op (if conjugate #'conjugate #'identity))
-          (contents (contents matrix))
-          (tcontents
+          (original (contents matrix))
+          (transposed
            (make-array
             (list n-columns m-rows)
             :element-type
             (matrix-element-type matrix))))
-     (dotimes (row m-rows tcontents)
+     (dotimes (row m-rows transposed)
        (dotimes (column n-columns)
-         (setf (aref tcontents column row)
-               (funcall op (aref contents row column))))))))
+         (setf
+          (aref transposed column row)
+          (aref original row column)))))))
 
-(defmethod ntranspose ((matrix dense-matrix) &optional conjugate)
+(defmethod ntranspose ((matrix dense-matrix))
   "Replace the contents of the dense matrix with the transpose."
   (let ((m-rows (matrix-row-dimension matrix))
-        (n-columns (matrix-column-dimension matrix)))
+        (n-columns (matrix-column-dimension matrix))
+        (contents (contents matrix)))
     (if (= m-rows n-columns)
-        (let ((op (if conjugate #'conjugate #'identity))
-              (contents (contents matrix)))
-          (dotimes (row m-rows matrix)
-            ;; FIXME : Conjugate on the diagonal may not be correct.
-            (setf
-             (aref contents row row)
-             (funcall op (aref contents row row)))
-            (do ((column (1+ row) (1+ column)))
-                ((>= column n-columns))
-              (psetf
-               (aref contents row column)
-               (funcall op (aref contents column row))
-               (aref contents column row)
-               (funcall op (aref contents row column))))))
+        (dotimes (row m-rows matrix)
+          (do ((column (1+ row) (1+ column)))
+              ((>= column n-columns))
+            (rotatef
+             (aref contents row column) (aref contents column row))))
         (error "Rows and columns unequal."))))
 
 (defmethod permute

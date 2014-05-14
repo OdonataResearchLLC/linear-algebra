@@ -26,6 +26,17 @@
 
 (in-package :linear-algebra-test)
 
+(define-test copy-array
+  (:tag :kernel :utility)
+  (assert-float-equal
+   #(1.1 2.2 3.3 4.4 5.5)
+   (linear-algebra-kernel:copy-array
+    #(1.1 2.2 3.3 4.4 5.5)))
+  (assert-float-equal
+   #2A((1.1 1.2 1.3) (2.1 2.2 2.3) (3.1 3.2 3.3))
+   (linear-algebra-kernel:copy-array
+    #2A((1.1 1.2 1.3) (2.1 2.2 2.3) (3.1 3.2 3.3)))))
+
 (define-test common-class-of
   (:tag :kernel :utility)
   (let ((object-a (make-array '(3 3) :adjustable t))

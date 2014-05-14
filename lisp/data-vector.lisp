@@ -112,7 +112,7 @@
   "Return a copy of the vector."
   (make-instance
    (class-of vector)
-   :contents (copy-seq (contents vector))))
+   :contents (copy-array (contents vector))))
 
 (defmethod subvector ((vector data-vector) start &optional end)
   "Return a new data vector that is a subset of vector."
@@ -268,28 +268,22 @@ applying the function to each element of the vectors."
   "Return the p-norm of the vector."
   (norm-vector (contents vector) measure))
 
-(defmethod transpose ((vector column-vector) &optional conjugate)
+(defmethod transpose ((vector column-vector))
   "Return a row vector."
   (make-instance
-   'row-vector
-   :contents
-   (transpose (contents vector) conjugate)))
+   'row-vector :contents (copy-array (contents vector))))
 
-(defmethod transpose ((vector row-vector) &optional conjugate)
+(defmethod transpose ((vector row-vector))
   "Return a column vector."
   (make-instance
-   'column-vector
-   :contents
-   (transpose (contents vector) conjugate)))
+   'column-vector :contents (copy-array (contents vector))))
 
-(defmethod ntranspose ((vector column-vector) &optional conjugate)
+(defmethod ntranspose ((vector column-vector))
   "Return a row vector destructively."
-  (ntranspose (contents vector) conjugate)
   (change-class vector 'row-vector))
 
-(defmethod ntranspose ((vector row-vector) &optional conjugate)
+(defmethod ntranspose ((vector row-vector))
   "Return a column vector destructively."
-  (ntranspose (contents vector) conjugate)
   (change-class vector 'column-vector))
 
 (defmethod permute :before

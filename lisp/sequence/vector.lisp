@@ -39,24 +39,17 @@ vector."
 (defmethod norm ((data vector) &optional (measure 1))
   (norm-vector data measure))
 
-(defmethod transpose ((data vector) &optional conjugate)
+(defmethod transpose ((data vector))
   "Return a row vector."
   (let ((result
          (make-array
-          (length data)
-          :element-type (array-element-type data))))
-    (if conjugate
-        (dotimes (index (length data) result)
-          (setf (aref result index) (aref data index)))
-        (dotimes (index (length data) result)
-          (setf (aref result index) (conjugate (aref data index)))))))
+          (length data) :element-type (array-element-type data))))
+    (dotimes (index (length data) result)
+      (setf (aref result index) (conjugate (aref data index))))))
 
-(defmethod ntranspose ((data vector) &optional conjugate)
+(defmethod ntranspose ((data vector))
   "Return a row vector destructively."
-  (if conjugate
-      (dotimes (index (length data) data)
-        (setf (aref data index) (conjugate (aref data index))))
-      data))
+  data)
 
 (defmethod permute ((data vector) (matrix permutation-matrix))
   "Return the permutation of the list."

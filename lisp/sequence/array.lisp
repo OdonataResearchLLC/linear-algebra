@@ -43,10 +43,9 @@ matrix."
       (error "Array rank(~D) must be 2."
              (array-rank data))))
 
-(defmethod transpose ((data array) &optional conjugate)
+(defmethod transpose ((data array))
   "Return the transpose of the array."
-  (let* ((op (if conjugate #'conjugate #'identity))
-         (m-rows (array-dimension data 0))
+  (let* ((m-rows (array-dimension data 0))
          (n-columns (array-dimension data 1))
          (result
           (make-array
@@ -54,28 +53,17 @@ matrix."
            :element-type (array-element-type data))))
     (dotimes (row m-rows result)
       (dotimes (column n-columns)
-        (setf
-         (aref result column row)
-         (funcall op (aref data row column)))))))
+        (setf (aref result column row) (aref data row column))))))
 
-(defmethod ntranspose ((data array) &optional conjugate)
+(defmethod ntranspose ((data array))
   "Replace the contents of the array with the transpose."
   (let ((m-rows (array-dimension data 0))
-        (n-columns (array-dimension data 1))
-        (op (if conjugate #'conjugate #'identity)))
+        (n-columns (array-dimension data 1)))
     (if (= m-rows n-columns)
         (dotimes (row m-rows data)
-          ;; FIXME : Conjugate on the diagonal may not be correct.
-          (setf
-           (aref data row row)
-           (funcall op (aref data row row)))
           (do ((column (1+ row) (1+ column)))
               ((>= column n-columns))
-            (psetf
-             (aref data row column)
-             (funcall op (aref data column row))
-             (aref data column row)
-             (funcall op (aref data row column)))))
+            (rotatef (aref data row column) (aref data column row))))
         (error "Rows(~D) and columns(~D) unequal."
                m-rows n-columns))))
 

@@ -26,6 +26,33 @@
 
 (in-package :linear-algebra-kernel)
 
+;;; Copy each element of the array
+
+(defgeneric copy-array (array)
+  (:documentation
+   "Return an element-wise copy of the original array."))
+
+(defmethod copy-array ((original vector))
+  "Return an element-wise copy of the original vector."
+  (let* ((size (length original))
+         (new-vector
+          (make-array
+           size :element-type (array-element-type original))))
+    (dotimes (index size new-vector)
+      (setf (aref new-vector index) (aref original index)))))
+
+(defmethod copy-array ((original array))
+  "Return an element-wise copy of the original array."
+  (let ((new-array
+         (make-array
+          (array-dimensions original)
+          :element-type (array-element-type original))))
+    (dotimes (row (array-dimension original 0) new-array)
+      (dotimes (column (array-dimension original 1))
+        (setf
+         (aref new-array row column)
+         (aref original row column))))))
+
 ;;; Class and type utilities
 
 (defun common-class-of (object1 object2 &optional

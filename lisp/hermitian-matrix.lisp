@@ -351,15 +351,12 @@ matrix2."
              start-row1 (+ start-row1 m-rows -1)
              start-column1 (+ start-column1 n-columns -1)))))))
 
-(defmethod transpose ((matrix hermitian-matrix) &optional (conjugate t))
+(defmethod transpose ((matrix hermitian-matrix))
   "The transpose of a Hermitian matrix is itself."
-  (declare (ignore conjugate))
-  ;; Just copy the matrix
   (copy-matrix matrix))
 
-(defmethod ntranspose ((matrix hermitian-matrix) &optional (conjugate t))
+(defmethod ntranspose ((matrix hermitian-matrix))
   "The destructive transpose of a Hermitian matrix is itself."
-  (declare (ignore conjugate))
   matrix)
 
 (defmethod permute
