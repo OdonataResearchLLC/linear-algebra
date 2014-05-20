@@ -34,9 +34,9 @@
 ;;; Algorithm 4.22, pg. 74
 ;;; Triangular matrix factorization with column pivot search
 
+;;; Step 1
 (defun initialize-pivot-selection-vector (size)
   "Return a new, initialized, pivot vector."
-  ;; Step 1
   (let ((pivot-selection-vector (make-array size)))
     (dotimes (index size pivot-selection-vector)
       (setf (svref pivot-selection-vector index) index))))

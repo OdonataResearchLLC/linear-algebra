@@ -44,7 +44,8 @@
      (:file "unary-operations")
      (:file "binary-operations")
      (:file "rotation")
-     (:file "gauss")))
+     (:file "gauss")
+     (:file "cholesky")))
    ;; Linear algebra interface
    (:module interface
     :depends-on ("linear-algebra-test")

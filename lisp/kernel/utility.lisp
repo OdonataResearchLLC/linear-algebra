@@ -26,6 +26,26 @@
 
 (in-package :linear-algebra-kernel)
 
+;;; Initialization
+
+(defun zero-vector (size &optional element-type)
+  "Return a vector of zeros."
+  (if element-type
+      (make-array
+       size
+       :element-type element-type
+       :initial-element (coerce 0 element-type))
+      (make-array size :initial-element 0)))
+
+(defun zero-array (rows columns &optional element-type)
+  "Return an array of zeros."
+  (if element-type
+      (make-array
+       (list rows columns)
+       :element-type element-type
+       :initial-element (coerce 0 element-type))
+      (make-array (list rows columns) :initial-element 0)))
+
 ;;; Copy each element of the array
 
 (defgeneric copy-array (array)

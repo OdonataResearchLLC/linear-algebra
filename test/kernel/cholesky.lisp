@@ -45,4 +45,34 @@
      :initial-contents
      '((1.15 1.26 1.37)
        (1.26 2.23 2.31)
-       (1.37 2.31 3.31))))))
+       (1.37 2.31 3.31)))))
+  ;; 3x3 from Wikipedia
+  (assert-float-equal
+   #2A(( 2.0 12.0 -16.0)
+       ( 6.0  1.0 -43.0)
+       (-8.0  5.0   3.0))
+   (linear-algebra-kernel::standard-cholesky-decomposition
+    (make-array
+     '(3 3)
+     :initial-contents
+     '((4 12 -16) (12 37 -43) (-16 -43 98))))))
+
+(define-test standard-cholesky-linear-solver
+  (:tag :kernel :cholesky)
+  ;; 2x2
+  (assert-float-equal
+   #(3.2653065 -1.3265308)
+   (linear-algebra-kernel::standard-cholesky-linear-solver
+    (make-array '(2 2) :initial-contents '((1.1 1.2) (1.2 2.2)))
+    (make-array 2 :initial-contents '(2.0 1.0))))
+  ;; 3x3
+  (assert-float-equal
+   #(3.5856622 -2.306286 0.79007966)
+   (linear-algebra-kernel::standard-cholesky-linear-solver
+    (make-array
+     '(3 3)
+     :initial-contents
+     '((1.15 1.26 1.37)
+       (1.26 2.23 2.31)
+       (1.37 2.31 3.31)))
+    (make-array 3 :initial-contents '(2.3 1.2 2.2)))))

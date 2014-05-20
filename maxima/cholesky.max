@@ -32,7 +32,13 @@ A2 : matrix
   [1.2, 2.2]
 );
 
-cholesky(A2);
+b2 : matrix ([2.0], [1.0]);
+
+ll2 : cholesky(A2);
+
+c2 : invert(ll2).b2;
+
+x2 : invert(transpose(ll2)).c2;
 
 /* 3x3 linear system */
 
@@ -43,4 +49,10 @@ A3 : matrix
   [1.37, 2.31, 3.31]
 );
 
-cholesky(A3);
+b3 : matrix ([3.1], [1.1], [2.1]);
+
+ll3 : cholesky(A3);
+
+c3 : invert(ll3).b3;
+
+x2 : invert(transpose(ll3)).c3;

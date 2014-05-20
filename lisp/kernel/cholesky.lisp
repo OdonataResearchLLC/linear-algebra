@@ -39,23 +39,65 @@
   "Factor A = LL^T."
   (loop
    with size = (array-dimension array 0)
-   for index below size do
+   for index-j below size do
    ;; Step 1.1
    (multiple-value-bind (scale sumsq)
-       (sumsq-row array index :end index)
+       (sumsq-row array index-j :end index-j)
      (setf
-      (aref array index index)
-      (sqrt (- (aref array index index) (* scale scale sumsq)))))
+      (aref array index-j index-j)
+      (sqrt (- (aref array index-j index-j) (* scale scale sumsq)))))
    ;; Step 1.2
    (loop
-    for row from (1+ index) below size do
+    for index-k from (1+ index-j) below size do
     (setf
-     (aref array row index)
+     (aref array index-k index-j)
      (/
-      (- (aref array row index)
-         (loop for column below index sum
-               (* (aref array row column)
-                  (aref array index column))))
-      (aref array index index))))
+      (- (aref array index-k index-j)
+         (loop
+          for index-i below index-j sum
+          (* (aref array index-k index-i)
+             (aref array index-j index-i))))
+      (aref array index-j index-j))))
    ;; Return the factored array
    finally return array))
+
+#| NOTE:
+
+   Step 2 in algorithm 4.27 incorrectly describes the forward
+   substitution algorithm. Division by the diagonal term cannot be
+   performed in a separate loop from the substitution steps.
+
+|#
+
+(defun standard-cholesky-linear-solver (array vector)
+  "Linear system solver for positive definite matrices using the
+standard Cholesky decomposition."
+  (let ((size (array-dimension array 0))
+        (ll-array))
+    ;; Step 1, decomposition
+    (setq ll-array (standard-cholesky-decomposition array))
+    ;; Step 2, forward substitution
+    (loop
+     for index-i below size do
+     (setf
+      (aref vector index-i)
+      (/
+       (- (aref vector index-i)
+          (loop
+           for index-j below index-i sum
+           (* (aref ll-array index-i index-j) (aref vector index-j))))
+       (aref array index-i index-i))))
+    ;; Step 3, backward substitution
+    (loop
+     for index-i from (1- size) downto 0 do
+     (setf
+      (aref vector index-i)
+      (/
+       (- (aref vector index-i)
+          (loop
+           for index-j from (1+ index-i) below size sum
+           (* (aref ll-array index-j index-i)
+              (aref vector index-j))))
+       (aref ll-array index-i index-i))))
+    ;; Return the solution
+    vector))
