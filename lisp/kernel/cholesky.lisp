@@ -31,11 +31,10 @@
 
 (in-package :linear-algebra-kernel)
 
-;;; Algorithm 4.27, pg. 80
-;;; Linear system solver for positive definite matrix using the
-;;; standard Cholesky decomposition
+;;; Algorithm 4.27, Step 1, pg. 80
+;;; The standard Cholesky decomposition
 
-(defun standard-cholesky-decomposition (array)
+(defun cholesky-decomposition (array)
   "Factor A = LL^T."
   (loop
    with size = (array-dimension array 0)
@@ -61,119 +60,10 @@
    ;; Return the factored array
    finally return array))
 
-#| ERRATA
-
-   Step 2 in algorithm 4.27 incorrectly describes the forward
-   substitution algorithm. Division by the diagonal term cannot be
-   performed in a separate loop from the substitution steps.
-
-|#
-
-(defun standard-cholesky-linear-solver (array vector)
-  "Linear system solver for positive definite matrices using the
-standard Cholesky decomposition."
-  (let ((size (array-dimension array 0))
-        (ll-array))
-    ;; Step 1, decomposition
-    (setq ll-array (standard-cholesky-decomposition array))
-    ;; Step 2, forward substitution
-    (loop
-     for index-i below size do
-     (setf
-      (aref vector index-i)
-      (/
-       (- (aref vector index-i)
-          (loop
-           for index-j below index-i sum
-           (* (aref ll-array index-i index-j) (aref vector index-j))))
-       (aref array index-i index-i))))
-    ;; Step 3, backward substitution
-    (loop
-     for index-i from (1- size) downto 0 do
-     (setf
-      (aref vector index-i)
-      (/
-       (- (aref vector index-i)
-          (loop
-           for index-j from (1+ index-i) below size sum
-           (* (aref ll-array index-j index-i)
-              (aref vector index-j))))
-       (aref ll-array index-i index-i))))
-    ;; Return the solution
-    vector))
-
-;;; Algorithm 4.28, pg. 81
-;;; Linear system solver via root-free Cholesky
-
-(defun root-free-cholesky-decomposition (array)
-  "Factor A = LDL^t."
-  (loop
-   with size = (array-dimension array 0)
-   for index-i below size do
-   (decf
-    (aref array index-i index-i)
-    (loop
-     for index-k below index-i sum
-     (* (aref array index-k index-k)
-        (aref array index-i index-k)
-        (aref array index-i index-k))))
-   (loop
-    for index-j from (1+ index-i) below size do
-    (setf
-     (aref array index-j index-i)
-     (/
-      (- (aref array index-j index-i)
-         (loop
-          for index-k below index-i sum
-          (* (aref array index-k index-k)
-             (aref array index-j index-k)
-             (aref array index-i index-k))))
-      (aref array index-i index-i))))
-   ;; Return the factored array
-   finally return array))
-
-#| ERRATA
-
-   The x term in the summation of Step 3 in algorithm 4.28 should have
-   a j subscript, not an i. This has been corrected in the code.
-
-|#
-
-(defun root-free-cholesky-solver (array vector)
-  "Linear system solver for positive definite matrices using the
-root-free Cholesky decomposition."
-  (let ((size (array-dimension array 0)))
-    ;; Step 1, decomposition
-    (setq array (root-free-cholesky-decomposition array))
-    ;; Step 2.1
-    (loop
-     for index-i below (1- size) do
-     (loop
-      for index-j from (1+ index-i) below size do
-      (decf
-       (aref vector index-j)
-       (* (aref array index-j index-i) (aref vector index-i)))))
-    ;; Step 2.2
-    (loop
-     for index-i below size do
-     (setf
-      (aref vector index-i)
-      (/ (aref vector index-i) (aref array index-i index-i))))
-    ;; Step 3, backward substitution
-    (loop
-     for index-i from (1- size) downto 0 do
-     (decf
-      (aref vector index-i)
-      (loop
-       for index-j from (1+ index-i) below size sum
-       (* (aref array index-j index-i) (aref vector index-j)))))
-    ;; Return the solution
-    vector))
-
 ;;; Algorithm 4.29, pg. 82
 ;;; Simplified linear system solver via root-free Cholesky
 
-(defun simplified-root-free-cholesky-decomposition (array)
+(defun root-free-cholesky-decomposition (array)
   "Factor A = LDL^t."
   (loop
    with size = (array-dimension array 0)
@@ -197,8 +87,8 @@ root-free Cholesky decomposition."
 root-free Cholesky decomposition."
   (let ((size (array-dimension array 0)))
     ;; Step 1, decomposition
-    (setq array (simplified-root-free-cholesky-decomposition array))
-    ;; Step 2
+    (setq array (root-free-cholesky-decomposition array))
+    ;; Step 2.1 & 2.2
     (loop
      for index-j below size do
      (loop
@@ -206,7 +96,7 @@ root-free Cholesky decomposition."
       (decf
        (aref vector index-j)
        (* (aref array index-j index-i) (aref vector index-i)))))
-    ;; Step 3, backward substitution
+    ;; Step 2.3 & 3.2
     (loop
      for index-j from (1- size) downto 0 do
      (setf
