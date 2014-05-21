@@ -95,8 +95,8 @@
 ;;; TODO: Replace or add an implicitly scaled pivot search
 ;;; FIXME: Improve the accuracy of the factorization
 
-(defun factor-lr-array (array)
-  "Return the LR factorization of the array."
+(defun gauss-factorization (array)
+  "Return the Gauss factorization of the array."
   (loop
    with size = (array-dimension array 0)
    with pivot-selection-vector =
@@ -108,7 +108,7 @@
 ;;; Algorithm 4.23, pg. 75
 ;;; Gauss algorithm with column pivot search
 
-(defun solve-linear-system (array vector)
+(defun gauss-solver (array vector)
   "Gauss algorithm with column pivot search."
   (let ((size (array-dimension array 0))
         (solution
@@ -117,8 +117,8 @@
           :element-type (array-element-type vector)
           :initial-element 0.0)))
   ;; Step 1
-  (multiple-value-bind (lr-array pivot-selection-vector)
-      (factor-lr-array array)
+  (multiple-value-bind (factored pivot-selection-vector)
+      (gauss-factorization array)
     ;; Step 2
     (loop
      initially
@@ -130,21 +130,21 @@
       (aref solution row)
       (- (aref vector (svref pivot-selection-vector row))
          (loop for col from 0 below row sum
-               (* (aref lr-array row col) (aref solution col))))))
+               (* (aref factored row col) (aref solution col))))))
     ;; Step 3
     (loop
      with end = (1- size)
      initially
      (setf
       (aref solution end)
-      (/ (aref solution end) (aref lr-array end end)))
+      (/ (aref solution end) (aref factored end end)))
      for row downfrom (1- end) to 0 do
      (setf
       (aref solution row)
       (/ (- (aref solution row)
             (loop for col from (1+ row) below size sum
-                  (* (aref lr-array row col) (aref solution col))))
-         (aref lr-array row row)))))
+                  (* (aref factored row col) (aref solution col))))
+         (aref factored row row)))))
   ;; Return the solution
   solution))
 
@@ -170,8 +170,8 @@ vector, otherwise 0.0."
            :element-type array-type
            :initial-element (coerce 0.0 array-type))))
   ;; Step 1
-  (multiple-value-bind (lr-array pivot-selection-vector)
-      (factor-lr-array array)
+  (multiple-value-bind (factored pivot-selection-vector)
+      (gauss-factorization array)
     ;; Step 2
     (loop
      for column below size do
@@ -185,21 +185,23 @@ vector, otherwise 0.0."
        (- (unit-pivot-value
            pivot-selection-vector row column array-type)
           (loop for index from 0 below row sum
-                (* (aref lr-array row index) (aref solution index column)))))))
+                (* (aref factored row index)
+                   (aref solution index column)))))))
     ;; Step 3
     (loop
      with end = (1- size)
      for column below size do
      (setf
       (aref solution end column)
-      (/ (aref solution end column) (aref lr-array end end)))
+      (/ (aref solution end column) (aref factored end end)))
      (loop
       for row downfrom (1- end) to 0 do
       (setf
        (aref solution row column)
        (/ (- (aref solution row column)
              (loop for index from (1+ row) below size sum
-                   (* (aref lr-array row index) (aref solution index column))))
-          (aref lr-array row row))))))
+                   (* (aref factored row index)
+                      (aref solution index column))))
+          (aref factored row row))))))
   ;; Return the solution
   solution))

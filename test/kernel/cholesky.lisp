@@ -32,14 +32,14 @@
   (assert-float-equal
    #2A((1.0488088 1.2)
        (1.1441552 0.9438798))
-   (linear-algebra-kernel::cholesky-decomposition
+   (linear-algebra-kernel:cholesky-decomposition
     (make-array '(2 2) :initial-contents '((1.1 1.2) (1.2 2.2)))))
   ;; 3x3
   (assert-float-equal
    #2A((1.0723806 1.26       1.37)
        (1.1749561 0.92167145 2.31)
        (1.2775316 0.8777058  0.95265186))
-   (linear-algebra-kernel::cholesky-decomposition
+   (linear-algebra-kernel:cholesky-decomposition
     (make-array
      '(3 3)
      :initial-contents
@@ -51,7 +51,7 @@
    #2A(( 2.0 12.0 -16.0)
        ( 6.0  1.0 -43.0)
        (-8.0  5.0   3.0))
-   (linear-algebra-kernel::cholesky-decomposition
+   (linear-algebra-kernel:cholesky-decomposition
     (make-array
      '(3 3)
      :initial-contents
@@ -62,14 +62,14 @@
   ;; 2x2
   (assert-float-equal
    #2A((1.1 1.2) (1.0909091 0.8909091))
-   (linear-algebra-kernel::root-free-cholesky-decomposition
+   (linear-algebra-kernel:root-free-cholesky-decomposition
     (make-array '(2 2) :initial-contents '((1.1 1.2) (1.2 2.2)))))
   ;; 3x3
   (assert-float-equal
    #2A((1.15      1.26       1.37)
        (1.0956522 0.84947825 2.31)
        (1.1913043 0.9522979  0.90754557))
-   (linear-algebra-kernel::root-free-cholesky-decomposition
+   (linear-algebra-kernel:root-free-cholesky-decomposition
     (make-array
      '(3 3)
      :initial-contents
@@ -82,13 +82,13 @@
   ;; 2x2
   (assert-float-equal
    #(3.2653065 -1.3265308)
-   (linear-algebra-kernel::cholesky-solver
+   (linear-algebra-kernel:cholesky-solver
     (make-array '(2 2) :initial-contents '((1.1 1.2) (1.2 2.2)))
     (make-array 2 :initial-contents '(2.0 1.0))))
   ;; 3x3
   (assert-float-equal
    #(3.5856622 -2.306286 0.79007966)
-   (linear-algebra-kernel::cholesky-solver
+   (linear-algebra-kernel:cholesky-solver
     (make-array
      '(3 3)
      :initial-contents

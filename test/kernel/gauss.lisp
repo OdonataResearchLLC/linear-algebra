@@ -147,10 +147,10 @@
            (0.9285714 -0.78260816  0.8547211 -1.0736067))
        array2))))
 
-(define-test factor-lr-array
+(define-test gauss-factorization
   (:tag :kernel :gauss)
   (multiple-value-bind (array psv)
-      (linear-algebra-kernel::factor-lr-array
+      (linear-algebra-kernel::gauss-factorization
        (make-array
         '(4 4) :initial-contents
         '((1.1 1.4 1.3 1.2)
@@ -165,13 +165,13 @@
          (0.9285714 -0.78260816  0.8547211 -1.0736067))
      array)))
 
-(define-test solve-linear-system
+(define-test gauss-solver
   (:tag :kernel :gauss)
   (let ((*epsilon* (* 64 single-float-epsilon)))
     ;; 2x2
     (assert-float-equal
      #(2.0 -1.0)
-     (linear-algebra-kernel:solve-linear-system
+     (linear-algebra-kernel:gauss-solver
       (make-array
        '(2 2) :initial-contents
        '((1.1 1.2) (2.1 2.2)))
@@ -180,7 +180,7 @@
     ;; Maxima : #(66.36628 -151.8314 85.6105)
     (assert-float-equal
      #(66.36775 -151.8342 85.6118)
-     (linear-algebra-kernel:solve-linear-system
+     (linear-algebra-kernel:gauss-solver
       (make-array
        '(3 3) :initial-contents
        '((1.15 1.26 1.37) (2.14 2.23 2.31) (3.13 3.22 3.31)))

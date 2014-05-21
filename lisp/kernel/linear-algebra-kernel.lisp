@@ -61,5 +61,9 @@
            :jacobi-rotation
            :householder-reflection)
   ;; Gauss algorithm
-  (:export :solve-linear-system
-           :invert-array))
+  (:export :gauss-solver
+           :invert-array)
+  ;; Cholesky
+  (:export :cholesky-decomposition
+           :root-free-cholesky-decomposition
+           :cholesky-solver))
