@@ -169,3 +169,59 @@ root-free Cholesky decomposition."
        (* (aref array index-j index-i) (aref vector index-j)))))
     ;; Return the solution
     vector))
+
+;;; Algorithm 4.29, pg. 82
+;;; Simplified linear system solver via root-free Cholesky
+
+(defun simplified-root-free-cholesky-decomposition (array)
+  "Factor A = LDL^t."
+  (loop
+   with size = (array-dimension array 0)
+   for index-j below size do
+   (loop
+    for index-i below index-j
+    as var-h = (aref array index-j index-i)
+    do
+    (setf
+     (aref array index-j index-i)
+     (/ var-h (aref array index-i index-i)))
+    (loop
+     for index-k from (1+ index-i) upto index-j do
+     (decf
+      (aref array index-j index-k)
+      (* var-h (aref array index-k index-i)))))
+   finally return array))
+
+(defun cholesky-solver (array vector)
+  "Linear system solver for positive definite matrices using the
+root-free Cholesky decomposition."
+  (let* ((size (array-dimension array 0))
+         (element-type (array-element-type vector))
+         (tmp-z (zero-vector size element-type))
+         (tmp-c (zero-vector size element-type))
+         (solution (zero-vector size element-type)))
+    ;; Step 1, decomposition
+    (setq array (simplified-root-free-cholesky-decomposition array))
+    ;; Step 2
+    (loop
+     for index-j below size do
+     (setf (aref tmp-z index-j) (aref vector index-j))
+     (loop
+      for index-i below index-j sum
+      (decf
+       (aref tmp-z index-j)
+       (* (aref array index-j index-i) (aref tmp-z index-i))))
+     (setf
+      (aref tmp-c index-j)
+      (/ (aref tmp-z index-j) (aref array index-j index-j))))
+    ;; Step 3, backward substitution
+    (loop
+     for index-j from (1- size) downto 0 do
+     (setf (aref solution index-j) (aref tmp-c index-j))
+      (loop
+       for index-i from (1+ index-j) below size do
+       (decf
+        (aref solution index-j)
+        (* (aref array index-i index-j) (aref solution index-i)))))
+    ;; Return the solution
+    solution))
