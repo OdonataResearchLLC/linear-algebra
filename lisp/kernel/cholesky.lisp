@@ -195,9 +195,7 @@ root-free Cholesky decomposition."
 (defun cholesky-solver (array vector)
   "Linear system solver for positive definite matrices using the
 root-free Cholesky decomposition."
-  (let* ((size (array-dimension array 0))
-         (element-type (array-element-type vector))
-         (solution (zero-vector size element-type)))
+  (let ((size (array-dimension array 0)))
     ;; Step 1, decomposition
     (setq array (simplified-root-free-cholesky-decomposition array))
     ;; Step 2
@@ -207,17 +205,17 @@ root-free Cholesky decomposition."
       for index-i below index-j do
       (decf
        (aref vector index-j)
-       (* (aref array index-j index-i) (aref vector index-i))))
-     (setf
-      (aref solution index-j)
-      (/ (aref vector index-j) (aref array index-j index-j))))
+       (* (aref array index-j index-i) (aref vector index-i)))))
     ;; Step 3, backward substitution
     (loop
      for index-j from (1- size) downto 0 do
-      (loop
-       for index-i from (1+ index-j) below size do
-       (decf
-        (aref solution index-j)
-        (* (aref array index-i index-j) (aref solution index-i)))))
+     (setf
+      (aref vector index-j)
+      (/ (aref vector index-j) (aref array index-j index-j)))
+     (loop
+      for index-i from (1+ index-j) below size do
+      (decf
+       (aref vector index-j)
+       (* (aref array index-i index-j) (aref vector index-i)))))
     ;; Return the solution
-    solution))
+    vector))
