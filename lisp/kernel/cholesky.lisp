@@ -198,7 +198,6 @@ root-free Cholesky decomposition."
   (let* ((size (array-dimension array 0))
          (element-type (array-element-type vector))
          (tmp-z (zero-vector size element-type))
-         (tmp-c (zero-vector size element-type))
          (solution (zero-vector size element-type)))
     ;; Step 1, decomposition
     (setq array (simplified-root-free-cholesky-decomposition array))
@@ -212,12 +211,11 @@ root-free Cholesky decomposition."
        (aref tmp-z index-j)
        (* (aref array index-j index-i) (aref tmp-z index-i))))
      (setf
-      (aref tmp-c index-j)
+      (aref solution index-j)
       (/ (aref tmp-z index-j) (aref array index-j index-j))))
     ;; Step 3, backward substitution
     (loop
      for index-j from (1- size) downto 0 do
-     (setf (aref solution index-j) (aref tmp-c index-j))
       (loop
        for index-i from (1+ index-j) below size do
        (decf
