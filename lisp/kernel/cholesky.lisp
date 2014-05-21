@@ -197,22 +197,20 @@ root-free Cholesky decomposition."
 root-free Cholesky decomposition."
   (let* ((size (array-dimension array 0))
          (element-type (array-element-type vector))
-         (tmp-z (zero-vector size element-type))
          (solution (zero-vector size element-type)))
     ;; Step 1, decomposition
     (setq array (simplified-root-free-cholesky-decomposition array))
     ;; Step 2
     (loop
      for index-j below size do
-     (setf (aref tmp-z index-j) (aref vector index-j))
      (loop
-      for index-i below index-j sum
+      for index-i below index-j do
       (decf
-       (aref tmp-z index-j)
-       (* (aref array index-j index-i) (aref tmp-z index-i))))
+       (aref vector index-j)
+       (* (aref array index-j index-i) (aref vector index-i))))
      (setf
       (aref solution index-j)
-      (/ (aref tmp-z index-j) (aref array index-j index-j))))
+      (/ (aref vector index-j) (aref array index-j index-j))))
     ;; Step 3, backward substitution
     (loop
      for index-j from (1- size) downto 0 do
