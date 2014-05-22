@@ -149,99 +149,87 @@ the operation."))
    (= 2 (array-rank array))
    (= (array-dimension array 1) (length vector))))
 
-(defun %product-vector-array (vector array)
+(defun %product-vector-array (vector array &optional result)
   "Return the result of the array premultiplied by the vector."
-  (let* ((m-rows (array-dimension array 0))
-         (n-columns (array-dimension array 1))
-         (zero (coerce 0 (array-element-type vector)))
-         (element)
-         (result
-          (make-array
-           n-columns
-           :element-type (array-element-type vector))))
-    (dotimes (column n-columns result)
-      (setq element zero)
-      (dotimes (row m-rows)
-        (setq
-         element
-         (+ element (* (aref vector row) (aref array row column)))))
-      ;; Store the result
-      (setf (aref result column) element))))
+  (loop
+   with (m-rows n-columns) = (array-dimensions array)
+   with result =
+   (or result (zero-vector n-columns (array-element-type vector)))
+   for column below n-columns do
+   (setf
+    (aref result column)
+    (loop
+     for row below m-rows sum
+     (* (aref vector row) (aref array row column))))
+   ;; Return the result
+   finally return result))
 
-(defun %scaled-product-vector-array (vector array scalar)
+(defun %scaled-product-vector-array
+       (scalar vector array &optional result)
   "Return the result of the array premultiplied by the vector and
 scaled."
-  (let* ((m-rows (array-dimension array 0))
-         (n-columns (array-dimension array 1))
-         (zero (coerce 0 (array-element-type vector)))
-         (element)
-         (result
-          (make-array
-           n-columns
-           :element-type (array-element-type vector))))
-    (dotimes (column n-columns result)
-      (setq element zero)
-      (dotimes (row m-rows)
-        (setq
-         element
-         (+ element (* (aref vector row) (aref array row column)))))
-      ;; Store the result
-      (setf (aref result column) (* scalar element)))))
+  (loop
+   with (m-rows n-columns) = (array-dimensions array)
+   with result =
+   (or result (zero-vector n-columns (array-element-type vector)))
+   for column below n-columns do
+   (setf
+    (aref result column)
+    (loop
+     for row below m-rows sum
+     (* (aref vector row) (aref array row column))
+     into unscaled-sum
+     finally return (* scalar unscaled-sum)))
+   ;; Return the result
+   finally return result))
 
-(defun product-vector-array (vector array scalar)
+(defun product-vector-array (vector array &optional scalar result)
   "Return the result of the array premultiplied by the vector and
 scaled."
   (if scalar
-      (%scaled-product-vector-array vector array scalar)
-      (%product-vector-array vector array)))
+      (%scaled-product-vector-array scalar vector array result)
+      (%product-vector-array vector array result)))
 
-(defun %product-array-vector (array vector)
+(defun %product-array-vector (array vector &optional result)
   "Return the result of the array postmultiplied by the vector."
-  (let* ((m-rows (array-dimension array 0))
-         (n-columns (array-dimension array 1))
-         (zero (coerce 0 (array-element-type vector)))
-         (element)
-         (result
-          (make-array
-           m-rows
-           :element-type (array-element-type vector))))
-    (dotimes (row m-rows result)
-      (setq element zero)
-      (dotimes (column n-columns)
-        (setq
-         element
-         (+ element
-            (* (aref array row column) (aref vector column)))))
-      ;; Store the result
-      (setf (aref result row) element))))
+  (loop
+   with (m-rows n-columns) = (array-dimensions array)
+   with result =
+   (or result (zero-vector m-rows (array-element-type vector)))
+   for row below m-rows do
+   (setf
+    (aref result row)
+    (loop
+     for column below n-columns sum
+     (* (aref array row column) (aref vector column))))
+   ;; Return the result
+   finally return result))
 
-(defun %scaled-product-array-vector (array vector scalar)
+(defun %scaled-product-array-vector
+       (scalar array vector &optional result)
   "Return the result of the array postmultiplied by the vector and
 scaled."
-  (let* ((m-rows (array-dimension array 0))
-         (n-columns (array-dimension array 1))
-         (zero (coerce 0 (array-element-type vector)))
-         (element)
-         (result
-          (make-array
-           m-rows
-           :element-type (array-element-type vector))))
-    (dotimes (row m-rows result)
-      (setq element zero)
-      (dotimes (column n-columns)
-        (setq
-         element
-         (+ element
-            (* (aref array row column) (aref vector column)))))
-      ;; Store the result
-      (setf (aref result row) (* scalar element)))))
+  (loop
+   with (m-rows n-columns) = (array-dimensions array)
+   with result =
+   (or result (zero-vector m-rows (array-element-type vector)))
+   for row below m-rows do
+   (setf
+    (aref result row)
+    (loop
+     for column below n-columns sum
+     (* (aref array row column) (aref vector column))
+     into unscaled-sum
+     finally return (* scalar unscaled-sum)))
+   ;; Return the result
+   finally return result))
 
-(defun product-array-vector (array vector scalar)
+(defun product-array-vector (array vector &optional scalar result)
   "Return the result of the array postmultiplied by the vector and
 scaled."
   (if scalar
-      (%scaled-product-array-vector array vector scalar)
-      (%product-array-vector array vector)))
+      (%scaled-product-array-vector scalar array vector result)
+      (%product-array-vector array vector result)))
 
 ;;; Binary array operations
 
@@ -312,52 +300,49 @@ addition."
    (= 2 (array-rank array1) (array-rank array2))
    (= (array-dimension array1 1) (array-dimension array2 0))))
 
-(defun %product-array-array (array1 array2)
+(defun %product-array-array (array1 array2 &optional result)
   "Return the result of the product of 2 arrays."
-  (let* ((l-columns (array-dimension array1 1))
-         (m-rows (array-dimension array1 0))
-         (n-columns (array-dimension array2 1))
-         (zero (coerce 0 (array-element-type array1)))
-         (element)
-         (result
-          (make-array
-           (list m-rows n-columns)
-           :element-type (array-element-type array1))))
-    (dotimes (row m-rows result)
-      (dotimes (column n-columns)
-        (setq element zero)
-        (dotimes (index l-columns)
-          (setq element
-                (+ element
-                   (* (aref array1 row index)
-                      (aref array2 index column)))))
-        ;; Store result
-        (setf (aref result row column) element)))))
+  (loop
+   with (m-rows l-columns) = (array-dimensions array1)
+   with n-columns = (array-dimension array2 1)
+   with result =
+   (or
+    result (zero-array m-rows n-columns (array-element-type array1)))
+   for row below m-rows do
+   (loop
+    for column below n-columns do
+    (setf
+     (aref result row column)
+     (loop
+      for index below l-columns sum
+      (* (aref array1 row index) (aref array2 index column)))))
+   ;; Return the result
+   finally return result))
 
-(defun %scaled-product-array-array (array1 array2 scalar)
+(defun %scaled-product-array-array
+       (scalar array1 array2 &optional result)
   "Return the scaled result of the product of 2 arrays."
-  (let* ((l-columns (array-dimension array1 1))
-         (m-rows (array-dimension array1 0))
-         (n-columns (array-dimension array2 1))
-         (zero (coerce 0 (array-element-type array1)))
-         (element)
-         (result
-          (make-array
-           (list m-rows n-columns)
-           :element-type (array-element-type array1))))
-    (dotimes (row m-rows result)
-      (dotimes (column n-columns)
-        (setq element zero)
-        (dotimes (index l-columns)
-          (setq element
-                (+ element
-                   (* (aref array1 row index)
-                      (aref array2 index column)))))
-        ;; Store result
-        (setf (aref result row column) (* scalar element))))))
+  (loop
+   with (m-rows l-columns) = (array-dimensions array1)
+   with n-columns = (array-dimension array2 1)
+   with result =
+   (or
+    result (zero-array m-rows n-columns (array-element-type array1)))
+   for row below m-rows do
+   (loop
+    for column below n-columns do
+    (setf
+     (aref result row column)
+     (loop
+      for index below l-columns sum
+      (* (aref array1 row index) (aref array2 index column))
+      into unscaled-sum
+      finally return (* scalar unscaled-sum))))
+   ;; Return the result
+   finally return result))
 
-(defun product-array-array (array1 array2 scalar)
+(defun product-array-array (array1 array2 &optional scalar result)
   "Return the scaled result of the product of 2 arrays."
   (if scalar
-      (%scaled-product-array-array array1 array2 scalar)
-      (%product-array-array array1 array2)))
+      (%scaled-product-array-array scalar array1 array2 result)
+      (%product-array-array array1 array2 result)))

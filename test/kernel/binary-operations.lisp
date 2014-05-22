@@ -516,13 +516,13 @@
   (assert-float-equal
    #(31.5 63.0 94.5)
    (linear-algebra-kernel::%scaled-product-vector-array
+    2.1
     #(1.0 2.0 3.0 4.0 5.0)
     #2A((1.0 2.0 3.0)
         (1.0 2.0 3.0)
         (1.0 2.0 3.0)
         (1.0 2.0 3.0)
-        (1.0 2.0 3.0))
-    2.1)))
+        (1.0 2.0 3.0)))))
 
 (define-test product-vector-array
   (:tag :kernel :binary-op :product)
@@ -534,8 +534,7 @@
         (1.0 2.0 3.0)
         (1.0 2.0 3.0)
         (1.0 2.0 3.0)
-        (1.0 2.0 3.0))
-    nil))
+        (1.0 2.0 3.0))))
   (assert-float-equal
    #(31.5 63.0 94.5)
    (linear-algebra-kernel:product-vector-array
@@ -564,11 +563,11 @@
   (assert-float-equal
    #(31.5 63.0 94.5)
    (linear-algebra-kernel::%scaled-product-array-vector
+    2.1
     #2A((1.0 1.0 1.0 1.0 1.0)
         (2.0 2.0 2.0 2.0 2.0)
         (3.0 3.0 3.0 3.0 3.0))
-    #(1.0 2.0 3.0 4.0 5.0)
-    2.1)))
+    #(1.0 2.0 3.0 4.0 5.0))))
 
 (define-test product-array-vector
   (:tag :kernel :binary-op :product)
@@ -579,8 +578,7 @@
     #2A((1.0 1.0 1.0 1.0 1.0)
         (2.0 2.0 2.0 2.0 2.0)
         (3.0 3.0 3.0 3.0 3.0))
-    #(1.0 2.0 3.0 4.0 5.0)
-    nil))
+    #(1.0 2.0 3.0 4.0 5.0)))
   (assert-float-equal
    #(31.5 63.0 94.5)
    (linear-algebra-kernel:product-array-vector
@@ -1250,6 +1248,7 @@
        (63.0 63.0 63.0 63.0)
        (94.5 94.5 94.5 94.5))
    (linear-algebra-kernel::%scaled-product-array-array
+    2.1
     #2A((1.0 1.0 1.0 1.0 1.0)
         (2.0 2.0 2.0 2.0 2.0)
         (3.0 3.0 3.0 3.0 3.0))
@@ -1257,8 +1256,7 @@
         (2.0 2.0 2.0 2.0)
         (3.0 3.0 3.0 3.0)
         (4.0 4.0 4.0 4.0)
-        (5.0 5.0 5.0 5.0))
-    2.1)))
+        (5.0 5.0 5.0 5.0)))))
 
 (define-test product-array-array
   (:tag :kernel :binary-op :product)
@@ -1275,8 +1273,7 @@
         (2.0 2.0 2.0 2.0)
         (3.0 3.0 3.0 3.0)
         (4.0 4.0 4.0 4.0)
-        (5.0 5.0 5.0 5.0))
-    nil))
+        (5.0 5.0 5.0 5.0))))
   (assert-float-equal
    #2A((31.5 31.5 31.5 31.5)
        (63.0 63.0 63.0 63.0)
