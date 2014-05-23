@@ -762,37 +762,6 @@
      (linear-algebra:matrix-validated-range
       matrix 9 9 1 1))))
 
-(define-test sumsq-hermitian-matrix
-  (:tag :hermitian-matrix :sumsq)
-  (multiple-value-bind (scale sumsq)
-      (linear-algebra:sumsq
-       (linear-algebra:make-matrix
-        5 5 :matrix-type 'linear-algebra:hermitian-matrix
-        :initial-contents
-        '((#C(1  0) #C(1  2) #C(1  3) #C(1  4) #C(1 5))
-          (#C(1 -2) #C(2  0) #C(2  3) #C(2  4) #C(2 5))
-          (#C(1 -3) #C(2 -3) #C(3  0) #C(3  4) #C(3 5))
-          (#C(1 -4) #C(2 -4) #C(3 -4) #C(4  0) #C(4 5))
-          (#C(1 -5) #C(2 -5) #C(3 -5) #C(4 -5) #C(5 0)))))
-    (assert-float-equal 6.4031243 scale)
-    (assert-float-equal 12.073173 sumsq)))
-
-(define-test sump-hermitian-matrix
-  (:tag :hermitian-matrix :sump)
-  (multiple-value-bind (scale sump)
-      (linear-algebra:sump
-       (linear-algebra:make-matrix
-        5 5 :matrix-type 'linear-algebra:hermitian-matrix
-        :initial-contents
-        '((#C(1  0) #C(1  2) #C(1  3) #C(1  4) #C(1 5))
-          (#C(1 -2) #C(2  0) #C(2  3) #C(2  4) #C(2 5))
-          (#C(1 -3) #C(2 -3) #C(3  0) #C(3  4) #C(3 5))
-          (#C(1 -4) #C(2 -4) #C(3 -4) #C(4  0) #C(4 5))
-          (#C(1 -5) #C(2 -5) #C(3 -5) #C(4 -5) #C(5 0))))
-       3.5)
-    (assert-float-equal 6.4031243 scale)
-    (assert-float-equal #C(0.27959093 1.5426422) sump)))
-
 (define-test norm-hermitian-matrix
   (:tag :hermitian-matrix :norm)
   (let ((matrix

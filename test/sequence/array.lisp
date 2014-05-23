@@ -26,29 +26,6 @@
 
 (in-package :linear-algebra-test)
 
-(define-test sumsq-array
-  (:tag :array :sumsq)
-  (multiple-value-bind (scale sumsq)
-      (linear-algebra:sumsq
-       #2A((1.1 1.2 1.3 1.4 1.5)
-           (2.1 2.2 2.3 2.4 2.5)
-           (3.1 3.2 3.3 3.4 3.5)
-           (4.1 4.2 4.3 4.4 4.5)))
-    (assert-float-equal 4.5 scale)
-    (assert-float-equal 8.997532 sumsq)))
-
-(define-test sump-array
-  (:tag :array :sump)
-  (multiple-value-bind (scale sump)
-      (linear-algebra:sump
-       #2A((1.1 1.2 1.3 1.4 1.5)
-           (2.1 2.2 2.3 2.4 2.5)
-           (3.1 3.2 3.3 3.4 3.5)
-           (4.1 4.2 4.3 4.4 4.5))
-       3.5)
-    (assert-float-equal 4.5 scale)
-    (assert-float-equal 6.540154 sump)))
-
 (define-test norm-array
   (:tag :array :norm)
   (let ((array

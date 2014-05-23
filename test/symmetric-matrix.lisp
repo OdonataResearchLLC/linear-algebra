@@ -673,35 +673,6 @@
 
 ;;; Symmetric matrix fundamental operations
 
-(define-test sumsq-symmetric-matrix
-  (:tag :symmetric-matrix :sumsq)
-  (multiple-value-bind (scale sumsq)
-      (linear-algebra:sumsq
-       (linear-algebra:make-matrix
-        4 4 :matrix-type 'linear-algebra:symmetric-matrix
-        :initial-contents
-        #2A((1.1 1.2 1.3 1.4)
-            (1.2 2.2 2.3 2.4)
-            (1.3 2.3 3.3 3.4)
-            (1.4 2.4 3.4 4.4))))
-    (assert-float-equal 4.4 scale)
-    (assert-float-equal 4.7365694 sumsq)))
-
-(define-test sump-symmetric-matrix
-  (:tag :symmetric-matrix :sump)
-  (multiple-value-bind (scale sump)
-      (linear-algebra:sump
-       (linear-algebra:make-matrix
-        4 4 :matrix-type 'linear-algebra:symmetric-matrix
-        :initial-contents
-        #2A((1.1 1.2 1.3 1.4)
-            (1.2 2.2 2.3 2.4)
-            (1.3 2.3 3.3 3.4)
-            (1.4 2.4 3.4 4.4)))
-       3.5)
-    (assert-float-equal 4.4 scale)
-    (assert-float-equal 2.804554 sump)))
-
 (define-test norm-symmetric-matrix
   (:tag :symmetric-matrix :norm)
   (let ((matrix (symmetric-matrix)))

@@ -28,14 +28,6 @@
 
 ;;; External Interface
 
-(defgeneric sumsq (vector-or-matrix)
-  (:documentation
-   "Return the scaling parameter and the sum of the squares."))
-
-(defgeneric sump (vector-or-matrix p)
-  (:documentation
-   "Return the scaling parameter and the sum of the P powers."))
-
 (defgeneric norm (vector-or-matrix &optional measure)
   (:documentation
    "Return the norm according to measure."))
@@ -84,10 +76,3 @@
     (vector-or-matrix-1 vector-or-matrix-2 &optional scalar)
   (:documentation
    "Return the vector-vector, matrix-vector or matrix-matrix product."))
-
-;;; Checks
-
-(defmethod sump :before (v-or-m (p number))
-  "The power must be positive."
-  (declare (ignore scale sump))
-  (unless (plusp p) (error "power(~A) must be positive." p)))

@@ -39,8 +39,7 @@
   (:use :common-lisp :floating-point)
   (:use :linear-algebra-kernel)
   ;; Fundamental operations
-  (:export :sumsq :sump
-           :norm
+  (:export :norm
            :transpose :ntranspose
            :permute
            :scale :nscale

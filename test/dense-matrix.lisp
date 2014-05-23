@@ -636,35 +636,6 @@
   (test-matrix-validated-range
    'linear-algebra:dense-matrix 10 10))
 
-;;; Test dense matrix utility operations
-
-(define-test sumsq-dense-matrix
-  (:tag :dense-matrix :sumsq)
-  (multiple-value-bind (scale sumsq)
-      (linear-algebra:sumsq
-       (linear-algebra:make-matrix
-        4 5 :initial-contents
-        #2A((1.1 1.2 1.3 1.4 1.5)
-            (2.1 2.2 2.3 2.4 2.5)
-            (3.1 3.2 3.3 3.4 3.5)
-            (4.1 4.2 4.3 4.4 4.5))))
-    (assert-float-equal 4.5 scale)
-    (assert-float-equal 8.997532 sumsq)))
-
-(define-test sump-dense-matrix
-  (:tag :dense-matrix :sump)
-  (multiple-value-bind (scale sump)
-      (linear-algebra:sump
-       (linear-algebra:make-matrix
-        4 5 :initial-contents
-        #2A((1.1 1.2 1.3 1.4 1.5)
-            (2.1 2.2 2.3 2.4 2.5)
-            (3.1 3.2 3.3 3.4 3.5)
-            (4.1 4.2 4.3 4.4 4.5)))
-       3.5)
-    (assert-float-equal 4.5 scale)
-    (assert-float-equal 6.540154 sump)))
-
 ;;; Test dense matrix fundamental operations
 
 (define-test norm-dense-matrix

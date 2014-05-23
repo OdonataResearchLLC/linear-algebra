@@ -256,14 +256,6 @@ applying the function to each element of the vectors."
 
 ;;; Data vector fundamental operations
 
-(defmethod sumsq ((vector data-vector))
-  "Return the scaling parameter and the sum of the squares of vector."
-  (sumsq-vector (contents vector)))
-
-(defmethod sump ((vector data-vector) (p number))
-  "Return the scaling parameter and the sum of the P powers of vector."
-  (sump-vector (contents vector) p))
-
 (defmethod norm ((vector data-vector) &optional (measure 1))
   "Return the p-norm of the vector."
   (norm-vector (contents vector) measure))

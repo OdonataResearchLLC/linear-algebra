@@ -26,16 +26,6 @@
 
 (in-package :linear-algebra)
 
-(defmethod sumsq ((data array))
-  "Return the scaling parameter and the sum of the squares of the
-array."
-  (sumsq-array data))
-
-(defmethod sump ((data array) (p number))
-  "Return the scaling parameter and the sum of the P powers of the
-matrix."
-  (sump-array data p))
-
 (defmethod norm ((data array) &optional (measure 1))
   "Return the norm of the array."
   (if (= 2 (array-rank data))

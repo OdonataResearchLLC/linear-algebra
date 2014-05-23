@@ -235,14 +235,6 @@
 
 ;;; Dense matrix fundamental operations
 
-(defmethod sumsq ((matrix dense-matrix))
-  "Return the scaling parameter and the sum of the squares of the matrix."
-  (sumsq-array (contents matrix)))
-
-(defmethod sump ((matrix dense-matrix) (p number))
-  "Return the scaling parameter and the sum of the P powers of the matrix."
-  (sump-array (contents matrix) p))
-
 (defmethod norm ((matrix dense-matrix) &optional (measure 1))
   "Return the norm of the matrix."
   (norm-array (contents matrix) measure))

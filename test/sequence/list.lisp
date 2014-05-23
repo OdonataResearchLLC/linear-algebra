@@ -26,47 +26,6 @@
 
 (in-package :linear-algebra-test)
 
-(define-test sumsq-list
-  (:tag :list :sumsq)
-  ;; Real
-  (multiple-value-bind (scale sumsq)
-      (linear-algebra:sumsq
-       '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5))
-    (assert-rational-equal 6 scale)
-    (assert-rational-equal 73/18 sumsq))
-  ;; Complex
-  (multiple-value-bind (scale sumsq)
-      (linear-algebra:sumsq
-       '(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
-         #C(-2 3) #C(-3 1) #C(-1 0)))
-    (assert-float-equal 4.0 scale)
-    (assert-float-equal #C(2.75 -1.125) sumsq)))
-
-(define-test sump-list
-  (:tag :list :sump)
-  ;; Real
-  (let ((data '(-6 -5 -4 -3 -2 -1 0 1 2 3 4 5)))
-    (multiple-value-bind (scale sump)
-        (linear-algebra:sump data 2)
-      (assert-rational-equal 6 scale)
-      (assert-rational-equal 73/18 sump))
-    (multiple-value-bind (scale sump)
-        (linear-algebra:sump data 3)
-      (assert-rational-equal 6 scale)
-      (assert-rational-equal 1 sump)))
-  ;; Complex
-  (let ((data
-         '(#C(1 0) #C(3 1) #C(2 3) #C(0 4)
-           #C(-2 3) #C(-3 1) #C(-1 0))))
-    (multiple-value-bind (scale sump)
-        (linear-algebra:sump data 2)
-      (assert-float-equal 4.0 scale)
-      (assert-float-equal #C(2.75 -1.125) sump))
-    (multiple-value-bind (scale sump)
-        (linear-algebra:sump data 3)
-      (assert-float-equal 4.0 scale)
-      (assert-float-equal #C(2.6639833 0.54687494) sump))))
-
 ;;; Taxicab norm
 
 (define-test %norm-1-list

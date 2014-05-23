@@ -26,34 +26,6 @@
 
 (in-package :linear-algebra)
 
-(defmethod sumsq ((data list))
-  "Return the scaling parameter and the sum of the squares of the
-list."
-  (let ((scale 1)
-        (sumsq 0)
-        (abs-val))
-    (dolist (elm data (values scale sumsq))
-      (when (plusp (setq abs-val (abs elm)))
-        (if (< scale abs-val)
-            (setq
-             sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
-             scale abs-val)
-            (setq sumsq (+ sumsq (expt (/ elm scale) 2))))))))
-
-(defmethod sump ((data list) (p real))
-  "Return the scaling parameter and the sum of the powers of p of the
-data."
-  (let ((scale 1)
-        (sump 0)
-        (abs-val))
-    (dolist (elm data (values scale sump))
-      (when (plusp (setq abs-val (abs elm)))
-        (if (< scale abs-val)
-            (setq
-             sump (1+ (* sump (expt (/ scale abs-val) p)))
-             scale abs-val)
-            (setq sump (+ sump (expt (/ elm scale) p))))))))
-
 (defmethod %norm ((data list) (measure (eql 1)))
   "Return the Taxicab norm of the list."
   (loop for element in data sum (abs element)))
