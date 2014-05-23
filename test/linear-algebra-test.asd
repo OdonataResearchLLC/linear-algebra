@@ -45,7 +45,8 @@
      (:file "binary-operations")
      (:file "rotation")
      (:file "gauss")
-     (:file "cholesky")))
+     (:file "cholesky")
+     (:file "conjugate-gradient")))
    ;; Linear algebra interface
    (:module interface
     :depends-on ("linear-algebra-test")

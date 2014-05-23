@@ -66,4 +66,6 @@
   ;; Cholesky
   (:export :cholesky-decomposition
            :root-free-cholesky-decomposition
-           :cholesky-solver))
+           :cholesky-solver)
+  ;; Conjugate gradient method
+  (:export :conjugate-gradient-solver))
