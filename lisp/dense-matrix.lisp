@@ -434,3 +434,42 @@ matrix with a column vector."
    :contents
    (product-array-array
     (contents matrix1) (contents matrix2) scalar)))
+
+(defmethod compatible-dimensions-p
+    ((operation (eql :solve))
+     (matrix dense-matrix)
+     (vector column-vector))
+  "Return true if the array dimensions are compatible for product."
+  (= (matrix-row-dimension matrix)
+     (matrix-column-dimension matrix)
+     (vector-length vector)))
+
+(defmethod solve :before
+  ((matrix dense-matrix) (vector column-vector))
+  "Return the solution to the system of equations."
+  (unless (compatible-dimensions-p :solve matrix vector)
+    (error "Matrix~A is incompatible with column vector(~D)."
+           (matrix-dimensions matrix) (vector-length vector))))
+
+(defmethod solve ((matrix dense-matrix) (vector column-vector))
+  "Return the solution to the system of equations."
+  (make-instance
+   'column-vector
+   :contents
+   (gauss-solver
+    (copy-array (contents matrix)) (contents vector))))
+
+(defmethod nsolve :before
+  ((matrix dense-matrix) (vector column-vector))
+  "Return the solution to the system of equations."
+  (unless (compatible-dimensions-p :solve matrix vector)
+    (error "Matrix~A is incompatible with column vector(~D)."
+           (matrix-dimensions matrix) (vector-length vector))))
+
+(defmethod nsolve ((matrix dense-matrix) (vector column-vector))
+  "Return the solution to the system of equations."
+  (setf
+   (contents vector)
+   (gauss-solver (contents matrix) (contents vector)))
+  ;; Return the solution vector
+  vector)

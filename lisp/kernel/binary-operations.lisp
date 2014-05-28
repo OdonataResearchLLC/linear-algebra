@@ -100,6 +100,12 @@ the operation."))
               (aref vector1 index)
               (aref vector2 index)))))
 
+(defmethod compatible-dimensions-p
+    ((operation (eql :add)) (vector1 vector) (vector2 vector))
+  "Return true if the vector dimensions are compatible for an
+addition."
+  (= (array-dimension vector1 0) (array-dimension vector2 0)))
+
 (defun add-vector (vector1 vector2 scalar1 scalar2)
   "Vector binary addition."
   (%vector<-vector1-op-vector2

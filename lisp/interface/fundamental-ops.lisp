@@ -76,3 +76,11 @@
     (vector-or-matrix-1 vector-or-matrix-2 &optional scalar)
   (:documentation
    "Return the vector-vector, matrix-vector or matrix-matrix product."))
+
+(defgeneric solve (matrix vector)
+  (:documentation
+   "Return the solution to the system of equations."))
+
+(defgeneric nsolve (matrix vector)
+  (:documentation
+   "Return the solution to the system of equations in-place."))

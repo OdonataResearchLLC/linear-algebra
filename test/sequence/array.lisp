@@ -526,3 +526,53 @@
         (4.0 4.0 4.0 4.0)
         (5.0 5.0 5.0 5.0))
     2.1)))
+
+(define-test solve-array
+  (:tag :array :solve)
+  (let ((*epsilon* (* 64 single-float-epsilon))
+        (vector2 (make-array 2 :initial-contents '(1.0 2.0)))
+        (vector3 (make-array 3 :initial-contents '(2.3 1.2 2.2)))
+        (array2
+         (make-array
+          '(2 2) :initial-contents
+          '((1.1 1.2) (2.1 2.2))))
+        (array3
+         (make-array
+          '(3 3) :initial-contents
+          '((1.15 1.26 1.37) (2.14 2.23 2.31) (3.13 3.22 3.31)))))
+    ;; 2x2
+    (assert-float-equal
+     #(2.0 -1.0) (linear-algebra:solve array2 vector2))
+    (assert-float-equal #(1.0 2.0) vector2)
+    (assert-float-equal #2A((1.1 1.2) (2.1 2.2)) array2)
+    ;; 3x3
+    ;; Maxima : #(66.36628 -151.8314 85.6105)
+    (assert-float-equal
+     #(66.36775 -151.8342 85.6118)
+     (linear-algebra:solve array3 vector3))
+    (assert-float-equal #(2.3 1.2 2.2) vector3)
+    (assert-float-equal
+     #2A((1.15 1.26 1.37) (2.14 2.23 2.31) (3.13 3.22 3.31))
+     array3)))
+
+(define-test nsolve-array
+  (:tag :array :nsolve)
+  (let ((*epsilon* (* 64 single-float-epsilon))
+        (vector2 (make-array 2 :initial-contents '(1.0 2.0)))
+        (vector3 (make-array 3 :initial-contents '(2.3 1.2 2.2)))
+        (array2
+         (make-array
+          '(2 2) :initial-contents
+          '((1.1 1.2) (2.1 2.2))))
+        (array3
+         (make-array
+          '(3 3) :initial-contents
+          '((1.15 1.26 1.37) (2.14 2.23 2.31) (3.13 3.22 3.31)))))
+    ;; 2x2
+    (assert-float-equal
+     #(2.0 -1.0) (linear-algebra:nsolve array2 vector2))
+    ;; 3x3
+    ;; Maxima : #(66.36628 -151.8314 85.6105)
+    (assert-float-equal
+     #(66.36775 -151.8342 85.6118)
+     (linear-algebra:nsolve array3 vector3))))

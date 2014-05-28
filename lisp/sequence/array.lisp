@@ -143,3 +143,26 @@ vector."
       (product-array-array array1 array2 scalar)
       (error "The array dimensions, ~A and ~A, are not compatible."
              (array-dimensions array1) (array-dimensions array2))))
+
+(defmethod compatible-dimensions-p
+    ((operation (eql :solve)) (array array) (vector vector))
+  "Return true if the array dimensions are compatible for product."
+  (and
+   (= 2 (array-rank array))
+   (= (array-dimension array 0)
+      (array-dimension array 1)
+      (length vector))))
+
+(defmethod solve ((array array) (vector vector))
+  "Return the solution to the system of equations."
+  (if (compatible-dimensions-p :solve array vector)
+      (gauss-solver (copy-array array) vector)
+      (error "Array~A is incompatible with vector(~D)."
+             (array-dimensions array) (length vector))))
+
+(defmethod nsolve ((array array) (vector vector))
+  "Return the solution to the system of equations."
+  (if (compatible-dimensions-p :solve array vector)
+      (gauss-solver array vector)
+      (error "Array~A is incompatible with vector(~D)."
+             (array-dimensions array) (length vector))))

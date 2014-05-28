@@ -70,3 +70,10 @@
             (aref original
                   (+ start-row row)
                   (+ start-column column)))))))))
+
+(defmethod compatible-dimensions-p
+    ((operation (eql :solve))
+     (matrix square-matrix)
+     (vector column-vector))
+  "Return true if the array dimensions are compatible for product."
+  (= (matrix-column-dimension matrix) (vector-length vector)))

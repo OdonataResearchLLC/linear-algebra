@@ -45,7 +45,8 @@
            :scale :nscale
            :add :nadd
            :subtract :nsubtract
-           :product)
+           :product
+           :solve :nsolve)
   ;; Vector exports
   (:export :initialize-vector
            :make-vector
