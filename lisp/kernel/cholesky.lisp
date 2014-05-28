@@ -34,7 +34,7 @@
 ;;; Algorithm 4.27, Step 1, pg. 80
 ;;; The standard Cholesky decomposition
 
-(defun cholesky-decomposition (array)
+(defun symmetric-cholesky-decomposition (array)
   "Factor A = LL^T."
   (loop
    with size = (array-dimension array 0)
@@ -47,23 +47,25 @@
       (sqrt (- (aref array index-j index-j) (* scale scale sumsq)))))
    ;; Step 1.2
    (loop
-    for index-k from (1+ index-j) below size do
+    for index-k from (1+ index-j) below size
+    as element =
+    (/ (- (aref array index-k index-j)
+          (loop
+           for index-i below index-j sum
+           (* (aref array index-k index-i)
+              (aref array index-j index-i))))
+       (aref array index-j index-j))
+    do
     (setf
-     (aref array index-k index-j)
-     (/
-      (- (aref array index-k index-j)
-         (loop
-          for index-i below index-j sum
-          (* (aref array index-k index-i)
-             (aref array index-j index-i))))
-      (aref array index-j index-j))))
+     (aref array index-k index-j) element
+     (aref array index-j index-k) element))
    ;; Return the factored array
    finally return array))
 
 ;;; Algorithm 4.29, pg. 82
 ;;; Simplified linear system solver via root-free Cholesky
 
-(defun root-free-cholesky-decomposition (array)
+(defun root-free-symmetric-cholesky-decomposition (array)
   "Factor A = LDL^t."
   (loop
    with size = (array-dimension array 0)
@@ -71,23 +73,28 @@
    (loop
     for index-i below index-j
     as var-h = (aref array index-j index-i)
+    as element = (/ var-h (aref array index-i index-i))
     do
     (setf
-     (aref array index-j index-i)
-     (/ var-h (aref array index-i index-i)))
+     (aref array index-j index-i) element
+     (aref array index-i index-j) element)
     (loop
-     for index-k from (1+ index-i) upto index-j do
-     (decf
-      (aref array index-j index-k)
-      (* var-h (aref array index-k index-i)))))
+     for index-k from (1+ index-i) upto index-j
+     as element =
+     (- (aref array index-j index-k)
+        (* var-h (aref array index-k index-i)))
+     do
+     (setf
+      (aref array index-j index-k) element
+      (aref array index-k index-j) element)))
    finally return array))
 
-(defun cholesky-solver (array vector)
+(defun symmetric-cholesky-solver (array vector)
   "Linear system solver for positive definite matrices using the
 root-free Cholesky decomposition."
   (let ((size (array-dimension array 0)))
     ;; Step 1, decomposition
-    (setq array (root-free-cholesky-decomposition array))
+    (setq array (root-free-symmetric-cholesky-decomposition array))
     ;; Step 2.1 & 2.2
     (loop
      for index-j below size do

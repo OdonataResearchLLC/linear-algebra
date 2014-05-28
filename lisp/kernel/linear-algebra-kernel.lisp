@@ -63,8 +63,11 @@
   (:export :gauss-solver
            :invert-array)
   ;; Cholesky
-  (:export :cholesky-decomposition
-           :root-free-cholesky-decomposition
-           :cholesky-solver)
+  (:export :symmetric-cholesky-decomposition
+           :hermitian-cholesky-decomposition
+           :root-free-symmetric-cholesky-decomposition
+           :root-free-hermitian-cholesky-decomposition
+           :symmetric-cholesky-solver
+           :hermitian-cholesky-solver)
   ;; Conjugate gradient method
   (:export :conjugate-gradient-solver))
