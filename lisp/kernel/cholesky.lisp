@@ -205,7 +205,6 @@ root-free Cholesky decomposition."
       for index-i from (1+ index-j) below size do
       (decf
        (aref vector index-j)
-       (* (conjugate (aref array index-i index-j))
-          (aref vector index-i)))))
+       (* (aref array index-j index-i) (aref vector index-i)))))
     ;; Return the solution
     vector))
