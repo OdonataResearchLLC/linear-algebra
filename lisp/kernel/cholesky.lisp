@@ -62,6 +62,35 @@
    ;; Return the factored array
    finally return array))
 
+(defun hermitian-cholesky-decomposition (array)
+  "Factor A = LL^T."
+  (loop
+   with size = (array-dimension array 0)
+   for index-j below size do
+   ;; Step 1.1
+   (setf
+    (aref array index-j index-j)
+    (sqrt
+     (- (aref array index-j index-j)
+        (loop
+         for index-i below index-j
+         as element = (aref array index-j index-i)
+         sum (* element (conjugate element))))))
+   ;; Step 1.2
+   (loop
+    for index-k from (1+ index-j) below size do
+    (setf
+     (aref array index-k index-j)
+     (/ (- (aref array index-k index-j)
+           (loop
+            for index-i below index-j sum
+            (* (aref array index-k index-i)
+               (conjugate (aref array index-j index-i)))))
+        (aref array index-j index-j))
+     (aref array index-j index-k) 0.0))
+   ;; Return the factored array
+   finally return array))
+
 ;;; Algorithm 4.29, pg. 82
 ;;; Simplified linear system solver via root-free Cholesky
 
@@ -79,14 +108,69 @@
      (aref array index-j index-i) element
      (aref array index-i index-j) element)
     (loop
-     for index-k from (1+ index-i) upto index-j
+     for index-k from (1+ index-i) below index-j
      as element =
      (- (aref array index-j index-k)
         (* var-h (aref array index-k index-i)))
      do
      (setf
       (aref array index-j index-k) element
-      (aref array index-k index-j) element)))
+      (aref array index-k index-j) element)
+     finally
+     (decf
+      (aref array index-j index-j)
+      (* var-h (aref array index-j index-i)))))
+   finally return array))
+
+(defun root-free-hermitian-cholesky-decomposition (array)
+  "Factor A = LDL^t."
+  (loop
+   with size = (array-dimension array 0)
+   for index-j below size do
+   (loop
+    for index-i below index-j
+    as var-h = (aref array index-j index-i)
+    do
+    (setf
+     (aref array index-j index-i)
+     (/ var-h (aref array index-i index-i)))
+    (loop
+     for index-k from (1+ index-i) below index-j
+     as element =
+     (- (aref array index-j index-k)
+        (* var-h (aref array index-k index-i)))
+     do
+     (setf
+      (aref array index-j index-k) element
+      (aref array index-k index-j) (conjugate element))
+     finally
+     (decf
+      (aref array index-j index-j)
+      (* var-h (aref array index-j index-i)))))
+   finally return array))
+
+(defun root-free-hermitian-cholesky-decomposition (array)
+  (loop
+   with size = (array-dimension array 0)
+   for index-i below size do
+   (decf
+    (aref array index-i index-i)
+    (loop
+     for index-k below index-i
+     as element = (aref array index-i index-k)
+     sum
+     (* element (conjugate element)(aref array index-k index-k))))
+   (loop
+    for index-j from (1+ index-i) below size do
+    (setf
+     (aref array index-j index-i)
+     (/ (- (aref array index-j index-i)
+           (loop
+            for index-k below index-i sum
+            (* (aref array index-k index-k)
+               (aref array index-j index-k)
+               (conjugate (aref array index-i index-k)))))
+        (aref array index-i index-i))))
    finally return array))
 
 (defun symmetric-cholesky-solver (array vector)
@@ -114,5 +198,34 @@ root-free Cholesky decomposition."
       (decf
        (aref vector index-j)
        (* (aref array index-i index-j) (aref vector index-i)))))
+    ;; Return the solution
+    vector))
+
+(defun hermitian-cholesky-solver (array vector)
+  "Linear system solver for positive definite matrices using the
+root-free Cholesky decomposition."
+  (let ((size (array-dimension array 0)))
+    ;; Step 1, decomposition
+    (setq array (root-free-hermitian-cholesky-decomposition array))
+    ;; Step 2.1 & 2.2
+    (loop
+     for index-j below size do
+     (loop
+      for index-i below index-j do
+      (decf
+       (aref vector index-j)
+       (* (aref array index-j index-i) (aref vector index-i)))))
+    ;; Step 2.3 & 3.2
+    (loop
+     for index-j from (1- size) downto 0 do
+     (setf
+      (aref vector index-j)
+      (/ (aref vector index-j) (aref array index-j index-j)))
+     (loop
+      for index-i from (1+ index-j) below size do
+      (decf
+       (aref vector index-j)
+       (* (conjugate (aref array index-i index-j))
+          (aref vector index-i)))))
     ;; Return the solution
     vector))

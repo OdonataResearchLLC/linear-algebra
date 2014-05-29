@@ -55,7 +55,55 @@
     (make-array
      '(3 3)
      :initial-contents
-     '((4 12 -16) (12 37 -43) (-16 -43 98))))))
+     '((4 12 -16) (12 37 -43) (-16 -43 98)))))
+  ;; 3x3 from Rosetta Code
+  (assert-float-equal
+   #2A(( 5.0 3.0 -1.0)
+       ( 3.0 3.0  1.0)
+       (-1.0 1.0  3.0))
+   (linear-algebra-kernel:symmetric-cholesky-decomposition
+    (make-array
+     '(3 3)
+     :initial-contents
+     '((25.0 15.0 -5.0) (15.0 18.0 0.0) (-5.0 0.0 11.0)))))
+  ;; 4x4 from Rosetta Code
+  (assert-float-equal
+   #2A(( 4.2426405 5.18545   12.727922  9.899495)
+       ( 5.18545   6.565905   3.0460375 1.6245536)
+       (12.727922  3.0460375  1.6497375 1.849715)
+       ( 9.899495  1.6245536  1.849715  1.3926178))
+   (linear-algebra-kernel:symmetric-cholesky-decomposition
+    (make-array
+     '(4 4)
+     :initial-contents
+     '(( 18.0  22.0  54.0  42.0)
+       ( 22.0  70.0  86.0  62.0)
+       ( 54.0  86.0 174.0 134.0)
+       ( 42.0  62.0 134.0 106.0))))))
+
+(define-test hermitian-cholesky-decomposition
+  (:tag :kernel :cholesky)
+  ;; 2x2
+  (assert-float-equal
+   #2A((#C(1.4142135 0.0) 0.0)
+       (#C(0.7071068 1.4142137) #C(0.7071066 0.0)))
+   (linear-algebra-kernel:hermitian-cholesky-decomposition
+    (make-array
+     '(2 2) :initial-contents
+     '((#C(2.0 0.0) #C(1.0 -2.0))
+       (#C(1.0 2.0) #C(3.0  0.0))))))
+  ;; 3x3
+  (assert-float-equal
+   #2A((#C(1.8193405 0.0) 0.0 0.0)
+       (#C(0.69255865 1.0992994) #C(0.7361408 0.0) 0.0)
+       (#C(0.75302017 1.6489492) #C(-0.032873448 1.610834) #C(1.5060079 0.0)))
+   (linear-algebra-kernel:hermitian-cholesky-decomposition
+    (make-array
+     '(3 3)
+     :initial-contents
+     '((#C(3.31 0.0) #C(1.26 -2.0) #C(1.37 -3.0))
+       (#C(1.26 2.0) #C(2.23  0.0) #C(2.31 -1.5))
+       (#C(1.37 3.0) #C(2.31  1.5) #C(8.15  0.0)))))))
 
 (define-test root-free-symmetric-cholesky-decomposition
   (:tag :kernel :cholesky)
@@ -87,6 +135,30 @@
      :initial-contents
      '((4 12 -16) (12 37 -43) (-16 -43 98))))))
 
+(define-test root-free-hermitian-cholesky-decomposition
+  (:tag :kernel :cholesky)
+  ;; 2x2
+  (assert-float-equal
+   #2A((#C(2.0 0.0) #C(1.0 -2.0))
+       (#C(0.5 1.0) #C(0.5  0.0)))
+   (linear-algebra-kernel:root-free-hermitian-cholesky-decomposition
+    (make-array
+     '(2 2) :initial-contents
+     '((#C(2.0 0.0) #C(1.0 -2.0))
+       (#C(1.0 2.0) #C(3.0  0.0))))))
+  ;; 3x3
+  (assert-float-equal
+   #2A((#C(3.31 0.0) #C(1.26 -2.0) #C(1.37 -3.0))
+       (#C(0.38066468 0.6042296) #C(0.54190326 0.0) #C(2.31 -1.5))
+       (#C(0.4138973 0.9063445) #C(-0.044656907 2.1882146) #C(2.2680602 0.0)))
+   (linear-algebra-kernel:root-free-hermitian-cholesky-decomposition
+    (make-array
+     '(3 3)
+     :initial-contents
+     '((#C(3.31 0.0) #C(1.26 -2.0) #C(1.37 -3.0))
+       (#C(1.26 2.0) #C(2.23  0.0) #C(2.31 -1.5))
+       (#C(1.37 3.0) #C(2.31  1.5) #C(8.15  0.0)))))))
+
 (define-test symmetric-cholesky-solver
   (:tag :kernel :cholesky)
   ;; 2x2
@@ -105,4 +177,30 @@
      '((1.15 1.26 1.37)
        (1.26 2.23 2.31)
        (1.37 2.31 3.31)))
+    (make-array 3 :initial-contents '(2.3 1.2 2.2)))))
+
+(define-test hermitian-cholesky-solver
+  (:tag :kernel :cholesky)
+  ;; 2x2
+  (assert-float-equal
+   #(#C(5.0 2.0) #C(0.0 -4.0))
+   (linear-algebra-kernel:hermitian-cholesky-solver
+    (make-array
+     '(2 2)
+     :initial-contents
+     '((#C(2.0 0.0) #C(1.0 -2.0))
+       (#C(1.0 2.0) #C(3.0  0.0))))
+    (make-array 2 :initial-contents '(2.0 1.0))))
+  ;; 3x3
+  (assert-float-equal
+   #(#C( 3.5175739  3.4673653)
+     #C( 3.3198433 -4.336664)
+     #C(-0.784149  -1.2595195))
+   (linear-algebra-kernel:hermitian-cholesky-solver
+    (make-array
+     '(3 3)
+     :initial-contents
+     '((#C(3.31 0.0) #C(1.26 -2.0) #C(1.37 -3.0))
+       (#C(1.26 2.0) #C(2.23  0.0) #C(2.31 -1.5))
+       (#C(1.37 3.0) #C(2.31  1.5) #C(8.15  0.0))))
     (make-array 3 :initial-contents '(2.3 1.2 2.2)))))
