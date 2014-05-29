@@ -78,16 +78,18 @@
          sum (* element (conjugate element))))))
    ;; Step 1.2
    (loop
-    for index-k from (1+ index-j) below size do
+    for index-k from (1+ index-j) below size
+    as element =
+    (/ (- (aref array index-k index-j)
+          (loop
+           for index-i below index-j sum
+           (* (aref array index-k index-i)
+              (conjugate (aref array index-j index-i)))))
+       (aref array index-j index-j))
+    do
     (setf
-     (aref array index-k index-j)
-     (/ (- (aref array index-k index-j)
-           (loop
-            for index-i below index-j sum
-            (* (aref array index-k index-i)
-               (conjugate (aref array index-j index-i)))))
-        (aref array index-j index-j))
-     (aref array index-j index-k) 0.0))
+     (aref array index-k index-j) element
+     (aref array index-j index-k) (conjugate element)))
    ;; Return the factored array
    finally return array))
 
@@ -130,43 +132,25 @@
    (loop
     for index-i below index-j
     as var-h = (aref array index-j index-i)
+    as element = (/ var-h (aref array index-i index-i))
     do
     (setf
-     (aref array index-j index-i)
-     (/ var-h (aref array index-i index-i)))
+     (aref array index-j index-i) element
+     (aref array index-i index-j) (conjugate element))
     (loop
-     for index-k from (1+ index-i) below index-j do
-     (decf
-      (aref array index-j index-k)
-      (* var-h (conjugate (aref array index-k index-i))))
+     for index-k from (1+ index-i) below index-j
+     as element =
+     (- (aref array index-j index-k)
+        (* var-h (conjugate (aref array index-k index-i))))
+     do
+     ;; Lower
+     (setf
+      (aref array index-j index-k) element
+      (aref array index-k index-j) (conjugate element))
      finally
      (decf
       (aref array index-j index-j)
       (* var-h (conjugate (aref array index-j index-i))))))
-   finally return array))
-
-(defun root-free-hermitian-cholesky-decomposition (array)
-  (loop
-   with size = (array-dimension array 0)
-   for index-i below size do
-   (decf
-    (aref array index-i index-i)
-    (loop
-     for index-k below index-i
-     as element = (aref array index-i index-k)
-     sum
-     (* element (conjugate element)(aref array index-k index-k))))
-   (loop
-    for index-j from (1+ index-i) below size do
-    (setf
-     (aref array index-j index-i)
-     (/ (- (aref array index-j index-i)
-           (loop
-            for index-k below index-i sum
-            (* (aref array index-k index-k)
-               (aref array index-j index-k)
-               (conjugate (aref array index-i index-k)))))
-        (aref array index-i index-i))))
    finally return array))
 
 (defun symmetric-cholesky-solver (array vector)
