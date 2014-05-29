@@ -135,18 +135,14 @@
      (aref array index-j index-i)
      (/ var-h (aref array index-i index-i)))
     (loop
-     for index-k from (1+ index-i) below index-j
-     as element =
-     (- (aref array index-j index-k)
-        (* var-h (aref array index-k index-i)))
-     do
-     (setf
-      (aref array index-j index-k) element
-      (aref array index-k index-j) (conjugate element))
+     for index-k from (1+ index-i) below index-j do
+     (decf
+      (aref array index-j index-k)
+      (* var-h (conjugate (aref array index-k index-i))))
      finally
      (decf
       (aref array index-j index-j)
-      (* var-h (aref array index-j index-i)))))
+      (* var-h (conjugate (aref array index-j index-i))))))
    finally return array))
 
 (defun root-free-hermitian-cholesky-decomposition (array)
