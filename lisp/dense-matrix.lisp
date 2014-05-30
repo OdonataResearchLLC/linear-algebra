@@ -457,7 +457,7 @@ matrix with a column vector."
    'column-vector
    :contents
    (gauss-solver
-    (copy-array (contents matrix)) (contents vector))))
+    (copy-array (contents matrix)) (copy-array (contents vector)))))
 
 (defmethod nsolve :before
   ((matrix dense-matrix) (vector column-vector))
