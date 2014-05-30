@@ -1332,3 +1332,88 @@
    'error
    (linear-algebra:product
     (unit-hermitian-matrix 3) (unit-hermitian-matrix 4))))
+
+(define-test solve-hermitian-matrix
+  (:tag :hermitian-matrix :solve)
+  (let ((vector2 (linear-algebra:column-vector 2.0 1.0))
+        (vector3 (linear-algebra:column-vector 2.3 1.2 2.2))
+        (matrix2
+         (linear-algebra:make-matrix
+          2 2 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          #2A((#C(2.0 0.0) #C(1.0 -2.0))
+              (#C(1.0 2.0) #C(3.0  0.0)))))
+        (matrix3
+         (linear-algebra:make-matrix
+          3 3 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          #2A((#C(3.31 0.0) #C(1.26 -2.0) #C(1.37 -3.0))
+              (#C(1.26 2.0) #C(2.23  0.0) #C(2.31 -1.5))
+              (#C(1.37 3.0) #C(2.31  1.5) #C(8.15  0.0))))))
+    ;; 2x2
+    (assert-float-equal
+     #(#C(5.0 2.0) #C(0.0 -4.0))
+     (linear-algebra:solve matrix2 vector2))
+    (assert-float-equal
+     #2A((#C(2.0 0.0) #C(1.0 -2.0))
+         (#C(1.0 2.0) #C(3.0  0.0)))
+     matrix2)
+    (assert-float-equal
+     #(2.0 1.0) vector2 (linear-algebra::contents vector2))
+    ;; 3x3
+    (assert-float-equal
+     #(#C( 3.5175734   3.4673646)
+       #C( 3.3198433  -4.3366637)
+       #C(-0.78414906 -1.2595192))
+     (linear-algebra:solve matrix3 vector3))
+    (assert-float-equal
+     #2A((#C(3.31 0.0) #C(1.26 -2.0) #C(1.37 -3.0))
+         (#C(1.26 2.0) #C(2.23  0.0) #C(2.31 -1.5))
+         (#C(1.37 3.0) #C(2.31  1.5) #C(8.15  0.0)))
+     matrix3)
+    (assert-float-equal
+     #(2.3 1.2 2.2) vector3 (linear-algebra::contents vector3))))
+
+(define-test nsolve-hermitian-matrix
+  (:tag :hermitian-matrix :nsolve)
+  (let ((vector2 (linear-algebra:column-vector 2.0 1.0))
+        (vector3 (linear-algebra:column-vector 2.3 1.2 2.2))
+        (matrix2
+         (linear-algebra:make-matrix
+          2 2 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          #2A((#C(2.0 0.0) #C(1.0 -2.0))
+              (#C(1.0 2.0) #C(3.0  0.0)))))
+        (matrix3
+         (linear-algebra:make-matrix
+          3 3 :matrix-type 'linear-algebra:hermitian-matrix
+          :initial-contents
+          #2A((#C(3.31 0.0) #C(1.26 -2.0) #C(1.37 -3.0))
+              (#C(1.26 2.0) #C(2.23  0.0) #C(2.31 -1.5))
+              (#C(1.37 3.0) #C(2.31  1.5) #C(8.15  0.0))))))
+    ;; 2x2
+    (assert-float-equal
+     #(#C(5.0 2.0) #C(0.0 -4.0))
+     (linear-algebra:nsolve matrix2 vector2))
+    (assert-float-equal
+     #2A((#C(2.0 0.0) #C(0.5 -1.0))
+         (#C(0.5 1.0) #C(0.5  0.0)))
+     matrix2)
+    (assert-float-equal
+     #(#C(5.0 2.0) #C(0.0 -4.0)) vector2)
+    ;; 3x3
+    (assert-float-equal
+     #(#C( 3.5175734   3.4673646)
+       #C( 3.3198433  -4.3366637)
+       #C(-0.78414906 -1.2595192))
+     (linear-algebra:nsolve matrix3 vector3))
+    (assert-float-equal
+     #2A((#C(3.31       0.0)       #C( 0.38066468 -0.6042296) #C( 0.4138973   -0.9063445))
+         (#C(0.38066468 0.6042296) #C( 0.54190326  0.0)       #C(-0.044656467 -2.1882146))
+         (#C(0.4138973  0.9063445) #C(-0.044656467 2.1882146) #C( 2.2680602   -3.7252904E-9)))
+     matrix3)
+    (assert-float-equal
+     #(#C( 3.5175734   3.4673646)
+       #C( 3.3198433  -4.3366637)
+       #C(-0.78414906 -1.2595192))
+     vector3)))

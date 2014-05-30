@@ -357,3 +357,19 @@ subtracted to a symmetric matrix."
   (nsubtract-array
    (contents matrix1) (contents matrix2) scalar1 scalar2)
   matrix1)
+
+(defmethod solve ((matrix symmetric-matrix) (vector column-vector))
+  "Return the solution to the system of equations."
+  (make-instance
+   'column-vector
+   :contents
+   (symmetric-cholesky-solver
+    (copy-array (contents matrix)) (copy-array (contents vector)))))
+
+(defmethod nsolve ((matrix symmetric-matrix) (vector column-vector))
+  "Return the solution to the system of equations."
+  (setf
+   (contents vector)
+   (symmetric-cholesky-solver (contents matrix) (contents vector)))
+  ;; Return the solution vector
+  vector)

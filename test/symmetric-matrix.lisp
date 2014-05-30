@@ -1244,3 +1244,69 @@
          (1.2 2.2 2.3)
          (1.3 2.3 3.3)))
     2.1)))
+
+(define-test solve-symmetric-matrix
+  (:tag :symmetric-matrix :solve)
+  (let ((vector2 (linear-algebra:column-vector 2.0 1.0))
+        (vector3 (linear-algebra:column-vector 2.3 1.2 2.2))
+        (matrix2
+         (linear-algebra:make-matrix
+          2 2 :matrix-type 'linear-algebra:symmetric-matrix
+          :initial-contents #2A((1.1 1.2) (1.2 2.2))))
+        (matrix3
+         (linear-algebra:make-matrix
+          3 3 :matrix-type 'linear-algebra:symmetric-matrix
+          :initial-contents
+          #2A((1.15 1.26 1.37)
+              (1.26 2.23 2.31)
+              (1.37 2.31 3.31)))))
+    ;; 2x2
+    (assert-float-equal
+     #(3.2653065 -1.3265308)
+     (linear-algebra:solve matrix2 vector2))
+    (assert-float-equal
+     #2A((1.1 1.2) (1.2 2.2)) matrix2)
+    (assert-float-equal #(2.0 1.0)vector2)
+    ;; 3x3
+    (assert-float-equal
+     #(3.5856622 -2.306286 0.79007966)
+     (linear-algebra:solve matrix3 vector3))
+    (assert-float-equal
+     #2A((1.15 1.26 1.37)
+         (1.26 2.23 2.31)
+         (1.37 2.31 3.31))
+     matrix3)
+    (assert-float-equal #(2.3 1.2 2.2) vector3)))
+
+(define-test nsolve-symmetric-matrix
+  (:tag :symmetric-matrix :nsolve)
+  (let ((vector2 (linear-algebra:column-vector 2.0 1.0))
+        (vector3 (linear-algebra:column-vector 2.3 1.2 2.2))
+        (matrix2
+         (linear-algebra:make-matrix
+          2 2 :matrix-type 'linear-algebra:symmetric-matrix
+          :initial-contents #2A((1.1 1.2) (1.2 2.2))))
+        (matrix3
+         (linear-algebra:make-matrix
+          3 3 :matrix-type 'linear-algebra:symmetric-matrix
+          :initial-contents
+          #2A((1.15 1.26 1.37)
+              (1.26 2.23 2.31)
+              (1.37 2.31 3.31)))))
+    ;; 2x2
+    (assert-float-equal
+     #(3.2653065 -1.3265308)
+     (linear-algebra:nsolve matrix2 vector2))
+    (assert-float-equal
+     #2A((1.1 1.0909091) (1.0909091 0.8909091)) matrix2)
+    (assert-float-equal #(3.2653065 -1.3265308) vector2)
+    ;; 3x3
+    (assert-float-equal
+     #(3.5856622 -2.306286 0.79007966)
+     (linear-algebra:nsolve matrix3 vector3))
+    (assert-float-equal
+     #2A((1.15      1.0956522  1.1913043)
+         (1.0956522 0.84947825 0.9522979)
+         (1.1913043 0.9522979  0.90754557))
+     matrix3)
+    (assert-float-equal #(3.5856622 -2.306286 0.79007966) vector3)))

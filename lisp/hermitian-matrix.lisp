@@ -384,3 +384,19 @@ matrix2."
        "Permutation matrix~A and dense matrix~A sizes incompatible."
        (matrix-dimensions matrix)
        (matrix-dimensions permutation))))
+
+(defmethod solve ((matrix hermitian-matrix) (vector column-vector))
+  "Return the solution to the system of equations."
+  (make-instance
+   'column-vector
+   :contents
+   (hermitian-cholesky-solver
+    (copy-array (contents matrix)) (copy-array (contents vector)))))
+
+(defmethod nsolve ((matrix hermitian-matrix) (vector column-vector))
+  "Return the solution to the system of equations."
+  (setf
+   (contents vector)
+   (hermitian-cholesky-solver (contents matrix) (contents vector)))
+  ;; Return the solution vector
+  vector)
