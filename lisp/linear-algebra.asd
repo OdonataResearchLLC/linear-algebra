@@ -71,3 +71,9 @@
    (:file "square-matrix" :depends-on ("dense-matrix"))
    (:file "hermitian-matrix" :depends-on ("square-matrix"))
    (:file "symmetric-matrix" :depends-on ("square-matrix"))))
+
+(defmethod perform :after
+  ((operation load-op) (system (eql (find-system :linear-algebra))))
+  "Update *FEATURES* if the system loads successfully."
+  (pushnew :linear-algebra-kernel common-lisp:*features*)
+  (pushnew :linear-algebra common-lisp:*features*))
