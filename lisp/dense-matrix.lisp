@@ -473,3 +473,23 @@ matrix with a column vector."
    (gauss-solver (contents matrix) (contents vector)))
   ;; Return the solution vector
   vector)
+
+(defmethod invert ((matrix dense-matrix))
+  "Return the invert of the dense matrix."
+  (if (= (matrix-row-dimension matrix)
+         (matrix-column-dimension matrix))
+      (make-instance
+       (class-of matrix)
+       :contents
+       (gauss-invert (copy-array (contents matrix))))
+      (error "The number of rows does not equal columns.")))
+
+(defmethod ninvert ((matrix dense-matrix))
+  "Return the invert of the dense matrix."
+  (if (= (matrix-row-dimension matrix)
+         (matrix-column-dimension matrix))
+      (make-instance
+       (class-of matrix)
+       :contents
+       (gauss-invert (contents matrix)))
+      (error "The number of rows does not equal columns.")))

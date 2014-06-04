@@ -166,3 +166,19 @@ vector."
       (gauss-solver array vector)
       (error "Array~A is incompatible with vector(~D)."
              (array-dimensions array) (length vector))))
+
+(defmethod invert ((array array))
+  "Return the invert of the array."
+  (if (and
+       (= 2 (array-rank array))
+       (= (array-dimension array 0) (array-dimension array 1)))
+      (gauss-invert (copy-array array))
+      (error "Cannot invert array~A." array)))
+
+(defmethod ninvert ((array array))
+  "Return the invert of the array."
+  (if (and
+       (= 2 (array-rank array))
+       (= (array-dimension array 0) (array-dimension array 1)))
+      (gauss-invert array)
+      (error "Cannot invert array~A." array)))

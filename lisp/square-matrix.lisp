@@ -77,3 +77,17 @@
      (vector column-vector))
   "Return true if the array dimensions are compatible for product."
   (= (matrix-column-dimension matrix) (vector-length vector)))
+
+(defmethod invert ((matrix square-matrix))
+  "Return the invert of the square matrix."
+  (make-instance
+   (class-of matrix)
+   :contents
+   (gauss-invert (copy-array (contents matrix)))))
+
+(defmethod ninvert ((matrix square-matrix))
+  "Return the invert of the square matrix."
+  (make-instance
+   (class-of matrix)
+   :contents
+   (gauss-invert (contents matrix))))

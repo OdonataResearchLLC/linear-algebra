@@ -1258,3 +1258,108 @@
     (assert-float-equal
      #(66.36775 -151.8342 85.6118)
      (linear-algebra:nsolve matrix3 vector3))))
+
+(define-test invert-dense-matrix
+  (:tag :dense-matrix :invert)
+  ;; 2x2
+  (let ((matrix
+         (linear-algebra:make-matrix
+          2 2 :matrix-type 'linear-algebra:dense-matrix
+          :initial-contents
+          '((1.1 1.2) (2.1 2.2)))))
+    (assert-float-equal
+     #2A((-22.000029 12.000016) (21.000027 -11.000015))
+     (linear-algebra:invert matrix))
+    (assert-float-equal #2A((1.1 1.2) (2.1 2.2)) matrix))
+  ;; 3x3
+  (let ((matrix
+         (linear-algebra:make-matrix
+          3 3 :matrix-type 'linear-algebra:dense-matrix
+          :initial-contents
+          '((1.1 0.12 0.13)
+            (0.21 2.2 0.23)
+            (0.31 0.32 3.3)))))
+    (assert-float-equal
+     #2A((0.9272161 -0.04572601 -0.03333973)
+         (-0.08021406 0.4631565 -0.029120658)
+         (-0.07932379 -0.04061667 0.30898604))
+     (linear-algebra:invert matrix))
+    (assert-float-equal
+     #2A((1.1 0.12 0.13)
+         (0.21 2.2 0.23)
+         (0.31 0.32 3.3))
+     matrix))
+  ;; 4x4
+  (let ((matrix
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:dense-matrix
+          :initial-contents
+          '((10.0 0.12 0.13 0.14)
+            (0.21 20.0 0.23 0.24)
+            (0.31 0.32 30.0 0.34)
+            (0.41 0.42 0.43 40.0)))))
+    (assert-float-equal
+     #2A((0.10003952 -5.862483e-4 -4.2409348e-4 -3.4301603e-4)
+         (-0.0010267387 0.050018318 -3.748202e-4 -2.9333035e-4)
+         (-0.001011414 -5.216503e-4 0.033345684 -2.7676846e-4)
+         (-0.0010037516 -5.135755e-4 -3.5018355e-4 0.02500957))
+     (linear-algebra:invert matrix))
+    (assert-float-equal
+     #2A((10.0 0.12 0.13 0.14)
+         (0.21 20.0 0.23 0.24)
+         (0.31 0.32 30.0 0.34)
+         (0.41 0.42 0.43 40.0))
+     matrix)))
+
+(define-test ninvert-dense-matrix
+  (:tag :dense-matrix :ninvert)
+  ;; 2x2
+  (let ((matrix
+         (linear-algebra:make-matrix
+          2 2 :matrix-type 'linear-algebra:dense-matrix
+          :initial-contents
+          '((1.1 1.2) (2.1 2.2)))))
+    (assert-float-equal
+     #2A((-22.000029 12.000016) (21.000027 -11.000015))
+     (linear-algebra:ninvert matrix))
+    (assert-float-equal
+     #2A((2.1 2.2) (0.52380956 0.047618986)) matrix))
+  ;; 3x3
+  (let ((matrix
+         (linear-algebra:make-matrix
+          3 3 :matrix-type 'linear-algebra:dense-matrix
+          :initial-contents
+          '((1.1 0.12 0.13)
+            (0.21 2.2 0.23)
+            (0.31 0.32 3.3)))))
+    (assert-float-equal
+     #2A((0.9272161 -0.04572601 -0.03333973)
+         (-0.08021406 0.4631565 -0.029120658)
+         (-0.07932379 -0.04061667 0.30898604))
+     (linear-algebra:ninvert matrix))
+    (assert-float-equal
+     #2A((1.1        0.12       0.13)
+         (0.19090909 2.177091   0.20518182)
+         (0.28181818 0.13145148 3.2363923))
+     matrix))
+  ;; 4x4
+  (let ((matrix
+         (linear-algebra:make-matrix
+          4 4 :matrix-type 'linear-algebra:dense-matrix
+          :initial-contents
+          '((10.0 0.12 0.13 0.14)
+            (0.21 20.0 0.23 0.24)
+            (0.31 0.32 30.0 0.34)
+            (0.41 0.42 0.43 40.0)))))
+    (assert-float-equal
+     #2A((0.10003952 -5.862483e-4 -4.2409348e-4 -3.4301603e-4)
+         (-0.0010267387 0.050018318 -3.748202e-4 -2.9333035e-4)
+         (-0.001011414 -5.216503e-4 0.033345684 -2.7676846e-4)
+         (-0.0010037516 -5.135755e-4 -3.5018355e-4 0.02500957))
+     (linear-algebra:ninvert matrix))
+    (assert-float-equal
+     #2A((10.0    0.12         0.13         0.14)
+         ( 0.021 19.99748      0.22727      0.23706)
+         ( 0.031  0.015815994 29.992375     0.33191067)
+         ( 0.041  0.020756614  0.014001981 39.98469))
+     matrix)))

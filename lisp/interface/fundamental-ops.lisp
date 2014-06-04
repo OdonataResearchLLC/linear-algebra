@@ -84,3 +84,11 @@
 (defgeneric nsolve (matrix vector)
   (:documentation
    "Return the solution to the system of equations in-place."))
+
+(defgeneric invert (matrix)
+  (:documentation
+   "Return the invert of the matrix."))
+
+(defgeneric ninvert (matrix)
+  (:documentation
+   "Return the invert of the matrix with in-place decomposition."))

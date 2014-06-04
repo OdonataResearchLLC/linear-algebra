@@ -37,7 +37,8 @@
            :add :nadd
            :subtract :nsubtract
            :product
-           :solve :nsolve)
+           :solve :nsolve
+           :invert :ninvert)
   ;; Vector exports
   (:export :initialize-vector
            :make-vector

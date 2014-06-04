@@ -400,3 +400,19 @@ matrix2."
    (hermitian-cholesky-solver (contents matrix) (contents vector)))
   ;; Return the solution vector
   vector)
+
+(defmethod invert ((matrix hermitian-matrix))
+  "Return the invert of the hermitian matrix."
+  (make-instance
+   (class-of matrix)
+   :contents
+   (hermitian-cholesky-invert
+    (copy-array (contents matrix)))))
+
+(defmethod ninvert ((matrix hermitian-matrix))
+  "Return the invert of the hermitian matrix."
+  (make-instance
+   (class-of matrix)
+   :contents
+   (hermitian-cholesky-invert
+    (contents matrix))))

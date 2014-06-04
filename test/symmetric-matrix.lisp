@@ -1310,3 +1310,66 @@
          (1.1913043 0.9522979  0.90754557))
      matrix3)
     (assert-float-equal #(3.5856622 -2.306286 0.79007966) vector3)))
+
+(define-test invert-symmetric-matrix
+  (:tag :symmetric-matrix :invert)
+  ;; 2x2
+  (let ((matrix
+         (linear-algebra:make-matrix
+          2 2 :matrix-type 'linear-algebra:symmetric-matrix
+          :initial-contents
+          '((1.1 1.2) (1.2 2.2)))))
+    (assert-float-equal
+     #2A((2.2448979 -1.2244898) (-1.2244898 1.122449))
+     (linear-algebra:invert matrix))
+    (assert-float-equal #2A((1.1 1.2) (1.2 2.2)) matrix))
+  ;; 3x3
+  (let ((matrix
+         (linear-algebra:make-matrix
+          3 3 :matrix-type 'linear-algebra:symmetric-matrix
+          :initial-contents
+          '((1.15 1.26 1.37)
+            (1.26 2.23 2.31)
+            (1.37 2.31 3.31)))))
+    (assert-float-equal
+     #2A((2.3068395 -1.1345832 -0.16298579)
+         (-1.1345832 2.1764503 -1.0493114)
+         (-0.16298579 -1.0493114 1.101873))
+     (linear-algebra:invert matrix))
+    (assert-float-equal
+     #2A((1.15 1.26 1.37)
+         (1.26 2.23 2.31)
+         (1.37 2.31 3.31))
+     matrix)))
+
+(define-test ninvert-symmetric-matrix
+  (:tag :symmetric-matrix :ninvert)
+  ;; 2x2
+  (let ((matrix
+         (linear-algebra:make-matrix
+          2 2 :matrix-type 'linear-algebra:symmetric-matrix
+          :initial-contents
+          '((1.1 1.2) (1.2 2.2)))))
+    (assert-float-equal
+     #2A((2.2448979 -1.2244898) (-1.2244898 1.122449))
+     (linear-algebra:ninvert matrix))
+    (assert-float-equal
+     #2A((1.1 1.0909091) (1.0909091 0.8909091)) matrix))
+  ;; 3x3
+  (let ((matrix
+         (linear-algebra:make-matrix
+          3 3 :matrix-type 'linear-algebra:symmetric-matrix
+          :initial-contents
+          '((1.15 1.26 1.37)
+            (1.26 2.23 2.31)
+            (1.37 2.31 3.31)))))
+    (assert-float-equal
+     #2A((2.3068395 -1.1345832 -0.16298579)
+         (-1.1345832 2.1764503 -1.0493114)
+         (-0.16298579 -1.0493114 1.101873))
+     (linear-algebra:ninvert matrix))
+    (assert-float-equal
+     #2A((1.15      1.0956522  1.1913043)
+         (1.0956522 0.84947825 0.9522979)
+         (1.1913043 0.9522979  0.90754557))
+     matrix)))

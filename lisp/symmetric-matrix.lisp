@@ -373,3 +373,19 @@ subtracted to a symmetric matrix."
    (symmetric-cholesky-solver (contents matrix) (contents vector)))
   ;; Return the solution vector
   vector)
+
+(defmethod invert ((matrix symmetric-matrix))
+  "Return the invert of the symmetric matrix."
+  (make-instance
+   (class-of matrix)
+   :contents
+   (symmetric-cholesky-invert
+    (copy-array (contents matrix)))))
+
+(defmethod ninvert ((matrix symmetric-matrix))
+  "Return the invert of the symmetric matrix."
+  (make-instance
+   (class-of matrix)
+   :contents
+   (symmetric-cholesky-invert
+    (contents matrix))))
