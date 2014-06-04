@@ -81,6 +81,31 @@
      'double-float
      (linear-algebra-kernel:common-array-element-type array-d array-d))))
 
+(define-test specific-array-element-type
+  (:tag :kernel :utility)
+  (flet ((genarray (element-type)
+           (make-array
+            3 :element-type element-type
+            :initial-element (coerce 1 element-type))))
+    ;; Real float
+    (assert-eq
+     'single-float
+     (linear-algebra-kernel:specific-array-element-type
+      (genarray 'single-float)))
+    (assert-eq
+     'double-float
+     (linear-algebra-kernel:specific-array-element-type
+      (genarray 'double-float)))
+    ;; Complex float
+    (assert-equal
+     '(complex single-float)
+     (linear-algebra-kernel:specific-array-element-type
+      (genarray '(complex single-float))))
+    (assert-equal
+     '(complex double-float)
+     (linear-algebra-kernel:specific-array-element-type
+      (genarray '(complex double-float))))))
+
 (define-test complex-equal
   (:tag :kernel :utility :complex :equal)
   ;; complex float

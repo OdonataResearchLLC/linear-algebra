@@ -100,6 +100,14 @@
        (type-of (+ (coerce 1 type1) (coerce 1 type2)))))
      (t))))
 
+(defun specific-array-element-type (array &rest subscripts)
+  "Return the specific type of the element specified by subscripts."
+  (type-of
+   (apply
+    #'aref array
+    (or subscripts
+        (make-list (array-rank array) :initial-element 0)))))
+
 ;;; Equality predicates
 
 ;;; (COMPLEX-EQUAL number1 number2) => true or false
