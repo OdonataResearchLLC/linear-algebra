@@ -160,7 +160,7 @@ vector, otherwise 0.0."
    (if (= column (svref pivot-selection-vector row)) 1.0 0.0)
    array-type))
 
-(defun invert-array (array)
+(defun gauss-invert (array)
   "Find A^-1 via Gauss algorithm with partial column pivot search."
   (let* ((size (array-dimension array 0))
          (array-type (array-element-type array))

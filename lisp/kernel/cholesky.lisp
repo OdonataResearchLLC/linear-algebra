@@ -208,3 +208,93 @@ root-free Cholesky decomposition."
        (* (aref array index-j index-i) (aref vector index-i)))))
     ;; Return the solution
     vector))
+
+(defun symmetric-cholesky-invert (array)
+  "Invert a positive definite matrices using the root-free Cholesky
+decomposition."
+  (loop
+   with size = (array-dimension array 0)
+   with element-type = (specific-array-element-type array)
+   with one = (coerce 1 element-type)
+   with array^-1 =
+   (make-array
+    (array-dimensions array)
+    :element-type element-type
+    :initial-element (coerce 0 element-type))
+   initially
+   ;; Step 1, decomposition
+   (setq array (root-free-symmetric-cholesky-decomposition array))
+   for index-k below size do
+   (setf (aref array^-1 index-k index-k) one)
+   ;; Step 2.1 & 2.2
+   (loop
+    for index-j from (1+ index-k) below size do
+    (loop
+     for index-i from index-k below index-j do
+     (decf
+      (aref array^-1 index-j index-k)
+      (* (aref array index-j index-i)
+         (aref array^-1 index-i index-k)))))
+   ;; Step 2.3 & 3.2
+   (loop
+    for index-j from (1- size) downto index-k do
+    (setf
+     (aref array^-1 index-j index-k)
+     (/ (aref array^-1 index-j index-k)
+        (aref array index-j index-j)))
+    (loop
+     for index-i from (1+ index-j) below size do
+     (decf
+      (aref array^-1 index-j index-k)
+      (* (aref array index-i index-j)
+         (aref array^-1 index-i index-k))))
+    (setf
+     (aref array^-1 index-k index-j)
+     (aref array^-1 index-j index-k)))
+   ;; Return the solution
+   finally return array^-1))
+
+(defun hermitian-cholesky-invert (array)
+  "Invert a positive definite matrices using the root-free Cholesky
+decomposition."
+  (loop
+   with size = (array-dimension array 0)
+   with element-type = (specific-array-element-type array)
+   with one = (coerce 1 element-type)
+   with array^-1 =
+   (make-array
+    (array-dimensions array)
+    :element-type element-type
+    :initial-element (coerce 0 element-type))
+   initially
+   ;; Step 1, decomposition
+   (setq array (root-free-hermitian-cholesky-decomposition array))
+   for index-k below size do
+   (setf (aref array^-1 index-k index-k) one)
+   ;; Step 2.1 & 2.2
+   (loop
+    for index-j from (1+ index-k) below size do
+    (loop
+     for index-i from index-k below index-j do
+     (decf
+      (aref array^-1 index-j index-k)
+      (* (aref array index-j index-i)
+         (aref array^-1 index-i index-k)))))
+   ;; Step 2.3 & 3.2
+   (loop
+    for index-j from (1- size) downto index-k do
+    (setf
+     (aref array^-1 index-j index-k)
+     (/ (aref array^-1 index-j index-k)
+        (aref array index-j index-j)))
+    (loop
+     for index-i from (1+ index-j) below size do
+     (decf
+      (aref array^-1 index-j index-k)
+      (* (aref array index-j index-i)
+         (aref array^-1 index-i index-k))))
+    (setf
+     (aref array^-1 index-k index-j)
+     (conjugate (aref array^-1 index-j index-k))))
+   ;; Return the solution
+   finally return array^-1))

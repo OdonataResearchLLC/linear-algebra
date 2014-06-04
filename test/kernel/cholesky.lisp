@@ -204,3 +204,48 @@
        (#C(1.26 2.0) #C(2.23  0.0) #C(2.31 -1.5))
        (#C(1.37 3.0) #C(2.31  1.5) #C(8.15  0.0))))
     (make-array 3 :initial-contents '(2.3 1.2 2.2)))))
+
+(define-test symmetric-cholesky-invert
+  (:tag :kernel :cholesky)
+  ;; 2x2
+  (assert-float-equal
+   #2A((2.2448979 -1.2244898) (-1.2244898 1.122449))
+   (linear-algebra-kernel:symmetric-cholesky-invert
+    (make-array '(2 2) :initial-contents '((1.1 1.2) (1.2 2.2)))))
+  ;; 3x3
+  (assert-float-equal
+   #2A((2.3068395 -1.1345832 -0.16298579)
+       (-1.1345832 2.1764503 -1.0493114)
+       (-0.16298579 -1.0493114 1.101873))
+   (linear-algebra-kernel:symmetric-cholesky-invert
+    (make-array
+     '(3 3)
+     :initial-contents
+     '((1.15 1.26 1.37)
+       (1.26 2.23 2.31)
+       (1.37 2.31 3.31))))))
+
+(define-test hermitian-cholesky-invert
+  (:tag :kernel :cholesky)
+  ;; 2x2
+  (assert-float-equal
+   #2A((#C( 3.0 -0.0) #C(-1.0  2.0))
+       (#C(-1.0 -2.0) #C( 2.0 -0.0)))
+   (linear-algebra-kernel:hermitian-cholesky-invert
+    (make-array
+     '(2 2)
+     :initial-contents
+     '((#C(2.0 0.0) #C(1.0 -2.0))
+       (#C(1.0 2.0) #C(3.0  0.0))))))
+  ;; 3x3
+  (assert-float-equal
+   #2A((#C( 2.602711    5.9604646E-8) #C(-0.64015717  2.808354)     #C(-0.7729426   0.04424542))
+       (#C(-0.64015717 -2.808354)     #C(3.9574066   -3.7252904E-9) #C( 0.019689279 0.96479553))
+       (#C(-0.7729426  -0.04424542)   #C(0.019689279 -0.96479553)   #C( 0.4409054  -7.241874E-10)))
+   (linear-algebra-kernel:hermitian-cholesky-invert
+    (make-array
+     '(3 3)
+     :initial-contents
+     '((#C(3.31 0.0) #C(1.26 -2.0) #C(1.37 -3.0))
+       (#C(1.26 2.0) #C(2.23  0.0) #C(2.31 -1.5))
+       (#C(1.37 3.0) #C(2.31  1.5) #C(8.15  0.0)))))))

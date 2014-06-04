@@ -32,6 +32,7 @@
   (:export :copy-array
            :common-class-of
            :common-array-element-type
+           :specific-array-element-type
            :complex-equal
            :number-equal)
   ;; Permutation
@@ -61,13 +62,15 @@
            :householder-reflection)
   ;; Gauss algorithm
   (:export :gauss-solver
-           :invert-array)
+           :gauss-invert)
   ;; Cholesky
   (:export :symmetric-cholesky-decomposition
            :hermitian-cholesky-decomposition
            :root-free-symmetric-cholesky-decomposition
            :root-free-hermitian-cholesky-decomposition
            :symmetric-cholesky-solver
-           :hermitian-cholesky-solver)
+           :hermitian-cholesky-solver
+           :symmetric-cholesky-invert
+           :hermitian-cholesky-invert)
   ;; Conjugate gradient method
   (:export :conjugate-gradient-solver))

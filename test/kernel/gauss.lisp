@@ -186,11 +186,11 @@
        '((1.15 1.26 1.37) (2.14 2.23 2.31) (3.13 3.22 3.31)))
       (make-array 3 :initial-contents '(2.3 1.2 2.2))))))
 
-(define-test invert-array
+(define-test gauss-invert
   (:tag :kernel :gauss)
   (assert-float-equal
    #2A((-22.000029 12.000016) (21.000027 -11.000015))
-   (linear-algebra-kernel:invert-array
+   (linear-algebra-kernel:gauss-invert
     (make-array
      '(2 2) :initial-contents
      '((1.1 1.2) (2.1 2.2)))))
@@ -198,7 +198,7 @@
    #2A((0.9272161 -0.04572601 -0.03333973)
        (-0.08021406 0.4631565 -0.029120658)
        (-0.07932379 -0.04061667 0.30898604))
-   (linear-algebra-kernel:invert-array
+   (linear-algebra-kernel:gauss-invert
     (make-array
      '(3 3) :initial-contents
      '((1.1 0.12 0.13)
@@ -209,7 +209,7 @@
        (-0.0010267387 0.050018318 -3.748202e-4 -2.9333035e-4)
        (-0.001011414 -5.216503e-4 0.033345684 -2.7676846e-4)
        (-0.0010037516 -5.135755e-4 -3.5018355e-4 0.02500957))
-   (linear-algebra-kernel:invert-array
+   (linear-algebra-kernel:gauss-invert
     (make-array
      '(4 4) :initial-contents
      '((10.0 0.12 0.13 0.14)
