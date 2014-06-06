@@ -91,9 +91,4 @@
            :hermitian-matrix-p)
   ;; Symmetric matrix
   (:export :symmetric-matrix
-           :symmetric-matrix-p)
-  ;; Triangular matrix
-  (:export :upper-triangular-matrix
-           :upper-triangular-matrix-p
-           :lower-triangular-matrix
-           :lower-triangular-matrix-p))
+           :symmetric-matrix-p))
