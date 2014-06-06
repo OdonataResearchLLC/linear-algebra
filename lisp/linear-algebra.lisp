@@ -27,8 +27,8 @@
 (in-package :cl-user)
 
 (defpackage :linear-algebra
-  (:use :common-lisp :floating-point)
-  (:use :linear-algebra-kernel)
+  (:use :common-lisp)
+  (:use :floating-point :linear-algebra-kernel)
   ;; Fundamental operations
   (:export :norm
            :transpose :ntranspose

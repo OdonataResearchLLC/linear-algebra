@@ -75,17 +75,23 @@
 
 ;;; Class and type utilities
 
-(defun common-class-of (object1 object2 &optional
-                        (default-class nil default-class-p))
+(defun common-class-of (object1 object2)
   "Return the common class of the 2 objects or default-class."
-  (let ((class1 (class-of object1))
-        (class2 (class-of object2)))
-    (cond
-      ((eq class1 class2) class1)
-      ((subtypep class1 class2) class2)
-      ((subtypep class2 class1) class1)
-      (default-class-p (find-class default-class))
-      (t (error "No common or default class.")))))
+  (labels
+      ((common-class (c-p-l-1 c-p-l-2)
+         (let ((class1 (pop c-p-l-1))
+               (class2 (pop c-p-l-2)))
+           (cond
+            ((eq class1 class2) class1)
+            ((member class1 c-p-l-2) class1)
+            ((member class2 c-p-l-1) class2)
+            (t (common-class c-p-l-1 c-p-l-2))))))
+    ;; First call copies the class precedence list
+    (common-class
+     (copy-list
+      (closer-mop:class-precedence-list (class-of object1)))
+     (copy-list
+      (closer-mop:class-precedence-list (class-of object2))))))
 
 (defun common-array-element-type (array1 array2)
   "Return the array type common to both arrays."

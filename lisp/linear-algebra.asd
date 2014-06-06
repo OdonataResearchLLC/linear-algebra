@@ -32,7 +32,7 @@
   :version "0.1.0"
   :author "Thomas M. Hermann <thomas.m.hermann@odonata-research.com>"
   :license "MIT"
-  :depends-on ("floating-point")
+  :depends-on ("closer-mop" "floating-point")
   :components
   ((:file "linear-algebra" :depends-on ("kernel"))
    ;; Linear algebra kernel functions

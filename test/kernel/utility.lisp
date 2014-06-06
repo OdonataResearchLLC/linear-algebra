@@ -37,32 +37,28 @@
    (linear-algebra-kernel:copy-array
     #2A((1.1 1.2 1.3) (2.1 2.2 2.3) (3.1 3.2 3.3)))))
 
+(defclass class-0 () ())
+(defclass class-1 (class-0) ())
+(defclass class-a (class-1) ())
+(defclass class-sub-a (class-a) ())
+(defclass class-b (class-1) ())
+(defclass class-sub-b (class-b) ())
+
 (define-test common-class-of
   (:tag :kernel :utility)
-  (let ((object-a (make-array '(3 3) :adjustable t))
-        (object-v (make-array 3 :adjustable t))
-        (object-l (make-list 3))
-        (class-a (find-class 'array))
-        (class-v (find-class 'vector))
-        (class-t (find-class t)))
+  (let ((object-a (make-instance 'class-a))
+        (object-sub-a (make-instance 'class-sub-a))
+        (object-b (make-instance 'class-b))
+        (object-sub-b (make-instance 'class-sub-b)))
     (assert-eq
-     class-a
-     (linear-algebra-kernel:common-class-of object-a object-a))
+     (find-class 'class-1)
+     (linear-algebra-kernel:common-class-of object-a object-b))
     (assert-eq
-     class-a
-     (linear-algebra-kernel:common-class-of object-a object-v))
+     (find-class 'class-1)
+     (linear-algebra-kernel:common-class-of object-sub-a object-b))
     (assert-eq
-     class-a
-     (linear-algebra-kernel:common-class-of object-v object-a))
-    (assert-eq
-     class-v
-     (linear-algebra-kernel:common-class-of object-v object-v))
-    (assert-eq
-     class-t
-     (linear-algebra-kernel:common-class-of object-v object-l t))
-    (assert-error
-     'error
-     (linear-algebra-kernel:common-class-of object-v object-l))))
+     (find-class 'class-1)
+     (linear-algebra-kernel:common-class-of object-a object-sub-b))))
 
 (define-test common-array-element-type
   (:tag :kernel :utility)

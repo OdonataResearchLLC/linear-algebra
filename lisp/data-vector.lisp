@@ -328,7 +328,7 @@ applying the function to each element of the vectors."
      &key scalar1 scalar2)
   "Return the addition of scalar1*vector1 with scalar2*vector2."
   (make-instance
-   (common-class-of vector1 vector2 'column-vector)
+   (common-class-of vector1 vector2)
    :contents
    (add-vector
     (contents vector1) (contents vector2) scalar1 scalar2)))
@@ -338,7 +338,7 @@ applying the function to each element of the vectors."
      &key scalar1 scalar2)
   "Return the addition of scalar1*vector1 with scalar2*vector2."
   (make-instance
-   (common-class-of vector1 vector2 'row-vector)
+   (common-class-of vector1 vector2)
    :contents
    (add-vector
     (contents vector1) (contents vector2) scalar1 scalar2)))
@@ -382,7 +382,7 @@ applying the function to each element of the vectors."
      &key scalar1 scalar2)
   "Return the subraction of scalar2*vector2 from scalar1*vector1."
   (make-instance
-   (common-class-of vector1 vector2 'column-vector)
+   (common-class-of vector1 vector2)
    :contents
    (subtract-vector
     (contents vector1) (contents vector2) scalar1 scalar2)))
@@ -392,7 +392,7 @@ applying the function to each element of the vectors."
      &key scalar1 scalar2)
   "Return the subraction of scalar2*vector2 from scalar1*vector1."
   (make-instance
-   (common-class-of vector1 vector2 'row-vector)
+   (common-class-of vector1 vector2)
    :contents
    (subtract-vector
     (contents vector1) (contents vector2) scalar1 scalar2)))
