@@ -54,7 +54,13 @@
    (contents self)
    (cond
     ((getf initargs :contents))
-    ((or initial-element initial-contents)
+    ((and initial-element initial-contents)
+     (apply #'make-array size initargs))
+    (initial-element
+     (remf initargs :initial-contents)
+     (apply #'make-array size initargs))
+    (initial-contents
+     (remf initargs :initial-element)
      (apply #'make-array size initargs))
     (t (make-array
         size :element-type element-type
