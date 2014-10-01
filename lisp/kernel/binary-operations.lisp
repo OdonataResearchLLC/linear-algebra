@@ -168,7 +168,7 @@ addition."
      for row below m-rows sum
      (* (aref vector row) (aref array row column))))
    ;; Return the result
-   finally return result))
+   finally (return result)))
 
 (defun %scaled-product-vector-array
        (scalar vector array &optional result)
@@ -185,9 +185,9 @@ scaled."
      for row below m-rows sum
      (* (aref vector row) (aref array row column))
      into unscaled-sum
-     finally return (* scalar unscaled-sum)))
+     finally (return (* scalar unscaled-sum))))
    ;; Return the result
-   finally return result))
+   finally (return result)))
 
 (defun product-vector-array (vector array &optional scalar result)
   "Return the result of the array premultiplied by the vector and
@@ -209,7 +209,7 @@ scaled."
      for column below n-columns sum
      (* (aref array row column) (aref vector column))))
    ;; Return the result
-   finally return result))
+   finally (return result)))
 
 (defun %scaled-product-array-vector
        (scalar array vector &optional result)
@@ -226,9 +226,9 @@ scaled."
      for column below n-columns sum
      (* (aref array row column) (aref vector column))
      into unscaled-sum
-     finally return (* scalar unscaled-sum)))
+     finally (return (* scalar unscaled-sum))))
    ;; Return the result
-   finally return result))
+   finally (return result)))
 
 (defun product-array-vector (array vector &optional scalar result)
   "Return the result of the array postmultiplied by the vector and
@@ -323,7 +323,7 @@ addition."
       for index below l-columns sum
       (* (aref array1 row index) (aref array2 index column)))))
    ;; Return the result
-   finally return result))
+   finally (return result)))
 
 (defun %scaled-product-array-array
        (scalar array1 array2 &optional result)
@@ -343,9 +343,9 @@ addition."
       for index below l-columns sum
       (* (aref array1 row index) (aref array2 index column))
       into unscaled-sum
-      finally return (* scalar unscaled-sum))))
+      finally (return (* scalar unscaled-sum)))))
    ;; Return the result
-   finally return result))
+   finally (return result)))
 
 (defun product-array-array (array1 array2 &optional scalar result)
   "Return the scaled result of the product of 2 arrays."

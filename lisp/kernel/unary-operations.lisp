@@ -155,7 +155,7 @@ array row."
         sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
         scale abs-val)
        (setq sumsq (+ sumsq (expt (/ abs-val scale) 2))))
-   finally return (values scale sumsq)))
+   finally (return (values scale sumsq))))
 
 (defun sumsq-column (array column &key (scale 1) (sumsq 0) start end)
   "Return the scaling parameter and the sum of the squares of the
@@ -171,7 +171,7 @@ array column."
         sumsq (1+ (* sumsq (expt (/ scale abs-val) 2)))
         scale abs-val)
        (setq sumsq (+ sumsq (expt (/ abs-val scale) 2))))
-   finally return (values scale sumsq)))
+   finally (return (values scale sumsq))))
 
 ;;; Norm
 

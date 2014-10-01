@@ -60,7 +60,7 @@
      (aref array index-k index-j) element
      (aref array index-j index-k) element))
    ;; Return the factored array
-   finally return array))
+   finally (return array)))
 
 (defun hermitian-cholesky-decomposition (array)
   "Factor A = LL^T."
@@ -91,7 +91,7 @@
      (aref array index-k index-j) element
      (aref array index-j index-k) (conjugate element)))
    ;; Return the factored array
-   finally return array))
+   finally (return array)))
 
 ;;; Algorithm 4.29, pg. 82
 ;;; Simplified linear system solver via root-free Cholesky
@@ -122,7 +122,7 @@
      (decf
       (aref array index-j index-j)
       (* var-h (aref array index-j index-i)))))
-   finally return array))
+   finally (return array)))
 
 (defun root-free-hermitian-cholesky-decomposition (array)
   "Factor A = LDL^t."
@@ -151,7 +151,7 @@
      (decf
       (aref array index-j index-j)
       (* var-h (conjugate (aref array index-j index-i))))))
-   finally return array))
+   finally (return array)))
 
 (defun symmetric-cholesky-solver (array vector)
   "Linear system solver for positive definite matrices using the
@@ -252,7 +252,7 @@ decomposition."
      (aref array^-1 index-k index-j)
      (aref array^-1 index-j index-k)))
    ;; Return the solution
-   finally return array^-1))
+   finally (return array^-1)))
 
 (defun hermitian-cholesky-invert (array)
   "Invert a positive definite matrices using the root-free Cholesky
@@ -297,4 +297,4 @@ decomposition."
      (aref array^-1 index-k index-j)
      (conjugate (aref array^-1 index-j index-k))))
    ;; Return the solution
-   finally return array^-1))
+   finally (return array^-1)))

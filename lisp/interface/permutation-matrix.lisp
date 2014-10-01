@@ -186,4 +186,4 @@ columns."
     for column across contents
     as  row = 0 then (1+ row)
     do (setf (aref permuted column) row)
-    finally return permuted)))
+    finally (return permuted))))

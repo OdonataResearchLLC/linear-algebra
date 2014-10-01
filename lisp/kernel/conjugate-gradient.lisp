@@ -57,7 +57,7 @@
    with result = (zero-vector size (array-element-type residual))
    for index below size do
    (setf (aref result index) (- (aref residual index)))
-   finally return result))
+   finally (return result)))
 
 (defun conjugate-gradient-solver
        (array vector &optional epsilon (limit 25))
@@ -90,4 +90,4 @@
      (/ (inner-product-vector -residual adk nil) denominator)
      nil))
    ;; Return the solution
-   finally return (values solution iteration)))
+   finally (return (values solution iteration))))

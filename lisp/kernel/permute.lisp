@@ -40,7 +40,7 @@
    for column across permutation
    and row = 0 then (1+ row)
    do (setf (aref result column) (aref data row))
-   finally return result))
+   finally (return result)))
 
 (defmethod right-permute ((data array) (permutation vector))
   "Permute the columns of the array."
@@ -55,7 +55,7 @@
    (loop
     for irow below m-rows do
     (setf (aref result irow column) (aref data irow row)))
-   finally return result))
+   finally (return result)))
 
 ;;; Left permutation
 
@@ -71,7 +71,7 @@
    for column across permutation
    and row = 0 then (1+ row)
    do (setf (aref result row) (aref data column))
-   finally return result))
+   finally (return result)))
 
 (defmethod left-permute ((permutation vector) (data array))
   "Permute the rows of the array."
@@ -86,4 +86,4 @@
    (loop
     for icol below n-columns do
     (setf (aref result row icol) (aref data column icol)))
-   finally return result))
+   finally (return result)))

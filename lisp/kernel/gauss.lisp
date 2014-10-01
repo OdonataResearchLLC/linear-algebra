@@ -52,14 +52,14 @@
    (setq
     max-row row
     max-element element)
-   finally return max-row))
+   finally (return max-row)))
 
 (defun swap-rows (array i0 jth)
   "Interchange the "
   (loop
    for column below (array-dimension array 1) do
    (rotatef (aref array i0 column) (aref array jth column))
-   finally return array))
+   finally (return array)))
 
 (defun column-pivot (array pivot-selection-vector column)
   "Return the LR pivot of the array."
@@ -103,7 +103,7 @@
    (initialize-pivot-selection-vector size)
    for column below (1- size) do
    (column-pivot array pivot-selection-vector column)
-   finally return (values array pivot-selection-vector)))
+   finally (return (values array pivot-selection-vector))))
 
 ;;; Algorithm 4.23, pg. 75
 ;;; Gauss algorithm with column pivot search
