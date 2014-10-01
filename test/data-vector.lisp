@@ -78,13 +78,7 @@
   (let ((data (make-random-list 100 1.0)))
     (assert-float-equal
      (make-array 100 :initial-contents data)
-     (linear-algebra:make-vector 100 :initial-contents data)))
-  ;; It is an error to specify both initial element and contents.
-  (assert-error
-   'error
-   (linear-algebra:make-vector
-    3 :initial-element 1.0
-    :initial-contents (list 1.1 2.2 3.3))))
+     (linear-algebra:make-vector 100 :initial-contents data))))
 
 (define-test column-vector
   (:tag :data-vector :column-vector)

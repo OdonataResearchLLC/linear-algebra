@@ -28,27 +28,17 @@
 
 ;;; Vector interface operations
 
-(defgeneric initialize-vector (vector data size element-type)
-  (:documentation
-   "Initialize the vector with data."))
-
-(defun make-vector (size &key
-                    (element-type 'number)
-                    (vector-type 'column-vector)
-                    (initial-element nil initial-element-p)
-                    (initial-contents nil initial-contents-p))
-  "Create a 1D numeric array to represent a numeric vector."
-  (let ((new-vector (make-instance vector-type)))
-    (cond
-      ((and initial-element-p initial-contents-p)
-       (error "Cannot specify both :INITIAL-ELEMENT and :INITIAL-CONTENTS."))
-      (initial-contents-p
-       (initialize-vector new-vector initial-contents size element-type))
-      (initial-element-p
-       (initialize-vector new-vector initial-element size element-type))
-      (t
-       (initialize-vector
-        new-vector (coerce 0 element-type) size element-type)))))
+(defun make-vector
+       (size &key
+        (vector-type 'column-vector)
+        (element-type 'number)
+        initial-element initial-contents)
+  "Create the data structure to represent a vector."
+  (make-instance
+   vector-type :size size
+   :element-type element-type
+   :initial-element initial-element
+   :initial-contents initial-contents))
 
 (defgeneric vector-in-bounds-p (vector index)
   (:documentation

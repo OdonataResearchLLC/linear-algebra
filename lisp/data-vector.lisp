@@ -46,27 +46,21 @@
   (:documentation
    "A column vector."))
 
+(defmethod initialize-instance :after
+  ((self data-vector) &rest initargs
+   &key size element-type initial-element initial-contents)
+  (remf initargs :size)
+  (setf
+   (contents self)
+   (cond
+    ((getf initargs :contents))
+    ((or initial-element initial-contents)
+     (apply #'make-array size initargs))
+    (t (make-array
+        size :element-type element-type
+        :initial-element (coerce 0 element-type))))))
+
 ;;; Data vector interface operations
-
-(defmethod initialize-vector
-    ((vector data-vector) (data number) (size integer) element-type)
-  "Initialize a data vector with a value."
-  (setf
-   (contents vector)
-   (make-array
-    size :element-type element-type :initial-element data))
-  ;; Return the data vector
-  vector)
-
-(defmethod initialize-vector
-    ((vector data-vector) (data sequence) (size integer) element-type)
-  "Initialize a data vector with a sequence."
-  (setf
-   (contents vector)
-   (make-array
-    size :element-type element-type :initial-contents data))
-  ;; Return the data vector
-  vector)
 
 (defun row-vector (&rest numbers)
   "Create a row vector from the numbers."
