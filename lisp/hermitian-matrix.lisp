@@ -38,16 +38,16 @@
   (typep object 'hermitian-matrix))
 
 (defun %initialize-hermitian-matrix-with-seq
-       (matrix data rows columns element-type)
+       (matrix data dimensions element-type)
   "Initialize and validate a Hermitian matrix with a sequence."
   (let ((contents
          (setf
           (contents matrix)
           (make-array
-           (list rows columns)
+           dimensions
            :element-type element-type
            :initial-contents data))))
-    (dotimes (i0 rows matrix)
+    (dotimes (i0 (first dimensions) matrix)
       (if (zerop (imagpart (aref contents i0 i0)))
           (dotimes (i1 i0)
             (unless
@@ -57,53 +57,55 @@
               (error "The data is not Hermitian.")))
           (error "The data is not Hermitian.")))))
 
-(defmethod initialize-matrix
-    ((matrix hermitian-matrix) (data complex)
-     (rows integer) (columns integer) element-type)
+(defmethod initialize-matrix-contents
+    ((matrix hermitian-matrix) (initial-element complex) initargs)
   "It is an error to initialize a Hermitian matrix with a complex
 element."
-  (declare (ignore data rows columns element-type))
   (error
    "The initial element for a ~A must be real." (type-of matrix)))
 
-(defmethod initialize-matrix
-    ((matrix hermitian-matrix) (data list)
-     (rows integer) (columns integer) element-type)
+(defmethod initialize-matrix-contents
+    ((matrix hermitian-matrix) (initial-contents list) initargs)
   "Initialize the Hermitian matrix with a nested sequence."
   (%initialize-hermitian-matrix-with-seq
-   matrix data rows columns element-type))
+   matrix initial-contents
+   (getf initargs :dimensions)
+   (getf initargs :element-type)))
 
-(defmethod initialize-matrix
-    ((matrix hermitian-matrix) (data vector)
-     (rows integer) (columns integer) element-type)
+(defmethod initialize-matrix-contents
+    ((matrix hermitian-matrix) (initial-contents vector) initargs)
   "Initialize the Hermitian matrix with a nested sequence."
   (%initialize-hermitian-matrix-with-seq
-   matrix data rows columns element-type))
+   matrix initial-contents
+   (getf initargs :dimensions)
+   (getf initargs :element-type)))
 
-(defmethod initialize-matrix
-    ((matrix hermitian-matrix) (data array)
-     (rows integer) (columns integer) element-type)
+(defmethod initialize-matrix-contents
+    ((matrix hermitian-matrix) (initial-contents array) initargs)
   "Initialize the Hermitian matrix with a 2D array."
-  (let ((contents
-         (setf
-          (contents matrix)
-          (make-array
-           (list rows columns)
-           :element-type element-type))))
-    (dotimes (i0 rows matrix)
+  (let* ((dimensions (getf initargs :dimensions))
+         (contents
+          (setf
+           (contents matrix)
+           (make-array
+            dimensions
+            :element-type (getf initargs :element-type)))))
+    (dotimes (i0 (first dimensions) matrix)
       (if (zerop
            (imagpart
-            (setf (aref contents i0 i0) (aref data i0 i0))))
+            (setf
+             (aref contents i0 i0)
+             (aref initial-contents i0 i0))))
           (dotimes (i1 i0)
             (unless
                 (complex-equal
                  (setf
                   (aref contents i0 i1)
-                  (aref data i0 i1))
+                  (aref initial-contents i0 i1))
                  (conjugate
                   (setf
                    (aref contents i1 i0)
-                   (aref data i1 i0))))
+                   (aref initial-contents i1 i0))))
               (error "The data is not Hermitian.")))
           (error "The data is not Hermitian.")))))
 

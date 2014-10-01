@@ -35,29 +35,22 @@
 
 ;;; Matrix interface operations
 
-(defgeneric initialize-matrix (matrix data rows columns element-type)
+(defgeneric initialize-matrix-contents
+    (matrix initial-contents initargs)
   (:documentation
    "Initialize the matrix with data."))
 
-(defun make-matrix (rows columns &key
-                    (matrix-type 'dense-matrix)
-                    (element-type 'number)
-                    (initial-element nil initial-element-p)
-                    (initial-contents nil initial-contents-p))
+(defun make-matrix
+       (rows columns &key
+        (matrix-type 'dense-matrix)
+        (element-type 'number)
+        initial-element initial-contents)
   "Return a new matrix instance."
-  (let ((new-matrix (make-instance matrix-type)))
-    (cond
-      ((and initial-element-p initial-contents-p)
-       (error "Cannot specify both INITIAL-ELEMENT and INITIAL-CONTENTS."))
-      (initial-element-p
-       (initialize-matrix
-        new-matrix initial-element rows columns element-type))
-      (initial-contents-p
-       (initialize-matrix
-        new-matrix initial-contents rows columns element-type))
-      (t
-       (initialize-matrix
-        new-matrix (coerce 0 element-type) rows columns element-type)))))
+  (make-instance
+   matrix-type :dimensions (list rows columns)
+   :element-type element-type
+   :initial-element initial-element
+   :initial-contents initial-contents))
 
 (defun matrixp (object)
   "Return true if object is a matrix, NIL otherwise."

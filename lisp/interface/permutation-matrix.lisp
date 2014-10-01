@@ -38,28 +38,30 @@
   "Return true if object is a permutation-matrix."
   (typep object 'permutation-matrix))
 
-(defmethod initialize-matrix :before
-  ((matrix permutation-matrix) data
-   (rows integer) (columns integer) element-type)
+(defmethod initialize-instance :after
+  ((self permutation-matrix) &rest initargs
+   &key dimensions element-type initial-element initial-contents)
   "Verify that the element-type was not set and that rows equals
 columns."
-  (declare (ignore matrix data))
-  (unless (eq 'number element-type)
+  (cond
+   ((slot-boundp self 'contents))
+   ((not (eq 'number element-type))
     (error
      "Cannot specify the element type of a permutation matrix."))
-  (unless (= rows columns)
-    (error "Number of rows must equal the number of columns.")))
-
-(defmethod initialize-matrix
-    ((matrix permutation-matrix) (data (eql 0))
-     (rows integer) (columns integer) element-type)
-  (declare (ignore element-type))
-  (loop
-   with contents =
-   (setf (contents matrix) (make-array rows :element-type 'fixnum))
-   for index below rows do
-   (setf (aref contents index) index)
-   finally (return matrix)))
+   ((not (apply #'= dimensions))
+    (error "Number of rows must equal the number of columns."))
+   (initial-element
+    (error
+     "Cannot specify the initial element of a permutation matrix."))
+   (initial-contents
+    (initialize-matrix-contents self initial-contents initargs))
+   (t
+    (loop
+     with rows = (first dimensions)
+     with contents =
+     (setf (contents self) (make-array rows :element-type 'fixnum))
+     for index below rows do
+     (setf (aref contents index) index)))))
 
 ;;; FIXME : Use the LOOP.
 (defun %initialize-permutation-matrix-with-seq (matrix data size)
@@ -86,50 +88,48 @@ columns."
         matrix)
       (error "Invalid number of rows of data.")))
 
-(defmethod initialize-matrix
-    ((matrix permutation-matrix) (data list)
-     (rows integer) (columns integer) element-type)
+(defmethod initialize-matrix-contents
+    ((matrix permutation-matrix) (initial-contents list) initargs)
   "Initialize the permutation matrix with a list."
-  (declare (ignore columns element-type))
-  (%initialize-permutation-matrix-with-seq matrix data rows))
+  (%initialize-permutation-matrix-with-seq
+   matrix initial-contents (first (getf initargs :dimensions))))
 
-(defmethod initialize-matrix
-    ((matrix permutation-matrix) (data vector)
-     (rows integer) (columns integer) element-type)
+(defmethod initialize-matrix-contents
+    ((matrix permutation-matrix) (initial-contents vector) initargs)
   "Initialize the permutation matrix with a list."
-  (declare (ignore columns element-type))
-  (%initialize-permutation-matrix-with-seq matrix data rows))
+  (%initialize-permutation-matrix-with-seq
+   matrix initial-contents (first (getf initargs :dimensions))))
 
-(defmethod initialize-matrix
-    ((matrix permutation-matrix) (data array)
-     (rows fixnum) (columns fixnum) element-type)
+(defmethod initialize-matrix-contents
+    ((matrix permutation-matrix) (initial-contents array) initargs)
   "Initialize the permutation matrix with a 2D array."
-  (declare (ignore element-type))
-  (cond
-   ((not (= rows (array-dimension data 0)))
-    (error "Invalid number of rows of data."))
-   ((not (= columns (array-dimension data 1)))
-    (error "Invalid number of columns of data."))
-   (t
-    (let ((row -1))
-      (map-into
-       (setf (contents matrix) (make-array rows))
-       (lambda ()
-         (incf row)
-         (do ((column 0 (1+ column)))
-             ((cond
-               ((>= column columns)
-                (error "Invalid permutation data."))
-               ((= 1 (aref data row column))))
-              column))))
-      ;; FIXME : Find a better way to identify duplicates.
-      (unless
-          (=
-           rows
-           (length (remove-duplicates (contents matrix) :test #'=)))
-        (error "Invalid permutation in data."))
-      ;; Return the permutation matrix
-      matrix))))
+  (let ((rows (first (getf initargs :dimensions)))
+        (columns (second (getf initargs :dimensions))))
+    (cond
+     ((not (= rows (array-dimension initial-contents 0)))
+      (error "Invalid number of rows of data."))
+     ((not (= columns (array-dimension initial-contents 1)))
+      (error "Invalid number of columns of data."))
+     (t
+      (let ((row -1))
+        (map-into
+         (setf (contents matrix) (make-array rows))
+         (lambda ()
+           (incf row)
+           (do ((column 0 (1+ column)))
+               ((cond
+                 ((>= column columns)
+                  (error "Invalid permutation data."))
+                 ((= 1 (aref initial-contents row column))))
+                column))))
+        ;; FIXME : Find a better way to identify duplicates.
+        (unless
+            (=
+             rows
+             (length (remove-duplicates (contents matrix) :test #'=)))
+          (error "Invalid permutation in data."))
+        ;; Return the permutation matrix
+        matrix)))))
 
 (defmethod matrix-in-bounds-p
     ((matrix permutation-matrix) (row integer) (column integer))

@@ -34,84 +34,81 @@
   (:documentation
    "Dense matrix object."))
 
+(defmethod initialize-instance :after
+  ((self dense-matrix) &rest initargs
+   &key dimensions element-type initial-element initial-contents)
+  (declare (ignore dimensions))
+  (cond
+   ((slot-boundp self 'contents))
+   ((and initial-element initial-contents)
+    (error
+     "Cannot specify both :INITIAL-ELEMENT and :INITIAL-CONTENTS"))
+   (initial-contents
+    (initialize-matrix-contents self initial-contents initargs))
+   (initial-element
+    (initialize-matrix-contents self initial-element initargs))
+   (t
+    (initialize-matrix-contents self (coerce 0 element-type) initargs))))
+
+(defmethod initialize-matrix-contents
+    ((matrix dense-matrix) (initial-element number) initargs)
+  "Initialize the dense matrix with an initial element."
+  (setf
+   (contents matrix)
+   (make-array
+    (getf initargs :dimensions)
+    :element-type (getf initargs :element-type)
+    :initial-element initial-element)))
+
+(defmethod initialize-matrix-contents
+    ((matrix dense-matrix) (initial-contents list) initargs)
+  "Initialize the dense matrix with a nested sequence."
+  (setf
+   (contents matrix)
+   (make-array
+    (getf initargs :dimensions)
+    :element-type (getf initargs :element-type)
+    :initial-contents initial-contents)))
+
+(defmethod initialize-matrix-contents
+    ((matrix dense-matrix) (initial-contents vector) initargs)
+  "Initialize the dense matrix with a nested sequence."
+  (setf
+   (contents matrix)
+   (make-array
+    (getf initargs :dimensions)
+    :element-type (getf initargs :element-type)
+    :initial-contents initial-contents)))
+
+(defmethod initialize-matrix-contents
+  ((matrix dense-matrix) (initial-contents array) initargs)
+  "Verify that the size of the data is valid."
+  ;; Rank 2
+  (unless (= 2 (array-rank initial-contents))
+    (error "Initial contents must be rank 2."))
+  ;; Consistent number of dimensions
+  (unless
+      (equal
+       (array-dimensions initial-contents)
+       (getf initargs :dimensions))
+    (error
+     "Initial contents dimensions do not equal matrix dimensions."))
+  ;; Consistent element types
+  (unless
+      (subtypep
+       (array-element-type initial-contents)
+       (upgraded-array-element-type (getf initargs :element-type)))
+    (error
+     ":INITIAL-CONTENTS are not compatible with ~A"
+     (getf initargs :element-type)))
+  ;; Copy the data
+  (setf (contents matrix) (copy-array initial-contents)))
+
 ;;; Dense matrix interface operations
 
 (defun dense-matrix-p (object)
   "Return true if object is a dense matrix."
   (typep object 'dense-matrix))
-
-(defmethod initialize-matrix
-    ((matrix dense-matrix) (data number)
-     (rows integer) (columns integer) element-type)
-  "Initialize the dense matrix with an initial element."
-  (setf
-   (contents matrix)
-   (make-array
-    (list rows columns)
-    :element-type element-type
-    :initial-element data))
-  ;; Return the matrix
-  matrix)
-
-(defmethod initialize-matrix
-    ((matrix dense-matrix) (data list)
-     (rows integer) (columns integer) element-type)
-  "Initialize the dense matrix with a nested sequence."
-  (setf
-   (contents matrix)
-   (make-array
-    (list rows columns)
-    :element-type element-type
-    :initial-contents data))
-  ;; Return the matrix
-  matrix)
-
-(defmethod initialize-matrix
-    ((matrix dense-matrix) (data vector)
-     (rows integer) (columns integer) element-type)
-  "Initialize the dense matrix with a nested sequence."
-  (setf
-   (contents matrix)
-   (make-array
-    (list rows columns)
-    :element-type element-type
-    :initial-contents data))
-  ;; Return the matrix
-  matrix)
-
-(defmethod initialize-matrix :before
-  ((matrix dense-matrix) (data array)
-   (rows integer) (columns integer) element-type)
-  "Verify that the size of the data is valid."
-  (when (vectorp data) (return-from initialize-matrix))
-  ;; Rank 2
-  (unless (= 2 (array-rank data))
-    (error "data rank(~D) must equal 2." (array-rank data)))
-  ;; Consistent number of rows
-  (unless (= rows (array-dimension data 0))
-    (error
-     "data rows(~D) does not equal matrix rows(~D)."
-     (array-dimension data 0) rows))
-  ;; Consistent number of columns
-  (unless (= columns (array-dimension data 1))
-    (error
-     "data columns(~D) does not equal matrix columns(~D)."
-     (array-dimension data 1) columns))
-  ;; Consistent type of data
-  (unless (subtypep
-           (array-element-type data)
-           (upgraded-array-element-type element-type))
-    (error
-     "Data type, ~A, is not of type ~A."
-     (array-element-type data) element-type)))
-
-(defmethod initialize-matrix
-    ((matrix dense-matrix) (data array)
-     (rows integer) (columns integer) element-type)
-  "Initialize the dense matrix with a 2D array."
-  (setf (contents matrix) (copy-array data))
-  ;; Return the matrix
-  matrix)
 
 (defmethod matrix-in-bounds-p
     ((matrix dense-matrix) (row integer) (column integer))

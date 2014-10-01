@@ -44,28 +44,24 @@
   "Return true if object is an identity-matrix."
   (typep object 'identity-matrix))
 
-(defmethod initialize-matrix
-    ((matrix identity-matrix)
-     (data number)
-     (rows integer)
-     (columns integer)
-     element-type)
-  "Initialize the identity matrix.."
+(defmethod initialize-instance :after
+    ((self identity-matrix) &rest initargs
+     &key dimensions element-type initial-element initial-contents)
+  "Initialize the identity matrix."
   (cond
-    ((not (zerop data))
-     (error "Initial data is invalid for an identity matrix."))
-    ((not (= rows columns))
-     (error "Rows and columns are not equal."))
-    (t
-     (setf
-      (slot-value matrix 'size) rows
-      (slot-value matrix 'contents)
-      (make-array
-       2 :element-type element-type
-       :initial-contents
-       (list (coerce 0 element-type) (coerce 1 element-type))))
-     ;; Return the matrix
-     matrix)))
+   ((slot-boundp self 'contents))
+   ((or initial-element initial-contents)
+    (error "Initial data is invalid for an identity matrix."))
+   ((not (apply #'= dimensions))
+    (error "Rows and columns are not equal."))
+   (t
+    (setf
+     (slot-value self 'size) (first dimensions)
+     (slot-value self 'contents)
+     (make-array
+      2 :element-type element-type
+      :initial-contents
+      (list (coerce 0 element-type) (coerce 1 element-type)))))))
 
 (defmethod matrix-in-bounds-p
     ((matrix identity-matrix) (row integer) (column integer))

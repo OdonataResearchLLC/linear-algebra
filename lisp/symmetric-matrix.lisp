@@ -38,51 +38,57 @@
   (typep object 'symmetric-matrix))
 
 (defun %initialize-symmetric-matrix-with-seq
-       (matrix data rows columns element-type)
+       (matrix data dimensions element-type)
   "Initialize and validate a symmetric matrix with a sequence."
   (let ((contents
          (setf (contents matrix)
                (make-array
-                (list rows columns)
+                dimensions
                 :element-type element-type
                 :initial-contents data))))
-    (dotimes (i0 rows matrix)
+    (dotimes (i0 (first dimensions) matrix)
       (dotimes (i1 i0)
         (unless (number-equal
                  (aref contents i0 i1)
                  (aref contents i1 i0))
           (error "The data is not symmetric."))))))
 
-(defmethod initialize-matrix
-    ((matrix symmetric-matrix) (data list)
-     (rows integer) (columns integer) element-type)
+(defmethod initialize-matrix-contents
+    ((matrix symmetric-matrix) (initial-contents list) initargs)
   "Initialize a symmetric matrix."
   (%initialize-symmetric-matrix-with-seq
-   matrix data rows columns element-type))
+   matrix initial-contents
+   (getf initargs :dimensions)
+   (getf initargs :element-type)))
 
-(defmethod initialize-matrix
-    ((matrix symmetric-matrix) (data vector)
-     (rows integer) (columns integer) element-type)
+(defmethod initialize-matrix-contents
+    ((matrix symmetric-matrix) (initial-contents vector) initargs)
   "Initialize a symmetric matrix."
   (%initialize-symmetric-matrix-with-seq
-   matrix data rows columns element-type))
+   matrix initial-contents
+   (getf initargs :dimensions)
+   (getf initargs :element-type)))
 
-(defmethod initialize-matrix
-    ((matrix symmetric-matrix) (data array)
-     (rows integer) (columns integer) element-type)
+(defmethod initialize-matrix-contents
+    ((matrix symmetric-matrix) (initial-contents array) initargs)
   "Initialize a symmetric matrix."
-  (let ((contents
-         (setf (contents matrix)
-               (make-array
-                (list rows columns)
-                :element-type element-type))))
-    (dotimes (i0 rows matrix)
-      (setf (aref contents i0 i0) (aref data i0 i0))
+  (let* ((dimensions (getf initargs :dimensions))
+         (contents
+          (setf (contents matrix)
+                (make-array
+                 dimensions
+                 :element-type (getf initargs :element-type)))))
+    (dotimes (i0 (first dimensions) matrix)
+      (setf (aref contents i0 i0) (aref initial-contents i0 i0))
       (dotimes (i1 i0)
         (unless
             (number-equal
-             (setf (aref contents i0 i1) (aref data i0 i1))
-             (setf (aref contents i1 i0) (aref data i1 i0)))
+             (setf
+              (aref contents i0 i1)
+              (aref initial-contents i0 i1))
+             (setf
+              (aref contents i1 i0)
+              (aref initial-contents i1 i0)))
           (error "The data is not symmetric."))))))
 
 (defmethod (setf mref)

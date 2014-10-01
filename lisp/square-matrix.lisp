@@ -37,12 +37,10 @@
   "Return true if OBJECT is a square matrix."
   (typep object 'square-matrix))
 
-(defmethod initialize-matrix :before
-  ((matrix square-matrix) data (rows integer) (columns integer)
-   element-type)
+(defmethod initialize-matrix-contents :before
+  ((matrix square-matrix) initial-contents initargs)
   "Verify that the number of rows and colums are equal."
-  (declare (ignore matrix data element-type))
-  (unless (= rows columns)
+  (unless (apply #'= (getf initargs :dimensions))
     (error "Number of rows must equal the number of columns.")))
 
 (defmethod submatrix
