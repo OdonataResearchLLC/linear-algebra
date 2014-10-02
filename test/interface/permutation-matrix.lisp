@@ -252,7 +252,8 @@
         (linear-algebra:transpose
          (make-instance
           'linear-algebra:permutation-matrix
-          :contents permutation)))
+          :contents
+          (coerce permutation '(vector fixnum)))))
        permutation)))
 
 ;;; Validate a range for a permutation matrix.

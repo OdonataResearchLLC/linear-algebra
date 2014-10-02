@@ -113,7 +113,7 @@ columns."
      (t
       (let ((row -1))
         (map-into
-         (setf (contents matrix) (make-array rows))
+         (setf (contents matrix) (make-array rows :element-type 'fixnum))
          (lambda ()
            (incf row)
            (do ((column 0 (1+ column)))
@@ -172,7 +172,7 @@ columns."
   "Return a copy of the permutation matrix."
   (make-instance
    'permutation-matrix
-   :contents (copy-seq (contents matrix))))
+   :contents (copy-array (contents matrix))))
 
 (defmethod transpose ((matrix permutation-matrix))
   "Transpose the permutation matrix."
