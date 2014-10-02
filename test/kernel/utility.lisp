@@ -94,11 +94,11 @@
       (genarray 'double-float)))
     ;; Complex float
     (assert-equal
-     '(complex single-float)
+     (type-of (complex 1.0 0.0))
      (linear-algebra-kernel:specific-array-element-type
       (genarray '(complex single-float))))
     (assert-equal
-     '(complex double-float)
+     (type-of (complex 1D0 0D0))
      (linear-algebra-kernel:specific-array-element-type
       (genarray '(complex double-float))))))
 
