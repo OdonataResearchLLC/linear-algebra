@@ -98,7 +98,8 @@
   ;; Symmetric test
   (multiple-value-bind (a b c s)
       (linear-algebra-kernel:jacobi-rotation 1.1 3.3 5.5)
-    (assert-float-equal -0.66610646 a)
+    (let ((*epsilon* (* 7 single-float-epsilon)))
+      (assert-float-equal -0.66610646 a))
     (assert-float-equal  7.266106   b)
     (assert-float-equal  0.8816746  c)
     (assert-float-equal -0.4718579  s))
@@ -122,4 +123,3 @@
     (assert-float-equal
      #(#C(0.2 -0.4) #C(0.4 -0.8) #C(0.6 -1.2) #C(0.8 -1.6) #C(1.0 -2.0))
      vector)))
-
