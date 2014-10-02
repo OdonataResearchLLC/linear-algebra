@@ -1361,11 +1361,12 @@
     (assert-float-equal
      #(2.0 1.0) vector2 (linear-algebra::contents vector2))
     ;; 3x3
-    (assert-float-equal
-     #(#C( 3.5175734   3.4673646)
-       #C( 3.3198433  -4.3366637)
-       #C(-0.78414906 -1.2595192))
-     (linear-algebra:solve matrix3 vector3))
+    (let ((*epsilon* (* 5 single-float-epsilon)))
+      (assert-float-equal
+       #(#C( 3.5175734   3.4673646)
+         #C( 3.3198433  -4.3366637)
+         #C(-0.78414906 -1.2595192))
+       (linear-algebra:solve matrix3 vector3)))
     (assert-float-equal
      #2A((#C(3.31 0.0) #C(1.26 -2.0) #C(1.37 -3.0))
          (#C(1.26 2.0) #C(2.23  0.0) #C(2.31 -1.5))
@@ -1376,7 +1377,8 @@
 
 (define-test nsolve-hermitian-matrix
   (:tag :hermitian-matrix :nsolve)
-  (let ((vector2 (linear-algebra:column-vector 2.0 1.0))
+  (let ((*epsilon* (* 5 single-float-epsilon))
+        (vector2 (linear-algebra:column-vector 2.0 1.0))
         (vector3 (linear-algebra:column-vector 2.3 1.2 2.2))
         (matrix2
          (linear-algebra:make-matrix
@@ -1436,7 +1438,8 @@
          (#C(1.0 2.0) #C(3.0  0.0)))
      matrix))
   ;; 3x3
-  (let ((matrix
+  (let ((*epsilon* (* 3 single-float-epsilon))
+        (matrix
          (linear-algebra:make-matrix
           3 3 :matrix-type 'linear-algebra:hermitian-matrix
           :initial-contents
@@ -1472,7 +1475,8 @@
          (#C(0.5 1.0) #C(0.5  0.0)))
      matrix))
   ;; 3x3
-  (let ((matrix
+  (let ((*epsilon* (* 3 single-float-epsilon))
+        (matrix
          (linear-algebra:make-matrix
           3 3 :matrix-type 'linear-algebra:hermitian-matrix
           :initial-contents
