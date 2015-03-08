@@ -3,7 +3,7 @@
 
   Linear Algebra in Common Lisp
 
-  Copyright (c) 2011-2014, Odonata Research LLC
+  Copyright (c) 2011-2015, Odonata Research LLC
 
   Permission is hereby granted, free  of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -48,7 +48,8 @@
      (:file "rotation" :depends-on ("unary-operations"))
      (:file "gauss" :depends-on ("linear-algebra-kernel"))
      (:file "cholesky" :depends-on ("unary-operations"))
-     (:file "conjugate-gradient" :depends-on ("binary-operations"))))
+     (:file "conjugate-gradient" :depends-on ("binary-operations"))
+     (:file "tridiagonal" :depends-on ("linear-algebra-kernel"))))
    ;; Interface
    (:module interface
     :depends-on ("linear-algebra" "kernel")

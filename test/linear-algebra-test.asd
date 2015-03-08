@@ -3,7 +3,7 @@
 
   Linear Algebra in Common Lisp Unit Tests
 
-  Copyright (c) 2011-2014, Odonata Research LLC
+  Copyright (c) 2011-2015, Odonata Research LLC
 
   Permission is hereby granted, free  of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,8 @@
      (:file "rotation")
      (:file "gauss")
      (:file "cholesky")
-     (:file "conjugate-gradient")))
+     (:file "conjugate-gradient")
+     (:file "tridiagonal")))
    ;; Linear algebra interface
    (:module interface
     :depends-on ("linear-algebra-test")
