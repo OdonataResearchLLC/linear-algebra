@@ -158,7 +158,7 @@
 root-free Cholesky decomposition."
   (let ((size (array-dimension array 0)))
     ;; Step 1, decomposition
-    (setq array (root-free-symmetric-cholesky-decomposition array))
+    (root-free-symmetric-cholesky-decomposition array)
     ;; Step 2.1 & 2.2
     (loop
      for index-j below size do
@@ -186,7 +186,7 @@ root-free Cholesky decomposition."
 root-free Cholesky decomposition."
   (let ((size (array-dimension array 0)))
     ;; Step 1, decomposition
-    (setq array (root-free-hermitian-cholesky-decomposition array))
+    (root-free-hermitian-cholesky-decomposition array)
     ;; Step 2.1 & 2.2
     (loop
      for index-j below size do
@@ -223,7 +223,7 @@ decomposition."
     :initial-element (coerce 0 element-type))
    initially
    ;; Step 1, decomposition
-   (setq array (root-free-symmetric-cholesky-decomposition array))
+   (root-free-symmetric-cholesky-decomposition array)
    for index-k below size do
    (setf (aref array^-1 index-k index-k) one)
    ;; Step 2.1 & 2.2
@@ -268,7 +268,7 @@ decomposition."
     :initial-element (coerce 0 element-type))
    initially
    ;; Step 1, decomposition
-   (setq array (root-free-hermitian-cholesky-decomposition array))
+   (root-free-hermitian-cholesky-decomposition array)
    for index-k below size do
    (setf (aref array^-1 index-k index-k) one)
    ;; Step 2.1 & 2.2
