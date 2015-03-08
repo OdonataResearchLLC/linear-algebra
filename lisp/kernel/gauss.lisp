@@ -105,48 +105,58 @@
    (column-pivot array pivot-selection-vector column)
    finally (return (values array pivot-selection-vector))))
 
+;;; Algorithm 4.23 : Step 2
+
+(defun gauss-update (factored pivot-selection-vector vector)
+  "Update the solution vector."
+  (loop
+   with update =
+   (make-array
+    (length vector)
+    :element-type (array-element-type vector)
+    :initial-element 0.0)
+   initially
+   (setf
+    (aref update 0)
+    (aref vector (svref pivot-selection-vector 0)))
+   for row from 1 below (array-dimension factored 0) do
+   (setf
+    (aref update row)
+    (- (aref vector(svref pivot-selection-vector row))
+       (loop
+        for col from 0 below row sum
+        (* (aref factored row col) (aref update col)))))
+   ;; Return the updated vector
+   finally (return update)))
+
+(defun gauss-backsubstitution (factored solution)
+  "Calculate the solution by backsubstitution."
+  (loop
+   with size = (array-dimension factored 0)
+   with end = (1- size)
+   initially
+   (setf
+    (aref solution end)
+    (/ (aref solution end) (aref factored end end)))
+   for row downfrom (1- end) to 0 do
+   (setf
+    (aref solution row)
+    (/ (- (aref solution row)
+          (loop for col from (1+ row) below size sum
+                (* (aref factored row col) (aref solution col))))
+       (aref factored row row)))
+   ;; Return the solution vector
+   finally (return solution)))
+
 ;;; Algorithm 4.23, pg. 75
 ;;; Gauss algorithm with column pivot search
 
 (defun gauss-solver (array vector)
   "Gauss algorithm with column pivot search."
-  (let ((size (array-dimension array 0))
-        (solution
-         (make-array
-          (length vector)
-          :element-type (array-element-type vector)
-          :initial-element 0.0)))
-  ;; Step 1
   (multiple-value-bind (factored pivot-selection-vector)
       (gauss-factorization array)
-    ;; Step 2
-    (loop
-     initially
-     (setf
-      (aref solution 0)
-      (aref vector (svref pivot-selection-vector 0)))
-     for row from 1 below size do
-     (setf
-      (aref solution row)
-      (- (aref vector (svref pivot-selection-vector row))
-         (loop for col from 0 below row sum
-               (* (aref factored row col) (aref solution col))))))
-    ;; Step 3
-    (loop
-     with end = (1- size)
-     initially
-     (setf
-      (aref solution end)
-      (/ (aref solution end) (aref factored end end)))
-     for row downfrom (1- end) to 0 do
-     (setf
-      (aref solution row)
-      (/ (- (aref solution row)
-            (loop for col from (1+ row) below size sum
-                  (* (aref factored row col) (aref solution col))))
-         (aref factored row row)))))
-  ;; Return the solution
-  solution))
+    (gauss-backsubstitution
+     factored (gauss-update factored pivot-selection-vector vector))))
 
 ;;; Algorithm 4.25, pg. 77
 ;;; Finding A^-1 via Gauss algorithm with partial column pivot search
