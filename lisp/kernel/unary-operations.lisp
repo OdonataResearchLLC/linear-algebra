@@ -27,6 +27,7 @@
 (in-package :linear-algebra-kernel)
 
 ;;; Squared sums
+;;; FIXME : Consider locating sumsq2 and sumsq3 in floating-point
 
 (defun sumsq2 (x y)
   "Return the square root of |x|^2 + |y|^2."

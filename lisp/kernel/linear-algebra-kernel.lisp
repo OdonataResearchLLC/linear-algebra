@@ -73,4 +73,6 @@
            :symmetric-cholesky-invert
            :hermitian-cholesky-invert)
   ;; Conjugate gradient method
-  (:export :conjugate-gradient-solver))
+  (:export :conjugate-gradient-solver)
+  ;; Tridiagonal
+  (:export :tridiagonal-solver))
