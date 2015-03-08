@@ -31,10 +31,7 @@
 
 (in-package :linear-algebra-kernel)
 
-;;; Algorithm 4.32, pg. 91
-;;; Linear equation solver for tridiagonal A
-
-;;; Step 1
+;;; Algorithm 4.32; Step 1
 
 (defun tridiagonal-factorization (array)
   "Return the factorization of the tridiagonal array."
@@ -56,7 +53,7 @@
    ;; Return the factored array.
    (return array)))
 
-;;; Step 2
+;;; Algorithm 4.32; Step 2
 
 (defun tridiagonal-update (array vector)
   "Update the solution vector using the factored array."
@@ -72,7 +69,7 @@
        (aref array row 1)))
    finally (return vector)))
 
-;;; Step 3
+;;; Algorithm 4.32; Step 3
 
 (defun tridiagonal-backsubstitution (array vector)
   "Perform backsubstitution to obtain the solution."
@@ -83,6 +80,9 @@
     (aref vector row)
     (* (aref array row 2) (aref vector (1+ row))))
    finally (return vector)))
+
+;;; Algorithm 4.32, pg. 91
+;;; Linear equation solver for tridiagonal A
 
 (defun tridiagonal-solver (array vector)
   "Linear equation solver for a tridiagonal matrix."
