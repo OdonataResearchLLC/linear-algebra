@@ -110,3 +110,4 @@
       (inner-product-vector vector1 vector2 scalar)
       (error "VECTOR1(~D) and VECTOR2(~D) are not of equal length."
              (length vector1) (length vector2))))
+
