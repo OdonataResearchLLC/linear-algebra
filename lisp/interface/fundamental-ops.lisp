@@ -92,3 +92,7 @@
 (defgeneric ninvert (matrix)
   (:documentation
    "Return the invert of the matrix with in-place decomposition."))
+
+(defgeneric mat-equal (matrix1 matrix2)
+  (:documentation
+   "Return if the two arrays elments are the same"))

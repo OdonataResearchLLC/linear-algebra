@@ -34,6 +34,7 @@
   (:documentation
    "Dense matrix object."))
 
+
 (defmethod initialize-instance :after
   ((self dense-matrix) &rest initargs
    &key dimensions element-type initial-element initial-contents)
@@ -109,6 +110,10 @@
 (defun dense-matrix-p (object)
   "Return true if object is a dense matrix."
   (typep object 'dense-matrix))
+
+(defmethod mat-equal
+    ((matrix1 dense-matrix) (matrix2 dense-matrix))
+  (equalp (contents matrix1) (contents matrix2)))
 
 (defmethod matrix-in-bounds-p
     ((matrix dense-matrix) (row integer) (column integer))

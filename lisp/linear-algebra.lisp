@@ -65,6 +65,7 @@
            :matrix-column-dimension
            :mref
            :copy-matrix
+	   :mat-equal
            :submatrix
            :replace-matrix
            :matrix-validated-range)
