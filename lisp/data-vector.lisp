@@ -200,6 +200,9 @@ applying the function to each element of the vectors."
          function
          vectors))
 
+(defmethod reduce-vector ((function function) (vector data-vector) initial-value)
+  (reduce function (contents vector) :initial-value initial-value))
+
 ;;; Data vector transformations
 
 (defmethod apply-rotation :before
@@ -446,3 +449,58 @@ applying the function to each element of the vectors."
     ((vector1 data-vector) (vector2 data-vector) &optional scalar)
   "Return the dot product of vector1 and vector2."
   (inner-product-vector (contents vector1) (contents vector2) scalar))
+
+(defmethod vec-equal :before
+  ((vector1 data-vector) (vector2 data-vector))
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar))
+  (unless (= (vector-length vector1) (vector-length vector2))
+    (error "VECTOR1 and VECTOR2 are not of equal length.")))
+
+(defmethod vec-equal
+    ((vector1 data-vector) (vector2 data-vector))
+  (equalp (contents vector1) (contents vector2)))
+
+
+(defmethod elem-divide :before
+  ((vector1 data-vector) (vector2 data-vector))
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar))
+  (unless (= (vector-length vector1) (vector-length vector2))
+    (error "VECTOR1 and VECTOR2 are not of equal length.")))
+
+(defmethod elem-divide
+    ((vector1 data-vector) (vector2 data-vector))
+  (make-instance
+   (common-class-of vector1 vector2)
+   :contents
+   (element-divide-vector
+    (contents vector1) (contents vector2))
+   ))
+
+(defmethod elem-multiply :before
+  ((vector1 data-vector) (vector2 data-vector))
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar))
+  (unless (= (vector-length vector1) (vector-length vector2))
+    (error "VECTOR1 and VECTOR2 are not of equal length.")))
+
+(defmethod elem-multiply
+    ((vector1 data-vector) (vector2 data-vector))
+  (make-instance
+   (common-class-of vector1 vector2)
+   :contents
+   (element-multiply-vector
+    (contents vector1) (contents vector2))
+   ))
+
+(defmethod distance :before
+  ((vector1 data-vector) (vector2 data-vector) &optional (measure 2))
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar))
+  (unless (= (vector-length vector1) (vector-length vector2))
+    (error "VECTOR1 and VECTOR2 are not of equal length.")))
+
+(defmethod distance
+    ((vector1 data-vector) (vector2 data-vector) &optional (measure 2))
+  (norm (subtract vector1 vector2) measure))

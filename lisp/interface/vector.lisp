@@ -89,6 +89,10 @@
    "Destructively modifies the result vector with the result of
 applying the function to each element of the vectors."))
 
+(defgeneric reduce-vector (function vector initial-value)
+  (:documentation
+   "Reduce a vector into a scalar using a function"))
+
 (defmacro dovector ((element vector &optional result) &body body)
   "Iterate over vector returning result."
   (let ((pos (gensym "POS-"))
@@ -108,3 +112,15 @@ applying the function to each element of the vectors."))
 (defgeneric napply-rotation (vector1 vector2 cc ss)
   (:documentation
    "Return the plane rotations of vector1 and vector2 by cc and ss."))
+
+(defgeneric vec-equal (vector1 vector2)
+  (:documentation
+   "Test if the contents of vector1 and vector2 are the same"))
+
+(defgeneric elem-divide (vector1 vector2)
+  (:documentation
+   "Return the element by element division of two vectors"))
+
+(defgeneric elem-multiply (vector1 vector2)
+  (:documentation
+   "Return the element by element multiplation of two vectors"))

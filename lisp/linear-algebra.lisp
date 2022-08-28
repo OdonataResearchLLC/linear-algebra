@@ -51,7 +51,12 @@
            :replace-vector
            :map-vector
            :map-into-vector
+	   :reduce-vector
            :dovector
+           :vec-equal
+   	   :elem-divide
+           :elem-multiply
+   	   :distance
            :apply-rotation :napply-rotation)
   ;; Matrix interface
   (:export :matrix-object
