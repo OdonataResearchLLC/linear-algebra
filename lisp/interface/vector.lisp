@@ -124,3 +124,8 @@ applying the function to each element of the vectors."))
 (defgeneric elem-multiply (vector1 vector2)
   (:documentation
    "Return the element by element multiplation of two vectors"))
+
+(defgeneric vec-every (vector predicate)
+  (:documentation
+   "Return true if every element in the vector satisfies
+  predicate. Return nil on the first element that does not"))

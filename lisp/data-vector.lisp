@@ -36,6 +36,10 @@
   (:documentation
    "A data vector."))
 
+(defmethod print-object ((vector data-vector) stream)
+  (print-unreadable-object (vector stream :type t :identity t)
+    (format stream "~a" (contents vector))))
+
 (defclass row-vector (data-vector)
   ()
   (:documentation
@@ -493,6 +497,10 @@ applying the function to each element of the vectors."
    (element-multiply-vector
     (contents vector1) (contents vector2))
    ))
+
+(defmethod vec-every ((vector data-vector) predicate)
+  (every predicate (contents vector)))
+    
 
 (defmethod distance :before
   ((vector1 data-vector) (vector2 data-vector) &optional (measure 2))

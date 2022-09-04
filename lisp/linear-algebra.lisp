@@ -48,7 +48,7 @@
            :vref
            :copy-vector
            :subvector
-           :replace-vector
+           :replace-vectorx
            :map-vector
            :map-into-vector
 	   :reduce-vector
@@ -56,6 +56,7 @@
            :vec-equal
    	   :elem-divide
            :elem-multiply
+           :vec-everyx
    	   :distance
            :apply-rotation :napply-rotation)
   ;; Matrix interface
