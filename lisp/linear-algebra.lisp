@@ -31,6 +31,7 @@
   (:use :floating-point :linear-algebra-kernel)
   ;; Fundamental operations
   (:export :norm
+	   :min-vector
            :transpose :ntranspose
            :permute
            :scale :nscale
@@ -76,8 +77,11 @@
            :replace-matrix
            :matrix-validated-range)
   ;; Identity matrix
-  (:export :identity-matrix
-           :identity-matrix-p)
+  (:export
+   :identity-matrix
+   :identity-matrix-p
+   :make-identity-matrix
+   )
   ;; Permutation matrix
   (:export :permutation-matrix
            :permutation-matrix-p)

@@ -63,6 +63,11 @@
       :initial-contents
       (list (coerce 0 element-type) (coerce 1 element-type)))))))
 
+(defmethod make-identity-matrix  (&key dimension element-type )
+  (make-instance 'identity-matrix
+		 :dimensions (list dimension dimension) :element-type element-type))
+
+
 (defmethod matrix-in-bounds-p
     ((matrix identity-matrix) (row integer) (column integer))
   "Return true if row and column do not exceed the dimensions of matrix."

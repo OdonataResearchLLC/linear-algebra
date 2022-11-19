@@ -193,6 +193,7 @@ array column."
     (dotimes (index (length vector) result)
       (setf (aref result index) (abs (aref vector index))))))
 
+
 (defmethod norm-vector ((data vector) (measure (eql 1)))
   "Return the Taxicab norm of the list."
   (loop for element across data sum (abs element)))
@@ -212,6 +213,7 @@ array column."
 (defmethod norm-vector ((data vector) (measure (eql :infinity)))
   "Return the infinity, or maximum, norm of vector."
   (loop for element across data maximize (abs element)))
+
 
 (defmethod norm-array ((data array) (measure (eql 1)))
   "Return the 1 norm of the array."
