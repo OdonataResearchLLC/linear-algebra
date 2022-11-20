@@ -498,12 +498,12 @@ matrix with a column vector."
 
 (defmethod add-diagonal ((value number) (matrix dense-matrix))
   (let ((result (copy-matrix matrix))
-	(num    (min (matrix-dimensions matrix)))
+	(num    (apply #'min (matrix-dimensions matrix)))
 	)
     (dotimes (index num result)
       (setf
-       (aref result index index)
-       (+ (aref matrix index index) value)))
+       (mref result index index)
+       (+ (mref matrix index index) value)))
     result))
 
 (defmethod add-diagonal :before
@@ -518,8 +518,8 @@ matrix with a column vector."
 	)
     (dotimes (index num result)
       (setf
-       (aref result index index)
-       (+ (aref matrix index index)
+       (mref result index index)
+       (+ (mref matrix index index)
 	  (vref vec index))))
     result))
 
