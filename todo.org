@@ -1,0 +1,11 @@
+* TODO convert the tests to fiveam
+* TODO move the types into a types subdirectory
+** create a types
+** refactor dense-matrix to remove the operations and put them in fundamental-ops
+* TODO get identity matrix to work
+** put it in types
+** create a diagonal matrix type and make identity a subclass
+* TODO add banded matrix type
+* TODO add SVD decomposition for Hermetian
+* TODO add gram-schmidt QR
+* TODO add sequential gram-schmidt as a square root op
