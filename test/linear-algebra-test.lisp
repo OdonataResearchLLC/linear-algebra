@@ -7,6 +7,7 @@
 
 (in-package :linear-algebra-test)
 
+
 ;;; Convenience functions
 
 (defun random-interior-index (size)

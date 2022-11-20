@@ -1363,3 +1363,40 @@
          ( 0.031  0.015815994 29.992375     0.33191067)
          ( 0.041  0.020756614  0.014001981 39.98469))
      matrix)))
+
+(define-test add-diagonal-dense-matrix
+  (:tag :dense-matrix :add-diagonal)
+  (let ((*epsilon* (* 64 single-float-epsilon))
+	(scalar 2.0)
+        (vector1 (linear-algebra:column-vector 1.0 2.0))
+	(vector2 (linear-algebra:column-vector 1.0 2.0 3.0))
+        (matrix1
+         (linear-algebra:make-matrix
+          2 2 :initial-contents '((1.1 1.2) (2.1 2.2))))
+        (result1
+         (linear-algebra:make-matrix
+          2 2 :initial-contents
+	  '((3.1 1.2) (2.1 4.2))))
+	(result2
+         (linear-algebra:make-matrix
+          2 2 :initial-contents
+	  '((2.1 1.2) (2.1 4.2))))
+	)
+
+    ;; 2x2
+    (assert-true
+     (linear-algebra:mat-equal
+      result1
+      (linear-algebra:add-diagonal scalar matrix1)))
+
+    (assert-true
+     (linear-algebra:mat-equal
+      result2
+      (linear-algebra:add-diagonal vector1 matrix1)))
+
+    (assert-error
+     'error
+     (linear-algebra:add-diagonal vector2 matrix1))
+    ))
+     
+    

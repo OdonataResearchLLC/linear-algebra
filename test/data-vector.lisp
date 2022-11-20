@@ -1207,18 +1207,18 @@
    (linear-algebra:product
     (linear-algebra:row-vector 1 2 3)
     (linear-algebra:column-vector 1 2 3 4)))
-  (assert-error
-   'error
+  (assert-equal
+   14
    (linear-algebra:product
     (linear-algebra:column-vector 1 2 3)
     (linear-algebra:column-vector 1 2 3)))
-  (assert-error
-   'error
+  (assert-equal
+   14
    (linear-algebra:product
     (linear-algebra:row-vector 1 2 3)
     (linear-algebra:row-vector 1 2 3)))
-  (assert-error
-   'error
+  (assert-equal
+   14
    (linear-algebra:product
     (linear-algebra:column-vector 1 2 3)
     (linear-algebra:row-vector 1 2 3))))
@@ -1231,5 +1231,6 @@
   14
    (linear-algebra-kernel:inner-product-vector
     (linear-algebra:row-vector 1 2 3)
-    (linear-algebra:row-vector 1 2 3)))
+    (linear-algebra:row-vector 1 2 3)
+    nil))
 )

@@ -101,5 +101,9 @@
   (:documentation
    "Return the invert of the matrix with in-place decomposition."))
 
+(defgeneric add-diagonal (scalar-or-vector matrix)
+  (:documentation
+   "Add a scalar or vector to every diagonal of the matrix"))
+
 
 

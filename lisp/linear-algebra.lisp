@@ -49,7 +49,7 @@
            :vref
            :copy-vector
            :subvector
-           :replace-vectorx
+           :replace-vector
            :map-vector
            :map-into-vector
 	   :reduce-vector
@@ -75,12 +75,13 @@
 	   :mat-equal
            :submatrix
            :replace-matrix
-           :matrix-validated-range)
+           :matrix-validated-range
+	   :add-diagonal
+	   )
   ;; Identity matrix
   (:export
    :identity-matrix
    :identity-matrix-p
-   :make-identity-matrix
    )
   ;; Permutation matrix
   (:export :permutation-matrix
