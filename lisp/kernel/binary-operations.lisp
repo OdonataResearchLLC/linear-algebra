@@ -146,6 +146,15 @@ addition."
    (binary-op #'*)
    vector1 vector2))
 
+(defun element-greater-vector (vector1 vector2)
+  (loop
+   for element1 across vector1
+   and element2 across vector2
+   when (<= element1 element2)
+     return nil
+   finally (return t)))
+
+
 (defun nsubtract-vector (vector1 vector2 scalar1 scalar2)
   "Destructive vector binary subtraction."
   (%vector1<-vector1-op-vector2

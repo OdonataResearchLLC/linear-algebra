@@ -34,6 +34,9 @@
   (:documentation
    "Dense matrix object."))
 
+(defmethod print-object ((matrix dense-matrix) stream)
+  (print-unreadable-object (matrix stream :type t :identity t)
+    (format stream "~a" (contents matrix))))
 
 (defmethod initialize-instance :after
   ((self dense-matrix) &rest initargs

@@ -54,6 +54,7 @@
            :subtract-array :nsubtract-array
            :element-multiply-vector
            :element-divide-vector
+           :element-greater-vector
            :inner-product-vector
            :product-vector-array
            :product-array-vector

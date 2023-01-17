@@ -57,7 +57,8 @@
            :vec-equal
    	   :elem-divide
            :elem-multiply
-           :vec-everyx
+           :vec-every
+           :elem-greater
    	   :distance
            :apply-rotation :napply-rotation)
   ;; Matrix interface

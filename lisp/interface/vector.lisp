@@ -125,6 +125,10 @@ applying the function to each element of the vectors."))
   (:documentation
    "Return the element by element multiplation of two vectors"))
 
+(defgeneric elem-greater (vector1 vector2)
+  (:documentation
+   "Return if vector1 is greater than vector 2 on every element"))
+
 (defgeneric vec-every (vector predicate)
   (:documentation
    "Return true if every element in the vector satisfies

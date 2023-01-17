@@ -502,6 +502,11 @@ applying the function to each element of the vectors."
     (contents vector1) (contents vector2))
    ))
 
+(defmethod elem-greater
+    ((vector1 data-vector) (vector2 data-vector))
+  (element-greater-vector
+   (contents vector1) (contents vector2)))
+
 (defmethod vec-every ((vector data-vector) predicate)
   (every predicate (contents vector)))
     
