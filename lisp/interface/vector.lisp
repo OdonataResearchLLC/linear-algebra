@@ -134,3 +134,6 @@ applying the function to each element of the vectors."))
    "Return true if every element in the vector satisfies
   predicate. Return nil on the first element that does not"))
 
+(defgeneric outer-product (vec1 vec2)
+  (:documentation
+   "Outer product of vec1 and vec2 returns an nxm matrix"))

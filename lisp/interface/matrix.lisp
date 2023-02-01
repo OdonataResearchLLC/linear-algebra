@@ -99,6 +99,10 @@ MATRIX."))
   (:documentation
    "Set the submatrix of the matrix."))
 
+(defgeneric matrix-trace (matrix)
+  (:documentation
+   "Return a column vector that is the trace of matrix"))
+
 (defgeneric replace-matrix
     (matrix1 matrix2 &key
      start-row1 end-row1

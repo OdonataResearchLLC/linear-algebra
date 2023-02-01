@@ -58,9 +58,11 @@
    	   :elem-divide
            :elem-multiply
            :vec-every
+           :outer-product
            :elem-greater
    	   :distance
-           :apply-rotation :napply-rotation)
+   :apply-rotation :napply-rotation
+   )
   ;; Matrix interface
   (:export :matrix-object
            :initialize-matrix
@@ -73,7 +75,8 @@
            :matrix-column-dimension
            :mref
            :copy-matrix
-	   :mat-equal
+           :mat-equal
+           :trace
            :submatrix
            :replace-matrix
            :matrix-validated-range

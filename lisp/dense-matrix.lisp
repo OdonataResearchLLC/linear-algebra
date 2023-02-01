@@ -526,3 +526,16 @@ matrix with a column vector."
 	  (vref vec index))))
     result))
 
+(defmethod matrix-trace ((matrix dense-matrix))
+  (let* ((num (apply #'min (matrix-dimensions matrix)))
+         (vec (make-instance 'data-vector :size num
+                                          :initial-element 0
+                                          :element-type (matrix-element-type matrix)))
+         )
+    (dotimes (index num )
+      (setf
+       (vref vec    index)
+       (mref matrix index index))
+      )
+    vec
+  ))

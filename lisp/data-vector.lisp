@@ -522,4 +522,26 @@ applying the function to each element of the vectors."
     ((vector1 data-vector) (vector2 data-vector) &optional (measure 2))
   (norm (subtract vector1 vector2) measure))
 
-
+(defmethod outer-product ((vector1 data-vector)
+                          (vector2 data-vector))
+  (let* ((len1 (vector-length vector1))
+         (len2 (vector-length vector2))
+         (mat
+           (if (equal vector1 vector2)
+               (make-instance 'square-matrix
+                              :dimensions (list len1 len2)
+                              :initial-element 0
+                              :element-type (vector-element-type vector1))
+               (make-instance 'dense-matrix
+                              :dimensions (list len1 len2)
+                              :initial-element 0
+                              :element-type (vector-element-type vector1))))
+         )
+    (dotimes (i len1)
+      (dotimes (j len2)
+        (setf
+         (mref mat i j)
+         (* (vref vector1 i) (vref vector2 j)))
+        ))
+    mat
+  ))
