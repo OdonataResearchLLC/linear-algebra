@@ -105,5 +105,3 @@
   (:documentation
    "Add a scalar or vector to every diagonal of the matrix"))
 
-
-

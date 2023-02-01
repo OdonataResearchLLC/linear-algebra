@@ -521,3 +521,5 @@ applying the function to each element of the vectors."
 (defmethod distance
     ((vector1 data-vector) (vector2 data-vector) &optional (measure 2))
   (norm (subtract vector1 vector2) measure))
+
+
