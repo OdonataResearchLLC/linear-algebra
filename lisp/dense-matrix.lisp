@@ -526,7 +526,7 @@ matrix with a column vector."
 	  (vref vec index))))
     result))
 
-(defmethod matrix-trace ((matrix dense-matrix))
+(defmethod matrix-diagonal ((matrix dense-matrix))
   (let* ((num (apply #'min (matrix-dimensions matrix)))
          (vec (make-instance 'data-vector :size num
                                           :initial-element 0

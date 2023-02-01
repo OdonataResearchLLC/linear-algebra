@@ -526,16 +526,14 @@ applying the function to each element of the vectors."
                           (vector2 data-vector))
   (let* ((len1 (vector-length vector1))
          (len2 (vector-length vector2))
-         (mat
-           (if (equal vector1 vector2)
-               (make-instance 'square-matrix
-                              :dimensions (list len1 len2)
-                              :initial-element 0
-                              :element-type (vector-element-type vector1))
-               (make-instance 'dense-matrix
-                              :dimensions (list len1 len2)
-                              :initial-element 0
-                              :element-type (vector-element-type vector1))))
+         (mat-type (cond
+                     ((equal vector1 vector2) 'symmetric-matrix)
+                     ((= len1 len2) 'square-matrix)
+                     (t 'dense-matrix)))
+         (mat (make-instance mat-type
+                             :dimensions (list len1 len2)
+                             :initial-element 0
+                             :element-type (vector-element-type vector1)))
          )
     (dotimes (i len1)
       (dotimes (j len2)

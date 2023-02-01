@@ -61,7 +61,7 @@
            :outer-product
            :elem-greater
    	   :distance
-   :apply-rotation :napply-rotation
+           :apply-rotation :napply-rotation
    )
   ;; Matrix interface
   (:export :matrix-object
@@ -76,7 +76,7 @@
            :mref
            :copy-matrix
            :mat-equal
-           :trace
+           :matrix-diagonal
            :submatrix
            :replace-matrix
            :matrix-validated-range

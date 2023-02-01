@@ -128,3 +128,7 @@ MATRIX."))
 (defgeneric mat-equal (matrix1 matrix2)
   (:documentation
    "Return if the two arrays elments are the same"))
+
+(defgeneric matrix-diagonal (matrix)
+  (:documentation
+   "Return the diagonal of the matrix as a vector"))
