@@ -31,6 +31,7 @@
   (:use :floating-point :linear-algebra-kernel)
   ;; Fundamental operations
   (:export :norm
+	   :min-vector
            :transpose :ntranspose
            :permute
            :scale :nscale
@@ -51,8 +52,17 @@
            :replace-vector
            :map-vector
            :map-into-vector
+	   :reduce-vector
            :dovector
-           :apply-rotation :napply-rotation)
+           :vec-equal
+   	   :elem-divide
+           :elem-multiply
+           :vec-every
+           :outer-product
+           :elem-greater
+   	   :distance
+           :apply-rotation :napply-rotation
+   )
   ;; Matrix interface
   (:export :matrix-object
            :initialize-matrix
@@ -65,12 +75,18 @@
            :matrix-column-dimension
            :mref
            :copy-matrix
+           :mat-equal
+           :matrix-diagonal
            :submatrix
            :replace-matrix
-           :matrix-validated-range)
+           :matrix-validated-range
+	   :add-diagonal
+	   )
   ;; Identity matrix
-  (:export :identity-matrix
-           :identity-matrix-p)
+  (:export
+   :identity-matrix
+   :identity-matrix-p
+   )
   ;; Permutation matrix
   (:export :permutation-matrix
            :permutation-matrix-p)

@@ -75,6 +75,16 @@ the operation."))
   "Return the scaled operation."
   (lambda (n1 n2) (- (* scalar1 n1) (* scalar2 n2))))
 
+(defmethod binary-op
+    ((op (eql #'/)) )
+  "Return the scaled operation."
+  (lambda (n1 n2) (/ n1 n2)))
+
+(defmethod binary-op
+    ((op (eql #'*)) )
+  "Return the scaled operation."
+  (lambda (n1 n2) (* n1 n2)))
+
 ;;; Binary vector operations
 
 (defun %vector<-vector1-op-vector2 (operation vector1 vector2)
@@ -124,6 +134,27 @@ addition."
    (scaled-binary-op #'- scalar1 scalar2)
    vector1 vector2))
 
+(defun element-divide-vector (vector1 vector2)
+  "Vector pointwise division."
+  (%vector<-vector1-op-vector2
+   (binary-op #'/)
+   vector1 vector2))
+
+(defun element-multiply-vector (vector1 vector2)
+  "Vector pointwise multiplication."
+  (%vector<-vector1-op-vector2
+   (binary-op #'*)
+   vector1 vector2))
+
+(defun element-greater-vector (vector1 vector2)
+  (loop
+   for element1 across vector1
+   and element2 across vector2
+   when (<= element1 element2)
+     return nil
+   finally (return t)))
+
+
 (defun nsubtract-vector (vector1 vector2 scalar1 scalar2)
   "Destructive vector binary subtraction."
   (%vector1<-vector1-op-vector2
@@ -137,7 +168,7 @@ addition."
    and element2 across vector2
    sum (* element1 element2) into result
    finally
-   (return (if scalar (* scalar result) result))))
+      (return (if scalar (* scalar result) result))))
 
 ;;; Binary array/vector operations
 

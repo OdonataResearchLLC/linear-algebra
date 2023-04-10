@@ -36,6 +36,10 @@
   (:documentation
    "A data vector."))
 
+(defmethod print-object ((vector data-vector) stream)
+  (print-unreadable-object (vector stream :type t :identity t)
+    (format stream "~a" (contents vector))))
+
 (defclass row-vector (data-vector)
   ()
   (:documentation
@@ -200,6 +204,9 @@ applying the function to each element of the vectors."
          function
          vectors))
 
+(defmethod reduce-vector ((function function) (vector data-vector) initial-value)
+  (reduce function (contents vector) :initial-value initial-value))
+
 ;;; Data vector transformations
 
 (defmethod apply-rotation :before
@@ -259,6 +266,10 @@ applying the function to each element of the vectors."
 (defmethod norm ((vector data-vector) &optional (measure 1))
   "Return the p-norm of the vector."
   (norm-vector (contents vector) measure))
+
+(defmethod min-vector ((vector data-vector))
+  (loop for element across (contents vector) minimize (abs element)))
+
 
 (defmethod transpose ((vector column-vector))
   "Return a row vector."
@@ -434,3 +445,101 @@ applying the function to each element of the vectors."
     ((vector1 row-vector) (vector2 column-vector) &optional scalar)
   "Return the dot product of vector1 and vector2."
   (inner-product-vector (contents vector1) (contents vector2) scalar))
+
+(defmethod product :before
+  ((vector1 data-vector) (vector2 data-vector) &optional scalar)
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar))
+  (unless (= (vector-length vector1) (vector-length vector2))
+    (error "VECTOR1 and VECTOR2 are not of equal length.")))
+
+(defmethod product
+    ((vector1 data-vector) (vector2 data-vector) &optional scalar)
+  "Return the dot product of vector1 and vector2."
+  (inner-product-vector (contents vector1) (contents vector2) scalar))
+
+(defmethod vec-equal :before
+  ((vector1 data-vector) (vector2 data-vector))
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar))
+  (unless (= (vector-length vector1) (vector-length vector2))
+    (error "VECTOR1 and VECTOR2 are not of equal length.")))
+
+(defmethod vec-equal
+    ((vector1 data-vector) (vector2 data-vector))
+  (equalp (contents vector1) (contents vector2)))
+
+
+(defmethod elem-divide :before
+  ((vector1 data-vector) (vector2 data-vector))
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar))
+  (unless (= (vector-length vector1) (vector-length vector2))
+    (error "VECTOR1 and VECTOR2 are not of equal length.")))
+
+(defmethod elem-divide
+    ((vector1 data-vector) (vector2 data-vector))
+  (make-instance
+   (common-class-of vector1 vector2)
+   :contents
+   (element-divide-vector
+    (contents vector1) (contents vector2))
+   ))
+
+(defmethod elem-multiply :before
+  ((vector1 data-vector) (vector2 data-vector))
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar))
+  (unless (= (vector-length vector1) (vector-length vector2))
+    (error "VECTOR1 and VECTOR2 are not of equal length.")))
+
+(defmethod elem-multiply
+    ((vector1 data-vector) (vector2 data-vector))
+  (make-instance
+   (common-class-of vector1 vector2)
+   :contents
+   (element-multiply-vector
+    (contents vector1) (contents vector2))
+   ))
+
+(defmethod elem-greater
+    ((vector1 data-vector) (vector2 data-vector))
+  (element-greater-vector
+   (contents vector1) (contents vector2)))
+
+(defmethod vec-every ((vector data-vector) predicate)
+  (every predicate (contents vector)))
+    
+
+(defmethod distance :before
+  ((vector1 data-vector) (vector2 data-vector) &optional (measure 2))
+  "Verify that the dimensions are equal."
+  (declare (ignore scalar))
+  (unless (= (vector-length vector1) (vector-length vector2))
+    (error "VECTOR1 and VECTOR2 are not of equal length.")))
+
+(defmethod distance
+    ((vector1 data-vector) (vector2 data-vector) &optional (measure 2))
+  (norm (subtract vector1 vector2) measure))
+
+(defmethod outer-product ((vector1 data-vector)
+                          (vector2 data-vector))
+  (let* ((len1 (vector-length vector1))
+         (len2 (vector-length vector2))
+         (mat-type (cond
+                     ((equal vector1 vector2) 'symmetric-matrix)
+                     ((= len1 len2) 'square-matrix)
+                     (t 'dense-matrix)))
+         (mat (make-instance mat-type
+                             :dimensions (list len1 len2)
+                             :initial-element 0
+                             :element-type (vector-element-type vector1)))
+         )
+    (dotimes (i len1)
+      (dotimes (j len2)
+        (setf
+         (mref mat i j)
+         (* (vref vector1 i) (vref vector2 j)))
+        ))
+    mat
+  ))

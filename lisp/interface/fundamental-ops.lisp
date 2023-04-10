@@ -32,6 +32,14 @@
   (:documentation
    "Return the norm according to measure."))
 
+(defgeneric min-vector (vector)
+  (:documentation
+   "Return the minimum absolute value"))
+
+(defgeneric distance (vector1 vector2 &optional measure)
+  (:documentation
+   "Return the distance between vector1 and vector2 using the measure"))
+
 (defgeneric transpose (vector-or-matrix)
   (:documentation
    "Transpose the vector or matrix."))
@@ -92,3 +100,8 @@
 (defgeneric ninvert (matrix)
   (:documentation
    "Return the invert of the matrix with in-place decomposition."))
+
+(defgeneric add-diagonal (scalar-or-vector matrix)
+  (:documentation
+   "Add a scalar or vector to every diagonal of the matrix"))
+

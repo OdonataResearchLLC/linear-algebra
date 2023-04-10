@@ -99,6 +99,10 @@ MATRIX."))
   (:documentation
    "Set the submatrix of the matrix."))
 
+(defgeneric matrix-trace (matrix)
+  (:documentation
+   "Return a column vector that is the trace of matrix"))
+
 (defgeneric replace-matrix
     (matrix1 matrix2 &key
      start-row1 end-row1
@@ -120,3 +124,11 @@ MATRIX."))
         (values start-row start-column end-row end-column)
         (error "The matrix range (~D:~D,~D:~D) is invalid."
                start-row start-column end-row end-column))))
+
+(defgeneric mat-equal (matrix1 matrix2)
+  (:documentation
+   "Return if the two arrays elments are the same"))
+
+(defgeneric matrix-diagonal (matrix)
+  (:documentation
+   "Return the diagonal of the matrix as a vector"))

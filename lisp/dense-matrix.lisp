@@ -34,6 +34,10 @@
   (:documentation
    "Dense matrix object."))
 
+(defmethod print-object ((matrix dense-matrix) stream)
+  (print-unreadable-object (matrix stream :type t :identity t)
+    (format stream "~a" (contents matrix))))
+
 (defmethod initialize-instance :after
   ((self dense-matrix) &rest initargs
    &key dimensions element-type initial-element initial-contents)
@@ -109,6 +113,10 @@
 (defun dense-matrix-p (object)
   "Return true if object is a dense matrix."
   (typep object 'dense-matrix))
+
+(defmethod mat-equal
+    ((matrix1 dense-matrix) (matrix2 dense-matrix))
+  (equalp (contents matrix1) (contents matrix2)))
 
 (defmethod matrix-in-bounds-p
     ((matrix dense-matrix) (row integer) (column integer))
@@ -490,3 +498,44 @@ matrix with a column vector."
        :contents
        (gauss-invert (contents matrix)))
       (error "The number of rows does not equal columns.")))
+
+(defmethod add-diagonal ((value number) (matrix dense-matrix))
+  (let ((result (copy-matrix matrix))
+	(num    (apply #'min (matrix-dimensions matrix)))
+	)
+    (dotimes (index num result)
+      (setf
+       (mref result index index)
+       (+ (mref matrix index index) value)))
+    result))
+
+(defmethod add-diagonal :before
+    ((vec data-vector) (matrix dense-matrix))
+  (unless (compatible-dimensions-p :solve matrix vector)
+    (error "Matrix~A is incompatible with column vector(~D)."
+           (matrix-dimensions matrix) (vector-length vector))))
+
+(defmethod add-diagonal ((vec data-vector) (matrix dense-matrix))
+  (let ((result (copy-matrix matrix))
+	(num    (min (matrix-dimensions matrix)))
+	)
+    (dotimes (index num result)
+      (setf
+       (mref result index index)
+       (+ (mref matrix index index)
+	  (vref vec index))))
+    result))
+
+(defmethod matrix-diagonal ((matrix dense-matrix))
+  (let* ((num (apply #'min (matrix-dimensions matrix)))
+         (vec (make-instance 'data-vector :size num
+                                          :initial-element 0
+                                          :element-type (matrix-element-type matrix)))
+         )
+    (dotimes (index num )
+      (setf
+       (vref vec    index)
+       (mref matrix index index))
+      )
+    vec
+  ))
